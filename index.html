@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Winyates Edition</title>
+<style>
+    :root {
+        --bg: #080711;
+        --card-bg: #120f24;
+        --neon-cyan: #00f0ff;
+        --neon-pink: #ff007f;
+        --text: #ffffff;
+        --text-dim: #a0a0c0;
+        --border: rgba(0, 240, 255, 0.25);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* NEON HEADER */
+    header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(18, 15, 36, 0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 2px solid var(--neon-cyan);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .brand-title {
+        font-size: 1.6rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text);
+        text-shadow: 0 0 8px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+    }
+
+    .search-container input {
+        background: #000;
+        border: 1px solid var(--neon-pink);
+        color: var(--text);
+        padding: 0.6rem 1.2rem;
+        border-radius: 20px;
+        outline: none;
+        width: 260px;
+        box-shadow: 0 0 8px rgba(255, 0, 127, 0.4);
+        transition: all 0.3s ease;
+    }
+
+    .search-container input:focus {
+        box-shadow: 0 0 15px var(--neon-pink);
+    }
+
+    /* GRID & CARDS */
+    .container { max-width: 1400px; margin: 2rem auto; padding: 0 1rem; width: 100%; flex: 1; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; }
+
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.25rem;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        border-color: var(--neon-pink);
+        box-shadow: 0 0 20px rgba(255, 0, 127, 0.4);
+    }
+
+    .card-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+        object-fit: cover;
+        margin-bottom: 0.75rem;
+        background: #000;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .card-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.3;
+    }
+
+    /* FULLSCREEN GAME MODAL */
+    .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.95);
+        flex-direction: column;
+        padding: 1rem;
+    }
+    .modal.active { display: flex; }
+
+    .modal-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title { font-size: 1.2rem; font-weight: bold; color: var(--neon-cyan); }
+
+    .close-btn {
+        background: var(--neon-pink);
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1.2rem;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 0 10px var(--neon-pink);
+    }
+
+    iframe { flex: 1; width: 100%; height: 100%; border: none; background: #000; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="brand-title">Winyates Edition</div>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search games..." oninput="filterGames()">
+    </div>
+</header>
+
+<main class="container">
+    <div id="gameGrid" class="grid"></div>
+</main>
+
+<div id="gameModal" class="modal">
+    <div class="modal-bar">
+        <div id="modalTitle" class="modal-title">Game View</div>
+        <button class="close-btn" onclick="closeGame()">Close ✕</button>
+    </div>
+    <iframe id="gameFrame" allow="autoplay; gamepad; fullscreen"></iframe>
+</div>
+
+<script>
+// RAW REPO DIRECTORIES MAPPED WITH PROPER SPACING
+const GAMES = [
+    { name: "1v1.lol", dir: "1v1lol" },
+    { name: "2048", dir: "2048" },
+    { name: "A Dark Room", dir: "adarkroom" },
+    { name: "ASCII Space", dir: "asciispace" },
+    { name: "Assessment Examination", dir: "assessmentexamination" },
+    { name: "Asteroids", dir: "asteroids" },
+    { name: "Astray", dir: "astray" },
+    { name: "Backcountry", dir: "backcountry" },
+    { name: "Baldi's Basics", dir: "baldisbasics" },
+    { name: "Basketball Legends", dir: "basketballlegends" },
+    { name: "Basketball Stars", dir: "basketballstars" },
+    { name: "Basket Bros", dir: "basketbrosio" },
+    { name: "Basket Random", dir: "basketrandom" },
+    { name: "BitLife", dir: "bitlife" },
+    { name: "Black Hole Square", dir: "blackholesquare" },
+    { name: "Bounce Back", dir: "bounceback" },
+    { name: "Boxing Random", dir: "boxingrandom" },
+    { name: "Breaklock", dir: "breaklock" },
+    { name: "Breakout", dir: "breakout" },
+    { name: "Bloons TD 4", dir: "btd4" },
+    { name: "Captain Callisto", dir: "captaincallisto" },
+    { name: "Chess", dir: "chess" },
+    { name: "Chroma Incident", dir: "chromaincident" },
+    { name: "Chrome Dino", dir: "chromedino" },
+    { name: "Clicker Heroes", dir: "clickerheroes" },
+    { name: "Cluster Rush", dir: "clusterrush" },
+    { name: "Connect 3", dir: "connect3" },
+    { name: "Cookie Clicker", dir: "cookieclicker" },
+    { name: "Crossy Road", dir: "crossyroad" },
+    { name: "CS:GO Clicker", dir: "csgoclicker" },
+    { name: "Cubefield", dir: "cubefield" },
+    { name: "Cubito Mayhem", dir: "cubitomayhem" },
+    { name: "Cut the Rope", dir: "cuttherope" },
+    { name: "Cut the Rope: Holiday", dir: "cuttheropeholiday" },
+    { name: "Cut the Rope: Time Travel", dir: "cuttheropetimetravel" },
+    { name: "Death Run 3D", dir: "deathrun3d" },
+    { name: "Deepest Sword", dir: "deepestsword" },
+    { name: "Doodle Jump", dir: "doodlejump" },
+    { name: "DOOM", dir: "doom" },
+    { name: "Draw the Hill", dir: "drawthehill" },
+    { name: "Drift", dir: "drift" },
+    { name: "Drift Hunters", dir: "drifthunters" },
+    { name: "Drive Mad", dir: "drivemad" },
+    { name: "Duck Life", dir: "ducklife" },
+    { name: "Duck Life 2", dir: "ducklife2" },
+    { name: "Duck Life 3", dir: "ducklife3" },
+    { name: "Duck Life 4", dir: "ducklife4" },
+    { name: "Duck Life 5", dir: "ducklife5" },
+    { name: "Earn to Die", dir: "earntodie" },
+    { name: "Edge Not Found", dir: "edgenotfound" },
+    { name: "Eggy Car", dir: "eggycar" },
+    { name: "Evil Glitch", dir: "evilglitch" },
+    { name: "Factory Balls Forever", dir: "factoryballsforever" },
+    { name: "Fireboy & Watergirl: Forest Temple", dir: "fireboyandwatergirlforesttemple" },
+    { name: "Flappy 2048", dir: "flappy2048" },
+    { name: "Flappy Bird", dir: "flappybird" },
+    { name: "Flappy Plane", dir: "flappyplane" },
+    { name: "Flight Simulator", dir: "flightsimulator" },
+    { name: "Friday Night Funkin'", dir: "fridaynightfunkin" },
+    { name: "Friendly Fire", dir: "friendlyfire" },
+    { name: "Fruit Ninja", dir: "fruitninja" },
+    { name: "Geometry Dash", dir: "geometrydash" },
+    { name: "Getaway Shootout", dir: "getawayshootoutnew" },
+    { name: "Gradihoppers", dir: "gladihoppers" },
+    { name: "Google Snake", dir: "googlesnake" },
+    { name: "Gopher Kart", dir: "gopherkart" },
+    { name: "Grindcraft", dir: "grindcraft" },
+    { name: "HexGL", dir: "hexgl" },
+    { name: "Hextris", dir: "hextris" },
+    { name: "Highway Traffic", dir: "highwaytraffic" },
+    { name: "Konnekt", dir: "konnekt" },
+    { name: "Learn to Fly", dir: "learntofly" },
+    { name: "Let's Surf", dir: "letssurf" },
+    { name: "Little Alchemy", dir: "littlealchemy" },
+    { name: "Mergeround Racers", dir: "mergeroundracers" },
+    { name: "Monkey Mart", dir: "monkeymart" },
+    { name: "Moto Road Rash 3D", dir: "motoroadrash3d" },
+    { name: "Moto X3M", dir: "motox3m" },
+    { name: "Ninjas vs Evil Corp", dir: "ninjavsevilcorp" },
+    { name: "Om Nom Bounce", dir: "omnombounce" },
+    { name: "OvO", dir: "ovo" },
+    { name: "OvO 2", dir: "ovo2" },
+    { name: "Pack a Bunchas", dir: "packabunchas" },
+    { name: "Pac-Man", dir: "pacman" },
+    { name: "Paper.io", dir: "paperio" },
+    { name: "Particle Clicker", dir: "particleclicker" },
+    { name: "Pushback", dir: "pushback" },
+    { name: "R3", dir: "r3" },
+    { name: "Racer", dir: "racer" },
+    { name: "Radius Raid", dir: "radiusraid" },
+    { name: "Red Ball 4", dir: "redball4" },
+    { name: "Retro Bowl", dir: "retrobowl" },
+    { name: "Retro Haunt", dir: "retrohaunt" },
+    { name: "Riddle School 2", dir: "riddleschool2" },
+    { name: "Ritz", dir: "ritz" },
+    { name: "Roadblocks", dir: "roadblocks" },
+    { name: "Rooftop Snipers", dir: "rooftopsnipers" },
+    { name: "Run 3", dir: "run3" },
+    { name: "Scrap Metal 3", dir: "scrapmetal3" },
+    { name: "Shuttledeck", dir: "shuttledeck" },
+    { name: "Sketchbook 04", dir: "sketchbook04" },
+    { name: "Sleeping Beauty", dir: "sleepingbeauty" },
+    { name: "Slither.io", dir: "slitherio" },
+    { name: "Slope", dir: "slope" },
+    { name: "Slope 2", dir: "slope2" },
+    { name: "Snake", dir: "snake" },
+    { name: "Snowbattle", dir: "snowbattle" },
+    { name: "Soccer Random", dir: "soccerrandom" },
+    { name: "Solitaire", dir: "solitaire" }
+];
+
+function renderGrid(items) {
+    const grid = document.getElementById("gameGrid");
+    grid.innerHTML = "";
+
+    items.forEach(game => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.onclick = () => openGame(game.name, `./games/${game.dir}/`);
+
+        // FALLBACK ICON SVG (Neon Joystick)
+        const defaultIcon = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="%2300f0ff" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="4"/><circle cx="8" cy="12" r="2" fill="%23ff007f"/><line x1="15" y1="11" x2="15" y2="11" stroke-width="3"/><line x1="17" y1="13" x2="17" y2="13" stroke-width="3"/></svg>`;
+
+        card.innerHTML = `
+            <img class="card-icon" src="./games/${game.dir}/icon.png" onerror="this.onerror=null; this.src='./games/${game.dir}/favicon.ico'; this.onerror=function(){this.src='${defaultIcon}';};" alt="${game.name}">
+            <div class="card-title">${game.name}</div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+function filterGames() {
+    const query = document.getElementById("searchInput").value.toLowerCase();
+    const filtered = GAMES.filter(g => g.name.toLowerCase().includes(query) || g.dir.toLowerCase().includes(query));
+    renderGrid(filtered);
+}
+
+function openGame(title, path) {
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("gameFrame").src = path;
+    document.getElementById("gameModal").classList.add("active");
+}
+
+function closeGame() {
+    document.getElementById("gameModal").classList.remove("active");
+    document.getElementById("gameFrame").src = "";
+}
+
+// Render grid on launch
+renderGrid(GAMES);
+</script>
+</body>
+</html>
