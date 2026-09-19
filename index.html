@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Winyates Edition</title>
+<!-- Supabase JS Client v2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
     :root {
         --bg: #f8fafc;
@@ -19,6 +21,7 @@
         --btn-bg: #f1f5f9;
         --school-blue: #2563eb;
         --owner-gold: #d97706;
+        --danger-red: #ef4444;
     }
 
     [data-theme="dark"] {
@@ -37,9 +40,10 @@
         --owner-gold: #f59e0b;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease; }
     body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-y: scroll; }
 
+    /* HEADER */
     header {
         position: sticky;
         top: 0;
@@ -56,14 +60,14 @@
     }
 
     .brand-container { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
-    .logo-wrapper { background: rgba(124, 58, 237, 0.05); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; transition: transform 0.2s; }
+    .logo-wrapper { background: rgba(124, 58, 237, 0.05); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; }
     .logo-wrapper:hover { transform: rotate(-3deg) scale(1.05); }
     .logo-img { height: 38px; width: auto; }
     .brand-title { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-    .header-actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .header-actions { display: flex; align-items: center; gap: 0.6rem; }
     
-    .search-container input { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1rem; border-radius: 30px; outline: none; width: 180px; font-size: 0.85rem; transition: all 0.2s; }
+    .search-container input { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1rem; border-radius: 30px; outline: none; width: 180px; font-size: 0.85rem; }
     .search-container input:focus { border-color: var(--accent-purple); box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15); width: 220px; }
 
     .nav-btn {
@@ -124,19 +128,20 @@
     .dropdown:hover .dropdown-content { display: block; }
 
     .owner-pill {
-        display: none;
+        display: flex;
         align-items: center;
         gap: 6px;
-        padding: 4px 10px;
+        padding: 4px 12px;
         background: rgba(217, 119, 6, 0.15);
         border: 1px solid var(--owner-gold);
-        color: var(--owner-gold);
         border-radius: 30px;
+        color: var(--owner-gold);
         font-size: 0.75rem;
         font-weight: 800;
         text-transform: uppercase;
     }
 
+    /* LAYOUT & SHELVES */
     .container { max-width: 1400px; margin: 1.5rem auto; padding: 0 1.5rem; width: 100%; flex: 1; }
     
     .shelf-section { margin-bottom: 1.5rem; display: none; }
@@ -146,9 +151,11 @@
     .shelf-card:hover { border-color: var(--accent-purple); transform: translateY(-3px); }
     .shelf-card-title { font-size: 0.8rem; font-weight: 700; }
 
+    /* MAIN GAME GRID */
     .game-count { margin-bottom: 1rem; color: var(--text-sub); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.1rem; }
 
+    /* GAME CARD */
     .card {
         background-color: var(--card-bg);
         border: 1px solid var(--border);
@@ -171,11 +178,23 @@
     }
     .card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--accent-purple); box-shadow: var(--shadow-hover); }
     .card:hover::before { opacity: 1; }
+    
+    .card.unplayable { opacity: 0.6; filter: grayscale(0.8); cursor: not-allowed; border-color: var(--border) !important; }
+    .card.unplayable:hover { transform: none; box-shadow: none; }
+
     .card-title { font-size: 0.9rem; font-weight: 700; color: var(--text); line-height: 1.3; }
     .fav-star { position: absolute; top: 8px; right: 8px; font-size: 0.85rem; color: var(--border); cursor: pointer; transition: transform 0.2s; }
     .fav-star.active { color: var(--accent-orange); }
     .fav-star:hover { transform: scale(1.3); }
 
+    .owner-controls { position: absolute; bottom: 6px; right: 6px; display: flex; gap: 4px; }
+    .owner-btn { background: var(--btn-bg); border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+    .owner-btn:hover { background: var(--accent-purple); color: #fff; }
+
+    .status-badge { position: absolute; top: 8px; left: 8px; font-size: 0.65rem; padding: 2px 6px; border-radius: 10px; font-weight: 800; text-transform: uppercase; }
+    .badge-locked { background: rgba(239, 68, 68, 0.15); color: var(--danger-red); border: 1px solid var(--danger-red); }
+
+    /* MODAL SYSTEM */
     .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px); flex-direction: column; padding: 1rem; }
     .modal.active { display: flex; }
     .modal-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); }
@@ -188,6 +207,7 @@
     .iframe-wrapper { flex: 1; width: 100%; height: 100%; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
     iframe { width: 100%; height: 100%; border: none; }
 
+    /* DIALOG POPUPS */
     .dialog-overlay { display: none; position: fixed; inset: 0; z-index: 1100; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem; }
     .dialog-overlay.active { display: flex; }
     .dialog-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 480px; padding: 1.5rem; box-shadow: var(--shadow-hover); position: relative; }
@@ -222,8 +242,8 @@
     </div>
 
     <div class="header-actions">
-        <div id="ownerBadge" class="owner-pill">👑 Owner</div>
-        <button class="nav-btn" id="addGameBtn" style="display:none;" onclick="openAddGameModal()">➕ Add Game</button>
+        <div id="ownerBadgeArea"></div>
+        <button class="nav-btn" id="addGameBtn" style="display:none;" onclick="openAddGameModal()">➕ Add Game (Global)</button>
 
         <div class="dropdown">
             <button class="school-btn">🏫 School Apps ▾</button>
@@ -244,6 +264,11 @@
 </header>
 
 <main class="container">
+    <section class="shelf-section" id="recentSection">
+        <div class="shelf-title">🕒 Recently Played</div>
+        <div class="horizontal-scroll" id="recentGrid"></div>
+    </section>
+
     <section class="shelf-section" id="favSection">
         <div class="shelf-title">⭐ Favorite Games</div>
         <div class="horizontal-scroll" id="favGrid"></div>
@@ -253,6 +278,7 @@
     <div id="gameGrid" class="grid"></div>
 </main>
 
+<!-- GAME MODAL -->
 <div id="gameModal" class="modal">
     <div class="modal-bar">
         <div id="modalTitle" class="modal-title">Game View</div>
@@ -266,117 +292,204 @@
     </div>
 </div>
 
+<!-- ADD GAME MODAL -->
 <div id="addGameModal" class="dialog-overlay">
     <div class="dialog-card">
         <div class="dialog-header">
-            <div class="dialog-title">➕ Add Custom Game</div>
+            <div class="dialog-title">➕ Add Game Globally</div>
             <button class="dialog-close" onclick="closeDialog('addGameModal')">✕</button>
         </div>
         <form onsubmit="handleAddGameSubmit(event)">
             <div class="form-group">
                 <label>Game Title</label>
-                <input type="text" id="newGameTitle" class="form-control" required placeholder="e.g. My Cool Game">
+                <input type="text" id="newGameTitle" class="form-control" required placeholder="e.g. Retro Space Shooter">
             </div>
             <div class="form-group">
-                <label>Game URL or Relative Path</label>
-                <input type="text" id="newGameUrl" class="form-control" required placeholder="https://... or ./games/mygame/">
+                <label>Game Folder Name or Full URL</label>
+                <input type="text" id="newGamePath" class="form-control" required placeholder="e.g. space-shooter OR https://example.com/game">
             </div>
-            <button type="submit" class="btn-primary">Add to Platform</button>
+            <button type="submit" class="btn-primary">Add Game for Everyone</button>
         </form>
     </div>
 </div>
 
 <script>
-function safeGetItem(key, defaultValue) {
+// ==========================================
+// 1. SAFE LOCALSTORAGE WRAPPERS & SUPABASE
+// ==========================================
+function safeGetStorage(key, fallback) {
     try {
-        const val = localStorage.getItem(key);
-        return val ? JSON.parse(val) : defaultValue;
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : fallback;
     } catch (e) {
-        console.warn("LocalStorage access restricted:", e);
-        return defaultValue;
+        return fallback;
     }
 }
 
-function safeSetItem(key, value) {
+function safeSetStorage(key, val) {
     try {
-        localStorage.setItem(key, JSON.stringify(value));
-    } catch (e) {
-        console.warn("LocalStorage access restricted:", e);
-    }
+        localStorage.setItem(key, JSON.stringify(val));
+    } catch (e) {}
 }
 
-let isOwnerMode = safeGetItem('winyates_owner_mode', false);
-let userFavorites = safeGetItem('winyates_favs', []);
-let customGames = safeGetItem('winyates_custom_games', []);
+const SUPABASE_URL = "https://kwoqpnhokoqwduvzxpwh.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRefiI6Imt3b3Fwbmhva29xd2R1dnp4cHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MjUzMDQsImV4cCI62E0NTQwMTMwNH0.94fjKYasm9hRs-kf-1YJHfMYEW4thLt5O2w52mSRpzU";
+
+let supabaseClient = null;
+try {
+    if (window.supabase && window.supabase.createClient) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+} catch (e) {
+    console.warn("Supabase initialization bypassed:", e);
+}
+
+// ==========================================
+// 2. STATE MANAGEMENT
+// ==========================================
+let isOwner = false;
+let userFavorites = safeGetStorage('winyates_favs', []);
+let userRecents = safeGetStorage('winyates_recents', []);
 
 const DEFAULT_GAMES = [
-    { name: "1v1.lol", dir: "1v1lol" },
-    { name: "2048", dir: "2048" },
-    { name: "A Dark Room", dir: "adarkroom" },
-    { name: "Asteroids", dir: "asteroids" },
-    { name: "Baldi's Basics", dir: "baldisbasics" },
-    { name: "Basketball Stars", dir: "basketballstars" },
-    { name: "Basket Random", dir: "basketrandom" },
-    { name: "BitLife", dir: "bitlife" },
-    { name: "Block Blast", file: "blockblast.html" },
-    { name: "Blumgi Ball", file: "blumgi-ball.html" },
-    { name: "Boxing Random", dir: "boxingrandom" },
-    { name: "Bloons TD 4", dir: "btd4" },
-    { name: "Chess", dir: "chess" },
-    { name: "Chrome Dino", dir: "chromedino" },
-    { name: "Cluster Rush", dir: "clusterrush" },
-    { name: "Cookie Clicker", dir: "cookieclicker" },
-    { name: "Crossy Road", dir: "crossyroad" },
-    { name: "Cut the Rope", dir: "cuttherope" },
-    { name: "Doodle Jump", dir: "doodlejump" },
-    { name: "DOOM", dir: "doom" },
-    { name: "Drift Hunters", dir: "drifthunters" },
-    { name: "Drive Mad", dir: "drivemad" },
-    { name: "Duck Life", dir: "ducklife" },
-    { name: "Eggy Car", dir: "eggycar" },
-    { name: "Fireboy & Watergirl", dir: "fireboyandwatergirlforesttemple" },
-    { name: "Flappy Bird", dir: "flappybird" },
-    { name: "Friday Night Funkin'", dir: "fridaynightfunkin" },
-    { name: "Fruit Ninja", dir: "fruitninja" },
-    { name: "Geometry Dash", dir: "geometrydash" },
-    { name: "Google Snake", dir: "googlesnake" },
-    { name: "Moto X3M", dir: "motox3m" },
-    { name: "OvO", dir: "ovo" },
-    { name: "Pac-Man", dir: "pacman" },
-    { name: "Paper.io", dir: "paperio" },
-    { name: "Retro Bowl", dir: "retrobowl" },
-    { name: "Run 3", dir: "run3" },
-    { name: "Slope", dir: "slope" },
-    { name: "Slither.io", dir: "slitherio" },
-    { name: "Snake", dir: "snake" },
-    { name: "Solitaire", dir: "solitaire" },
-    { name: "Minecraft", file: "Minecraft.html" }
+    { name: "1v1.lol", path: "./games/1v1lol/", is_playable: true },
+    { name: "2048", path: "./games/2048/", is_playable: true },
+    { name: "A Dark Room", path: "./games/adarkroom/", is_playable: true },
+    { name: "ASCII Space", path: "./games/asciispace/", is_playable: true },
+    { name: "Asteroids", path: "./games/asteroids/", is_playable: true },
+    { name: "Baldi's Basics", path: "./games/baldisbasics/", is_playable: true },
+    { name: "Basketball Stars", path: "./games/basketballstars/", is_playable: true },
+    { name: "Basket Random", path: "./games/basketrandom/", is_playable: true },
+    { name: "BitLife", path: "./games/bitlife/", is_playable: true },
+    { name: "Block Blast", path: "./blockblast.html", is_playable: true },
+    { name: "Blumgi Ball", path: "./blumgi-ball.html", is_playable: true },
+    { name: "Boxing Random", path: "./games/boxingrandom/", is_playable: true },
+    { name: "Bloons TD 4", path: "./games/btd4/", is_playable: true },
+    { name: "Chess", path: "./games/chess/", is_playable: true },
+    { name: "Chrome Dino", path: "./games/chromedino/", is_playable: true },
+    { name: "Cookie Clicker", path: "./games/cookieclicker/", is_playable: true },
+    { name: "Crossy Road", path: "./games/crossyroad/", is_playable: true },
+    { name: "Cut the Rope", path: "./games/cuttherope/", is_playable: true },
+    { name: "Doodle Jump", path: "./games/doodlejump/", is_playable: true },
+    { name: "DOOM", path: "./games/doom/", is_playable: true },
+    { name: "Drive Mad", path: "./games/drivemad/", is_playable: true },
+    { name: "Duck Life 4", path: "./games/ducklife4/", is_playable: true },
+    { name: "Eggy Car", path: "./games/eggycar/", is_playable: true },
+    { name: "Fireboy & Watergirl: Forest Temple", path: "./games/fireboyandwatergirlforesttemple/", is_playable: true },
+    { name: "Flappy Bird", path: "./games/flappybird/", is_playable: true },
+    { name: "Friday Night Funkin'", path: "./games/fridaynightfunkin/", is_playable: true },
+    { name: "Fruit Ninja", path: "./games/fruitninja/", is_playable: true },
+    { name: "Funny Shooter 2", path: "./funny-shooter-2.html", is_playable: true },
+    { name: "Geometry Dash", path: "./games/geometrydash/", is_playable: true },
+    { name: "Getaway Shootout", path: "./games/getawayshootoutnew/", is_playable: true },
+    { name: "Google Snake", path: "./games/googlesnake/", is_playable: true },
+    { name: "Learn to Fly", path: "./games/learntofly/", is_playable: true },
+    { name: "Little Alchemy 2", path: "./little-alechemy-2", is_playable: true },
+    { name: "Minecraft", path: "./Minecraft.html", is_playable: true },
+    { name: "Monkey Mart", path: "./games/monkeymart/", is_playable: true },
+    { name: "Moto X3M", path: "./games/motox3m/", is_playable: true },
+    { name: "OvO", path: "./games/ovo/", is_playable: true },
+    { name: "Paper.io", path: "./games/paperio/", is_playable: true },
+    { name: "Retro Bowl", path: "./games/retrobowl/", is_playable: true },
+    { name: "Rooftop Snipers", path: "./games/rooftopsnipers/", is_playable: true },
+    { name: "Run 3", path: "./games/run3/", is_playable: true },
+    { name: "Slither.io", path: "./games/slitherio/", is_playable: true },
+    { name: "Slope", path: "./games/slope/", is_playable: true },
+    { name: "Soccer Random", path: "./games/soccerrandom/", is_playable: true }
 ];
 
-function getAllGames() {
-    return [...customGames, ...DEFAULT_GAMES];
-}
+let allGames = [...DEFAULT_GAMES];
 
-window.owner = function(password) {
-    if (password === 'Owner123') {
-        isOwnerMode = true;
-        safeSetItem('winyates_owner_mode', true);
-        applyOwnerUI();
-        console.log("%c👑 OWNER MODE UNLOCKED SUCCESSFULLY!", "color: #f59e0b; font-weight: bold; font-size: 16px;");
-        return "Owner mode unlocked! 'Add Game' button is now available in header.";
+// ==========================================
+// 3. CONSOLE OWNER COMMAND & AUTH
+// ==========================================
+window.owner = function(pass) {
+    if (pass === "Owner123") {
+        isOwner = true;
+        document.getElementById("ownerBadgeArea").innerHTML = `<div class="owner-pill">👑 Owner Mode</div>`;
+        document.getElementById("addGameBtn").style.display = "inline-flex";
+        renderGrid(allGames);
+        console.log("✅ Owner mode activated!");
+        return "Owner mode activated successfully!";
     } else {
-        console.error("Incorrect owner password.");
+        console.error("❌ Invalid password.");
         return "Incorrect password.";
     }
 };
 
-function applyOwnerUI() {
-    const badge = document.getElementById("ownerBadge");
-    const addBtn = document.getElementById("addGameBtn");
-    if (badge) badge.style.display = isOwnerMode ? "flex" : "none";
-    if (addBtn) addBtn.style.display = isOwnerMode ? "inline-flex" : "none";
+// ==========================================
+// 4. SUPABASE DATA SYNCING
+// ==========================================
+async function loadGlobalGames() {
+    if (!supabaseClient) {
+        const localCustoms = safeGetStorage('winyates_custom_games', []);
+        allGames = [...DEFAULT_GAMES, ...localCustoms];
+        renderGrid(allGames);
+        renderShelves();
+        return;
+    }
+
+    try {
+        const { data, error } = await supabaseClient.from('games').select('*');
+        if (error || !data) {
+            console.warn("Supabase fetch fallback to local:", error);
+            const localCustoms = safeGetStorage('winyates_custom_games', []);
+            allGames = [...DEFAULT_GAMES, ...localCustoms];
+        } else {
+            const remoteMap = new Map(data.map(g => [g.name, g]));
+            allGames = DEFAULT_GAMES.map(g => remoteMap.get(g.name) || g);
+            data.forEach(g => {
+                if (!allGames.some(ag => ag.name === g.name)) {
+                    allGames.push(g);
+                }
+            });
+        }
+    } catch (e) {
+        const localCustoms = safeGetStorage('winyates_custom_games', []);
+        allGames = [...DEFAULT_GAMES, ...localCustoms];
+    }
+    renderGrid(allGames);
+    renderShelves();
 }
 
+async function saveGameGlobal(name, path) {
+    const newGame = { name, path, is_playable: true };
+    allGames.push(newGame);
+
+    if (supabaseClient) {
+        try {
+            await supabaseClient.from('games').upsert(newGame, { onConflict: 'name' });
+        } catch (e) {
+            console.warn("Supabase upsert failed:", e);
+        }
+    } else {
+        const localCustoms = safeGetStorage('winyates_custom_games', []);
+        localCustoms.push(newGame);
+        safeSetStorage('winyates_custom_games', localCustoms);
+    }
+    renderGrid(allGames);
+}
+
+async function toggleGamePlayable(gameName) {
+    const game = allGames.find(g => g.name === gameName);
+    if (!game) return;
+
+    game.is_playable = !(game.is_playable ?? true);
+
+    if (supabaseClient) {
+        try {
+            await supabaseClient.from('games').upsert({ name: game.name, path: game.path, is_playable: game.is_playable }, { onConflict: 'name' });
+        } catch (e) {
+            console.warn("Supabase toggle failed:", e);
+        }
+    }
+    renderGrid(allGames);
+    renderShelves();
+}
+
+// ==========================================
+// 5. UI RENDER ENGINE
+// ==========================================
 function renderGrid(items) {
     const grid = document.getElementById("gameGrid");
     const countEl = document.getElementById("gameCount");
@@ -387,42 +500,64 @@ function renderGrid(items) {
 
     items.forEach((game) => {
         const isFav = userFavorites.includes(game.name);
+        const isPlayable = game.is_playable ?? true;
         const card = document.createElement("div");
-        card.className = "card";
+        card.className = `card ${!isPlayable ? 'unplayable' : ''}`;
         
-        let gamePath = game.url || (game.file ? `./${game.file}` : `./games/${game.dir}/`);
+        const escapedName = game.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
         
+        let statusBadge = !isPlayable ? `<span class="status-badge badge-locked">🔒 Locked</span>` : '';
+        let ownerControls = isOwner ? `
+            <div class="owner-controls">
+                <button class="owner-btn" onclick="handleTogglePlayable(event, '${escapedName}')">
+                    ${isPlayable ? 'Make Unplayable' : 'Make Playable'}
+                </button>
+            </div>
+        ` : '';
+
         card.innerHTML = `
-            <span class="fav-star ${isFav ? 'active' : ''}">★</span>
+            ${statusBadge}
+            <span class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFav(event, '${escapedName}')">★</span>
             <div class="card-title">${game.name}</div>
+            ${ownerControls}
         `;
 
-        const star = card.querySelector('.fav-star');
-        star.onclick = (e) => {
-            e.stopPropagation();
-            toggleFav(game.name);
+        card.onclick = (e) => {
+            if (e.target.classList.contains('fav-star') || e.target.classList.contains('owner-btn')) return;
+            if (!isPlayable && !isOwner) {
+                alert("This game has been temporarily disabled by the Owner.");
+                return;
+            }
+            openGame(game.name, game.path);
         };
-
-        card.onclick = () => {
-            openGame(game.name, gamePath);
-        };
-
         grid.appendChild(card);
     });
 }
 
 function renderShelves() {
+    const recentSec = document.getElementById("recentSection");
+    const recentGrid = document.getElementById("recentGrid");
+    if (userRecents.length > 0) {
+        recentSec.style.display = "block";
+        recentGrid.innerHTML = userRecents.map(name => {
+            const game = allGames.find(g => g.name === name);
+            if (!game) return '';
+            const escapedName = game.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+            return `<div class="shelf-card" onclick="openGame('${escapedName}', '${game.path}')"><div class="shelf-card-title">${game.name}</div></div>`;
+        }).join('');
+    } else {
+        recentSec.style.display = "none";
+    }
+
     const favSec = document.getElementById("favSection");
     const favGrid = document.getElementById("favGrid");
-    const allGames = getAllGames();
-
     if (userFavorites.length > 0) {
         favSec.style.display = "block";
         favGrid.innerHTML = userFavorites.map(name => {
             const game = allGames.find(g => g.name === name);
             if (!game) return '';
-            const path = game.url || (game.file ? `./${game.file}` : `./games/${game.dir}/`);
-            return `<div class="shelf-card" onclick="openGame('${game.name.replace(/'/g, "\\'")}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
+            const escapedName = game.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+            return `<div class="shelf-card" onclick="openGame('${escapedName}', '${game.path}')"><div class="shelf-card-title">${game.name}</div></div>`;
         }).join('');
     } else {
         favSec.style.display = "none";
@@ -431,23 +566,36 @@ function renderShelves() {
 
 function filterGames() {
     const query = document.getElementById("searchInput").value.toLowerCase();
-    const filtered = getAllGames().filter(g => 
-        g.name.toLowerCase().includes(query)
-    );
+    const filtered = allGames.filter(g => g.name.toLowerCase().includes(query));
     renderGrid(filtered);
 }
 
-function toggleFav(gameName) {
+function toggleFav(e, gameName) {
+    e.stopPropagation();
     if (userFavorites.includes(gameName)) {
         userFavorites = userFavorites.filter(f => f !== gameName);
     } else {
         userFavorites.push(gameName);
     }
-    safeSetItem('winyates_favs', userFavorites);
-    filterGames();
+    safeSetStorage('winyates_favs', userFavorites);
+    renderGrid(allGames);
     renderShelves();
 }
 
+function addRecent(gameName) {
+    userRecents = [gameName, ...userRecents.filter(r => r !== gameName)].slice(0, 8);
+    safeSetStorage('winyates_recents', userRecents);
+    renderShelves();
+}
+
+function handleTogglePlayable(e, gameName) {
+    e.stopPropagation();
+    toggleGamePlayable(gameName);
+}
+
+// ==========================================
+// 6. MODALS & GAME LAUNCHER
+// ==========================================
 function openAddGameModal() {
     document.getElementById("addGameModal").classList.add("active");
 }
@@ -459,29 +607,32 @@ function closeDialog(id) {
 function handleAddGameSubmit(e) {
     e.preventDefault();
     const title = document.getElementById("newGameTitle").value.trim();
-    const url = document.getElementById("newGameUrl").value.trim();
+    let path = document.getElementById("newGamePath").value.trim();
 
-    if (!title || !url) return;
+    if (!title || !path) return;
 
-    customGames.push({ name: title, url: url });
-    safeSetItem('winyates_custom_games', customGames);
+    if (!path.startsWith('http://') && !path.startsWith('https://') && !path.startsWith('./')) {
+        path = `./games/${path}/`;
+    }
+
+    saveGameGlobal(title, path);
 
     document.getElementById("newGameTitle").value = "";
-    document.getElementById("newGameUrl").value = "";
+    document.getElementById("newGamePath").value = "";
     closeDialog("addGameModal");
-
-    filterGames();
+    alert(`Game "${title}" added globally!`);
 }
 
 function openGame(title, path) {
     document.getElementById("modalTitle").textContent = title;
     document.getElementById("gameFrame").src = path;
     document.getElementById("gameModal").classList.add("active");
+    addRecent(title);
 }
 
 function closeGame() {
     if (document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {});
+        document.exitFullscreen();
     }
     document.getElementById("gameModal").classList.remove("active");
     document.getElementById("gameFrame").src = "";
@@ -509,13 +660,9 @@ function toggleTheme() {
     }
 }
 
+// Initialize application
 window.addEventListener("DOMContentLoaded", () => {
-    applyOwnerUI();
-    filterGames();
-    renderShelves();
-
-    console.log("%c🎮 WINYATES EDITION READY!", "color: #7c3aed; font-weight: 900; font-size: 20px;");
-    console.log("%cType owner('Owner123') in this console to unlock Owner mode!", "color: #f59e0b; font-weight: bold; font-size: 14px;");
+    loadGlobalGames();
 });
 </script>
 </body>
