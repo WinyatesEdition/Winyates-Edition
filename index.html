@@ -183,12 +183,12 @@
     .card.unplayable:hover { transform: none; box-shadow: none; }
 
     .card-title { font-size: 0.9rem; font-weight: 700; color: var(--text); line-height: 1.3; }
-    .fav-star { position: absolute; top: 8px; right: 8px; font-size: 0.85rem; color: var(--border); cursor: pointer; transition: transform 0.2s; }
+    .fav-star { position: absolute; top: 8px; right: 8px; font-size: 0.85rem; color: var(--border); cursor: pointer; transition: transform 0.2s; z-index: 5; }
     .fav-star.active { color: var(--accent-orange); }
     .fav-star:hover { transform: scale(1.3); }
 
-    .owner-controls { position: absolute; bottom: 6px; right: 6px; display: flex; gap: 4px; }
-    .owner-btn { background: var(--btn-bg); border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+    .owner-controls { position: absolute; bottom: 6px; right: 6px; z-index: 10; }
+    .owner-btn { background: var(--btn-bg); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; font-size: 0.7rem; font-weight: 700; cursor: pointer; color: var(--text); }
     .owner-btn:hover { background: var(--accent-purple); color: #fff; }
 
     .status-badge { position: absolute; top: 8px; left: 8px; font-size: 0.65rem; padding: 2px 6px; border-radius: 10px; font-weight: 800; text-transform: uppercase; }
@@ -207,13 +207,15 @@
     .iframe-wrapper { flex: 1; width: 100%; height: 100%; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
     iframe { width: 100%; height: 100%; border: none; }
 
-    /* DIALOG POPUPS */
-    .dialog-overlay { display: none; position: fixed; inset: 0; z-index: 1100; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem; }
+    /* DIALOG POPUPS & ANNOUNCEMENT MODAL */
+    .dialog-overlay { display: none; position: fixed; inset: 0; z-index: 1100; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem; }
     .dialog-overlay.active { display: flex; }
     .dialog-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 480px; padding: 1.5rem; box-shadow: var(--shadow-hover); position: relative; }
     .dialog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
-    .dialog-title { font-size: 1.2rem; font-weight: 800; }
+    .dialog-title { font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
     .dialog-close { background: none; border: none; color: var(--text-sub); font-size: 1.2rem; cursor: pointer; }
+
+    .announcement-box { background: rgba(124, 58, 237, 0.08); border-left: 4px solid var(--accent-purple); padding: 1rem; border-radius: 8px; margin-bottom: 1.25rem; font-size: 0.95rem; line-height: 1.5; color: var(--text); }
 
     .form-group { margin-bottom: 1rem; }
     .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-sub); text-transform: uppercase; }
@@ -244,6 +246,7 @@
     <div class="header-actions">
         <div id="ownerBadgeArea"></div>
         <button class="nav-btn" id="addGameBtn" style="display:none;" onclick="openAddGameModal()">➕ Add Game (Global)</button>
+        <button class="nav-btn" id="editAnnouncementBtn" style="display:none;" onclick="openEditAnnouncementModal()">📢 Edit Announcement</button>
 
         <div class="dropdown">
             <button class="school-btn">🏫 School Apps ▾</button>
@@ -274,11 +277,11 @@
         <div class="horizontal-scroll" id="favGrid"></div>
     </section>
 
-    <div class="game-count" id="gameCount">Loading games...</div>
+    <div class="game-count" id="gameCount">Loading repository...</div>
     <div id="gameGrid" class="grid"></div>
 </main>
 
-<!-- GAME MODAL -->
+<!-- GAME PLAY MODAL -->
 <div id="gameModal" class="modal">
     <div class="modal-bar">
         <div id="modalTitle" class="modal-title">Game View</div>
@@ -289,6 +292,37 @@
     </div>
     <div class="iframe-wrapper">
         <iframe id="gameFrame" allow="autoplay; gamepad; fullscreen; focus-without-user-activation"></iframe>
+    </div>
+</div>
+
+<!-- GLOBAL ANNOUNCEMENT POPUP MODAL -->
+<div id="announcementModal" class="dialog-overlay">
+    <div class="dialog-card">
+        <div class="dialog-header">
+            <div class="dialog-title">📢 Announcement</div>
+            <button class="dialog-close" onclick="closeDialog('announcementModal')">✕</button>
+        </div>
+        <div class="announcement-box" id="announcementText">
+            Welcome to Winyates Edition! Funny Shooter 2 (working) is now live!
+        </div>
+        <button class="btn-primary" onclick="closeDialog('announcementModal')">Got it!</button>
+    </div>
+</div>
+
+<!-- EDIT ANNOUNCEMENT MODAL (OWNER ONLY) -->
+<div id="editAnnouncementModal" class="dialog-overlay">
+    <div class="dialog-card">
+        <div class="dialog-header">
+            <div class="dialog-title">📢 Update Announcement</div>
+            <button class="dialog-close" onclick="closeDialog('editAnnouncementModal')">✕</button>
+        </div>
+        <form onsubmit="handleAnnouncementSubmit(event)">
+            <div class="form-group">
+                <label>Announcement Message</label>
+                <textarea id="newAnnouncementInput" class="form-control" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Broadcast Message</button>
+        </form>
     </div>
 </div>
 
@@ -305,8 +339,8 @@
                 <input type="text" id="newGameTitle" class="form-control" required placeholder="e.g. Retro Space Shooter">
             </div>
             <div class="form-group">
-                <label>Game Folder Name or Full URL</label>
-                <input type="text" id="newGamePath" class="form-control" required placeholder="e.g. space-shooter OR https://example.com/game">
+                <label>Game Path or Full URL</label>
+                <input type="text" id="newGamePath" class="form-control" required placeholder="e.g. https://example.com/game OR ./games/mygame/">
             </div>
             <button type="submit" class="btn-primary">Add Game for Everyone</button>
         </form>
@@ -315,7 +349,7 @@
 
 <script>
 // ==========================================
-// 1. SAFE LOCALSTORAGE WRAPPERS & SUPABASE
+// 1. LOCALSTORAGE & SUPABASE SETUP
 // ==========================================
 function safeGetStorage(key, fallback) {
     try {
@@ -341,17 +375,18 @@ try {
         supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
 } catch (e) {
-    console.warn("Supabase initialization bypassed:", e);
+    console.warn("Supabase bypassed:", e);
 }
 
 // ==========================================
-// 2. STATE MANAGEMENT
+// 2. DEFAULT GAME REPOSITORY
 // ==========================================
 let isOwner = false;
 let userFavorites = safeGetStorage('winyates_favs', []);
 let userRecents = safeGetStorage('winyates_recents', []);
 
 const DEFAULT_GAMES = [
+    { name: "Funny Shooter 2 (working)", path: "https://abcfunnylol.neocities.org/fs2/", is_playable: true },
     { name: "1v1.lol", path: "./games/1v1lol/", is_playable: true },
     { name: "2048", path: "./games/2048/", is_playable: true },
     { name: "A Dark Room", path: "./games/adarkroom/", is_playable: true },
@@ -399,15 +434,17 @@ const DEFAULT_GAMES = [
 ];
 
 let allGames = [...DEFAULT_GAMES];
+let currentAnnouncement = "Welcome to Winyates Edition! Check out Funny Shooter 2 (working) now live!";
 
 // ==========================================
-// 3. CONSOLE OWNER COMMAND & AUTH
+// 3. CONSOLE OWNER COMMAND
 // ==========================================
 window.owner = function(pass) {
     if (pass === "Owner123") {
         isOwner = true;
         document.getElementById("ownerBadgeArea").innerHTML = `<div class="owner-pill">👑 Owner Mode</div>`;
         document.getElementById("addGameBtn").style.display = "inline-flex";
+        document.getElementById("editAnnouncementBtn").style.display = "inline-flex";
         renderGrid(allGames);
         console.log("✅ Owner mode activated!");
         return "Owner mode activated successfully!";
@@ -418,54 +455,52 @@ window.owner = function(pass) {
 };
 
 // ==========================================
-// 4. SUPABASE DATA SYNCING
+// 4. SUPABASE GLOBAL DATA SYNC
 // ==========================================
-async function loadGlobalGames() {
-    if (!supabaseClient) {
-        const localCustoms = safeGetStorage('winyates_custom_games', []);
-        allGames = [...DEFAULT_GAMES, ...localCustoms];
-        renderGrid(allGames);
-        renderShelves();
-        return;
+async function loadGlobalData() {
+    const localCustoms = safeGetStorage('winyates_custom_games', []);
+    allGames = [...DEFAULT_GAMES, ...localCustoms];
+
+    if (supabaseClient) {
+        try {
+            // Load custom games
+            const { data: dbGames } = await supabaseClient.from('games').select('*');
+            if (dbGames && dbGames.length > 0) {
+                const gameMap = new Map();
+                allGames.forEach(g => gameMap.set(g.name, g));
+                dbGames.forEach(g => gameMap.set(g.name, { name: g.name, path: g.path, is_playable: g.is_playable ?? true }));
+                allGames = Array.from(gameMap.values());
+            }
+
+            // Load announcement
+            const { data: annData } = await supabaseClient.from('announcements').select('*').order('created_at', { ascending: false }).limit(1);
+            if (annData && annData.length > 0) {
+                currentAnnouncement = annData[0].message;
+            }
+        } catch (e) {
+            console.warn("Supabase fetch failed, using local storage:", e);
+        }
     }
 
-    try {
-        const { data, error } = await supabaseClient.from('games').select('*');
-        if (error || !data) {
-            console.warn("Supabase fetch fallback to local:", error);
-            const localCustoms = safeGetStorage('winyates_custom_games', []);
-            allGames = [...DEFAULT_GAMES, ...localCustoms];
-        } else {
-            const remoteMap = new Map(data.map(g => [g.name, g]));
-            allGames = DEFAULT_GAMES.map(g => remoteMap.get(g.name) || g);
-            data.forEach(g => {
-                if (!allGames.some(ag => ag.name === g.name)) {
-                    allGames.push(g);
-                }
-            });
-        }
-    } catch (e) {
-        const localCustoms = safeGetStorage('winyates_custom_games', []);
-        allGames = [...DEFAULT_GAMES, ...localCustoms];
-    }
     renderGrid(allGames);
     renderShelves();
+    showAnnouncement();
 }
 
 async function saveGameGlobal(name, path) {
     const newGame = { name, path, is_playable: true };
     allGames.push(newGame);
 
+    const localCustoms = safeGetStorage('winyates_custom_games', []);
+    localCustoms.push(newGame);
+    safeSetStorage('winyates_custom_games', localCustoms);
+
     if (supabaseClient) {
         try {
             await supabaseClient.from('games').upsert(newGame, { onConflict: 'name' });
         } catch (e) {
-            console.warn("Supabase upsert failed:", e);
+            console.warn("Supabase game add failed:", e);
         }
-    } else {
-        const localCustoms = safeGetStorage('winyates_custom_games', []);
-        localCustoms.push(newGame);
-        safeSetStorage('winyates_custom_games', localCustoms);
     }
     renderGrid(allGames);
 }
@@ -476,19 +511,64 @@ async function toggleGamePlayable(gameName) {
 
     game.is_playable = !(game.is_playable ?? true);
 
+    const localCustoms = safeGetStorage('winyates_custom_games', []);
+    const locGame = localCustoms.find(g => g.name === gameName);
+    if (locGame) locGame.is_playable = game.is_playable;
+    safeSetStorage('winyates_custom_games', localCustoms);
+
     if (supabaseClient) {
         try {
             await supabaseClient.from('games').upsert({ name: game.name, path: game.path, is_playable: game.is_playable }, { onConflict: 'name' });
         } catch (e) {
-            console.warn("Supabase toggle failed:", e);
+            console.warn("Supabase playable toggle failed:", e);
         }
     }
     renderGrid(allGames);
     renderShelves();
 }
 
+async function saveAnnouncementGlobal(message) {
+    currentAnnouncement = message;
+    safeSetStorage('winyates_announcement', message);
+
+    if (supabaseClient) {
+        try {
+            await supabaseClient.from('announcements').insert([{ message }]);
+        } catch (e) {
+            console.warn("Supabase announcement broadcast failed:", e);
+        }
+    }
+    showAnnouncement();
+}
+
 // ==========================================
-// 5. UI RENDER ENGINE
+// 5. ANNOUNCEMENT SYSTEM
+// ==========================================
+function showAnnouncement() {
+    const annBox = document.getElementById("announcementText");
+    if (annBox) {
+        annBox.textContent = currentAnnouncement;
+        document.getElementById("announcementModal").classList.add("active");
+    }
+}
+
+function openEditAnnouncementModal() {
+    document.getElementById("newAnnouncementInput").value = currentAnnouncement;
+    document.getElementById("editAnnouncementModal").classList.add("active");
+}
+
+function handleAnnouncementSubmit(e) {
+    e.preventDefault();
+    const msg = document.getElementById("newAnnouncementInput").value.trim();
+    if (msg) {
+        saveAnnouncementGlobal(msg);
+        closeDialog("editAnnouncementModal");
+        alert("Announcement broadcasted successfully!");
+    }
+}
+
+// ==========================================
+// 6. UI RENDER ENGINE
 // ==========================================
 function renderGrid(items) {
     const grid = document.getElementById("gameGrid");
@@ -594,7 +674,7 @@ function handleTogglePlayable(e, gameName) {
 }
 
 // ==========================================
-// 6. MODALS & GAME LAUNCHER
+// 7. MODALS & GAME LAUNCHER
 // ==========================================
 function openAddGameModal() {
     document.getElementById("addGameModal").classList.add("active");
@@ -662,7 +742,7 @@ function toggleTheme() {
 
 // Initialize application
 window.addEventListener("DOMContentLoaded", () => {
-    loadGlobalGames();
+    loadGlobalData();
 });
 </script>
 </body>
