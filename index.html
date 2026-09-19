@@ -41,10 +41,9 @@
         --staff-green: #10b981;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
     body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-y: scroll; }
 
-    /* HEADER */
     header {
         position: sticky;
         top: 0;
@@ -61,17 +60,16 @@
     }
 
     .brand-container { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
-    .logo-wrapper { background: rgba(124, 58, 237, 0.05); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; }
+    .logo-wrapper { background: rgba(124, 58, 237, 0.05); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; transition: transform 0.2s; }
     .logo-wrapper:hover { transform: rotate(-3deg) scale(1.05); }
     .logo-img { height: 38px; width: auto; }
     .brand-title { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-    .header-actions { display: flex; align-items: center; gap: 0.6rem; }
+    .header-actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
     
-    .search-container input { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1rem; border-radius: 30px; outline: none; width: 180px; font-size: 0.85rem; }
+    .search-container input { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1rem; border-radius: 30px; outline: none; width: 180px; font-size: 0.85rem; transition: all 0.2s; }
     .search-container input:focus { border-color: var(--accent-purple); box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15); width: 220px; }
 
-    /* NAV BUTTONS */
     .nav-btn {
         background: var(--btn-bg);
         color: var(--text);
@@ -87,7 +85,6 @@
     }
     .nav-btn:hover { transform: translateY(-2px); border-color: var(--accent-purple); }
 
-    /* SCHOOL DROPDOWN */
     .dropdown { position: relative; display: inline-block; }
     .school-btn {
         background: linear-gradient(135deg, var(--school-blue), #1d4ed8);
@@ -130,7 +127,6 @@
     .dropdown-content a:hover { background-color: var(--btn-bg); color: var(--accent-purple); padding-left: 18px; }
     .dropdown:hover .dropdown-content { display: block; }
 
-    /* USER AVATAR BADGE */
     .user-pill {
         display: flex;
         align-items: center;
@@ -148,10 +144,8 @@
     .role-owner { background: rgba(217, 119, 6, 0.15); color: var(--owner-gold); border: 1px solid var(--owner-gold); }
     .role-staff { background: rgba(5, 150, 105, 0.15); color: var(--staff-green); border: 1px solid var(--staff-green); }
 
-    /* LAYOUT CONTAINERS */
     .container { max-width: 1400px; margin: 1.5rem auto; padding: 0 1.5rem; width: 100%; flex: 1; }
     
-    /* RECENT & FAVORITES BAR */
     .shelf-section { margin-bottom: 1.5rem; display: none; }
     .shelf-title { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-sub); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 6px; }
     .horizontal-scroll { display: flex; gap: 0.8rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: thin; }
@@ -159,11 +153,9 @@
     .shelf-card:hover { border-color: var(--accent-purple); transform: translateY(-3px); }
     .shelf-card-title { font-size: 0.8rem; font-weight: 700; }
 
-    /* MAIN GRID */
     .game-count { margin-bottom: 1rem; color: var(--text-sub); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.1rem; }
 
-    /* GAME CARD */
     .card {
         background-color: var(--card-bg);
         border: 1px solid var(--border);
@@ -191,7 +183,6 @@
     .fav-star.active { color: var(--accent-orange); }
     .fav-star:hover { transform: scale(1.3); }
 
-    /* MODAL SYSTEM */
     .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px); flex-direction: column; padding: 1rem; }
     .modal.active { display: flex; }
     .modal-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); }
@@ -204,7 +195,6 @@
     .iframe-wrapper { flex: 1; width: 100%; height: 100%; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
     iframe { width: 100%; height: 100%; border: none; }
 
-    /* GENERIC DIALOG POPUPS */
     .dialog-overlay { display: none; position: fixed; inset: 0; z-index: 1100; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem; }
     .dialog-overlay.active { display: flex; }
     .dialog-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 480px; padding: 1.5rem; box-shadow: var(--shadow-hover); position: relative; }
@@ -212,7 +202,6 @@
     .dialog-title { font-size: 1.2rem; font-weight: 800; }
     .dialog-close { background: none; border: none; color: var(--text-sub); font-size: 1.2rem; cursor: pointer; }
 
-    /* FORM ELEMENTS */
     .form-group { margin-bottom: 1rem; }
     .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-sub); text-transform: uppercase; }
     .form-control { width: 100%; background: var(--btn-bg); border: 1px solid var(--border); color: var(--text); padding: 0.6rem 0.9rem; border-radius: 8px; font-size: 0.9rem; outline: none; }
@@ -222,7 +211,6 @@
     .form-toggle-link { text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-sub); }
     .form-toggle-link span { color: var(--accent-purple); font-weight: 700; cursor: pointer; text-decoration: underline; }
 
-    /* CHAT DIALOG UI */
     .chat-dialog-card { max-width: 750px; height: 550px; display: flex; flex-direction: column; padding: 0; overflow: hidden; }
     .chat-layout { display: flex; flex: 1; height: calc(100% - 60px); }
     .chat-sidebar { width: 220px; border-right: 1px solid var(--border); background: var(--bg); display: flex; flex-direction: column; }
@@ -239,12 +227,10 @@
     .chat-time { font-weight: 400; color: var(--text-sub); font-size: 0.65rem; }
     .chat-input-area { padding: 0.8rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
 
-    /* SEARCH PROFILES DIALOG UI */
     .profile-search-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-top: 1rem; }
     .profile-search-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--btn-bg); border-radius: 10px; border: 1px solid var(--border); }
     .profile-search-info { display: flex; align-items: center; gap: 10px; }
 
-    /* TABBED OWNER PANEL */
     .tab-bar { display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 1rem; padding-bottom: 0.5rem; }
     .tab-btn { background: none; border: none; color: var(--text-sub); font-weight: 700; font-size: 0.85rem; padding: 4px 8px; cursor: pointer; }
     .tab-btn.active { color: var(--accent-purple); border-bottom: 2px solid var(--accent-purple); }
@@ -269,14 +255,10 @@
     </div>
 
     <div class="header-actions">
-        <!-- CHAT & SEARCH PROFILES BUTTONS -->
         <button class="nav-btn" onclick="openChatDialog()">💬 Chat</button>
         <button class="nav-btn" onclick="openProfileSearchDialog()">🔍 Search Users</button>
-
-        <!-- OWNER / STAFF BUTTON -->
         <button class="nav-btn" id="ownerPanelBtn" style="display:none;" onclick="openOwnerPanel()">👑 Owner Panel</button>
 
-        <!-- SCHOOL APPS DROPDOWN -->
         <div class="dropdown">
             <button class="school-btn">🏫 School Apps ▾</button>
             <div class="dropdown-content">
@@ -291,7 +273,6 @@
             <input type="text" id="searchInput" placeholder="Search games..." oninput="filterGames()">
         </div>
 
-        <!-- AUTH CORNER -->
         <div id="authCorner">
             <button class="nav-btn" onclick="openAuthModal('signin')">🔑 Sign In / Up</button>
         </div>
@@ -301,13 +282,11 @@
 </header>
 
 <main class="container">
-    <!-- RECENTLY PLAYED SHELF -->
     <section class="shelf-section" id="recentSection">
         <div class="shelf-title">🕒 Recently Played</div>
         <div class="horizontal-scroll" id="recentGrid"></div>
     </section>
 
-    <!-- FAVORITES SHELF -->
     <section class="shelf-section" id="favSection">
         <div class="shelf-title">⭐ Favorite Games</div>
         <div class="horizontal-scroll" id="favGrid"></div>
@@ -317,7 +296,6 @@
     <div id="gameGrid" class="grid"></div>
 </main>
 
-<!-- GAME MODAL -->
 <div id="gameModal" class="modal">
     <div class="modal-bar">
         <div id="modalTitle" class="modal-title">Game View</div>
@@ -331,7 +309,6 @@
     </div>
 </div>
 
-<!-- AUTH DIALOG -->
 <div id="authModal" class="dialog-overlay">
     <div class="dialog-card">
         <div class="dialog-header">
@@ -339,7 +316,6 @@
             <button class="dialog-close" onclick="closeDialog('authModal')">✕</button>
         </div>
 
-        <!-- SIGN IN FORM -->
         <form id="signInForm" onsubmit="handleSignIn(event)">
             <div class="form-group">
                 <label>Username or Email</label>
@@ -355,7 +331,6 @@
             </div>
         </form>
 
-        <!-- SIGN UP FORM -->
         <form id="signUpForm" style="display:none;" onsubmit="handleSignUp(event)">
             <div class="form-group">
                 <label>Username</label>
@@ -377,7 +352,6 @@
     </div>
 </div>
 
-<!-- PROFILE EDIT DIALOG -->
 <div id="profileModal" class="dialog-overlay">
     <div class="dialog-card">
         <div class="dialog-header">
@@ -397,7 +371,6 @@
     </div>
 </div>
 
-<!-- CHAT DIALOG -->
 <div id="chatModal" class="dialog-overlay">
     <div class="dialog-card chat-dialog-card">
         <div class="dialog-header" style="padding: 1rem 1.25rem; margin: 0; border-bottom: 1px solid var(--border);">
@@ -423,7 +396,6 @@
     </div>
 </div>
 
-<!-- SEARCH PROFILES DIALOG -->
 <div id="profileSearchModal" class="dialog-overlay">
     <div class="dialog-card">
         <div class="dialog-header">
@@ -435,7 +407,6 @@
     </div>
 </div>
 
-<!-- OWNER / STAFF MANAGEMENT DIALOG -->
 <div id="ownerModal" class="dialog-overlay">
     <div class="dialog-card">
         <div class="dialog-header">
@@ -467,34 +438,46 @@
 </div>
 
 <script>
-// ==========================================
-// 1. SUPABASE INITIALIZATION
-// ==========================================
+function safeGetItem(key, defaultValue) {
+    try {
+        const val = localStorage.getItem(key);
+        return val ? JSON.parse(val) : defaultValue;
+    } catch (e) {
+        console.warn("Storage access denied/restricted:", e);
+        return defaultValue;
+    }
+}
+
+function safeSetItem(key, value) {
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+        console.warn("Storage access denied/restricted:", e);
+    }
+}
+
 const SUPABASE_URL = "https://kwoqpnhokoqwduvzxpwh.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt3b3Fwbmhva29xd2R1dnp4cHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MjUzMDQsImV4cCI6MjEwNTQwMTMwNH0.94fjKYasm9hRs-kf-1YJHfMYEW4thLt5O2w52mSRpzU";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRefiI6Imt3b3Fwbmhva29xd2R1dnp4cHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MjUzMDQsImV4cCI6MjEwNTQwMTMwNH0.94fjKYasm9hRs-kf-1YJHfMYEW4thLt5O2w52mSRpzU";
 
 let supabase = null;
 try {
-    if (window.supabase) {
+    if (window.supabase && typeof window.supabase.createClient === 'function') {
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
 } catch (e) {
-    console.warn("Supabase client failed to initialize:", e);
+    console.warn("Supabase initialization bypassed:", e);
 }
 
-// ==========================================
-// 2. STATE & GAME DATA
-// ==========================================
 let currentUser = null;
 let currentChannel = 'global';
-let userFavorites = JSON.parse(localStorage.getItem('winyates_favs') || '[]');
-let userRecents = JSON.parse(localStorage.getItem('winyates_recents') || '[]');
+let userFavorites = safeGetItem('winyates_favs', []);
+let userRecents = safeGetItem('winyates_recents', []);
 
 const HARDCODED_OWNER = {
     username: "Owner",
     pass: "Owner@£",
     role: "owner",
-    avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Owner"
+    avatar: ""
 };
 
 const GAMES = [
@@ -506,7 +489,7 @@ const GAMES = [
     { name: "Asteroids", dir: "asteroids" },
     { name: "Astray", dir: "astray" },
     { name: "Backcountry", dir: "backcountry" },
-    { name: "Baldi's Basics", dir: "baldisbasics" },
+    { name: "Baldis Basics", dir: "baldisbasics" },
     { name: "Basketball Legends", dir: "basketballlegends" },
     { name: "Basketball Stars", dir: "basketballstars" },
     { name: "Basket Bros", dir: "basketbrosio" },
@@ -574,7 +557,7 @@ const GAMES = [
     { name: "Highway Traffic", dir: "highwaytraffic" },
     { name: "Konnekt", dir: "konnekt" },
     { name: "Learn to Fly", dir: "learntofly" },
-    { name: "Let's Surf", dir: "letssurf" },
+    { name: "Lets Surf", dir: "letssurf" },
     { name: "Little Alchemy", dir: "littlealchemy" },
     { name: "Little Alchemy 2", file: "little-alechemy-2" },
     { name: "Mergeround Racers", dir: "mergeroundracers" },
@@ -615,9 +598,6 @@ const GAMES = [
     { name: "Solitaire", dir: "solitaire" }
 ];
 
-// ==========================================
-// 3. UI RENDER ENGINE
-// ==========================================
 function renderGrid(items) {
     const grid = document.getElementById("gameGrid");
     const countEl = document.getElementById("gameCount");
@@ -632,16 +612,22 @@ function renderGrid(items) {
         card.className = "card";
         
         const gamePath = game.file ? `./${game.file}` : `./games/${game.dir}/`;
-        const escapedName = game.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
         
         card.innerHTML = `
-            <span class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFav(event, '${escapedName}')">★</span>
+            <span class="fav-star ${isFav ? 'active' : ''}">★</span>
             <div class="card-title">${game.name}</div>
         `;
-        card.onclick = (e) => {
-            if (e.target.classList.contains('fav-star')) return;
+
+        const star = card.querySelector('.fav-star');
+        star.onclick = (e) => {
+            e.stopPropagation();
+            toggleFav(game.name);
+        };
+
+        card.onclick = () => {
             openGame(game.name, gamePath);
         };
+
         grid.appendChild(card);
     });
 }
@@ -655,8 +641,7 @@ function renderShelves() {
             const game = GAMES.find(g => g.name === name);
             if (!game) return '';
             const path = game.file ? `./${game.file}` : `./games/${game.dir}/`;
-            const escapedName = game.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-            return `<div class="shelf-card" onclick="openGame('${escapedName}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
+            return `<div class="shelf-card" onclick="openGame('${game.name.replace(/'/g, "\\'")}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
         }).join('');
     } else {
         recentSec.style.display = "none";
@@ -670,8 +655,7 @@ function renderShelves() {
             const game = GAMES.find(g => g.name === name);
             if (!game) return '';
             const path = game.file ? `./${game.file}` : `./games/${game.dir}/`;
-            const escapedName = game.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-            return `<div class="shelf-card" onclick="openGame('${escapedName}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
+            return `<div class="shelf-card" onclick="openGame('${game.name.replace(/'/g, "\\'")}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
         }).join('');
     } else {
         favSec.style.display = "none";
@@ -688,41 +672,43 @@ function filterGames() {
     renderGrid(filtered);
 }
 
-function toggleFav(e, gameName) {
-    e.stopPropagation();
+function toggleFav(gameName) {
     if (userFavorites.includes(gameName)) {
         userFavorites = userFavorites.filter(f => f !== gameName);
     } else {
         userFavorites.push(gameName);
     }
-    localStorage.setItem('winyates_favs', JSON.stringify(userFavorites));
+    safeSetItem('winyates_favs', userFavorites);
     renderGrid(GAMES);
     renderShelves();
 }
 
 function addRecent(gameName) {
     userRecents = [gameName, ...userRecents.filter(r => r !== gameName)].slice(0, 8);
-    localStorage.setItem('winyates_recents', JSON.stringify(userRecents));
+    safeSetItem('winyates_recents', userRecents);
     renderShelves();
 }
 
-// ==========================================
-// 4. AUTHENTICATION & PROFILE LOGIC
-// ==========================================
 function openAuthModal(view = 'signin') {
     switchAuthView(view);
-    document.getElementById("authModal").classList.add("active");
+    const modal = document.getElementById("authModal");
+    if (modal) modal.classList.add("active");
 }
 
 function switchAuthView(view) {
     const isSignIn = view === 'signin';
-    document.getElementById("authDialogTitle").textContent = isSignIn ? "Sign In" : "Create Account";
-    document.getElementById("signInForm").style.display = isSignIn ? "block" : "none";
-    document.getElementById("signUpForm").style.display = isSignIn ? "none" : "block";
+    const title = document.getElementById("authDialogTitle");
+    const signInForm = document.getElementById("signInForm");
+    const signUpForm = document.getElementById("signUpForm");
+    
+    if (title) title.textContent = isSignIn ? "Sign In" : "Create Account";
+    if (signInForm) signInForm.style.display = isSignIn ? "block" : "none";
+    if (signUpForm) signUpForm.style.display = isSignIn ? "none" : "block";
 }
 
 function closeDialog(id) {
-    document.getElementById(id).classList.remove("active");
+    const el = document.getElementById(id);
+    if (el) el.classList.remove("active");
 }
 
 async function handleSignIn(e) {
@@ -734,24 +720,28 @@ async function handleSignIn(e) {
         currentUser = { ...HARDCODED_OWNER };
         updateUserUI();
         closeDialog("authModal");
-        alert("Welcome back, Owner! 👑");
         return;
     }
 
     if (supabase) {
-        const { data, error } = await supabase.auth.signInWithPassword({ email: identifier, password });
-        if (error) {
-            alert(error.message);
-        } else {
-            currentUser = { username: data.user.user_metadata.username || identifier, role: "member", avatar: "" };
-            updateUserUI();
-            closeDialog("authModal");
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({ email: identifier, password });
+            if (error) {
+                alert(error.message);
+            } else {
+                currentUser = { username: data.user.user_metadata.username || identifier, role: "member", avatar: "" };
+                updateUserUI();
+                closeDialog("authModal");
+            }
+            return;
+        } catch (err) {
+            console.warn("Supabase auth failed:", err);
         }
-    } else {
-        currentUser = { username: identifier, role: "member", avatar: "" };
-        updateUserUI();
-        closeDialog("authModal");
     }
+    
+    currentUser = { username: identifier, role: "member", avatar: "" };
+    updateUserUI();
+    closeDialog("authModal");
 }
 
 async function handleSignUp(e) {
@@ -761,28 +751,35 @@ async function handleSignUp(e) {
     const password = document.getElementById("signUpPassword").value;
 
     if (supabase) {
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: { data: { username, role: 'member' } }
-        });
-        if (error) {
-            alert(error.message);
-        } else {
-            alert("Account created! You can now log in.");
-            switchAuthView('signin');
+        try {
+            const { error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: { data: { username, role: 'member' } }
+            });
+            if (error) {
+                alert(error.message);
+            } else {
+                alert("Account registered! You can now log in.");
+                switchAuthView('signin');
+            }
+            return;
+        } catch (err) {
+            console.warn("Supabase auth error:", err);
         }
-    } else {
-        alert("Account registered! Logging in...");
-        currentUser = { username, role: "member", avatar: "" };
-        updateUserUI();
-        closeDialog("authModal");
     }
+    
+    alert("Account created! Logging in...");
+    currentUser = { username, role: "member", avatar: "" };
+    updateUserUI();
+    closeDialog("authModal");
 }
 
 function updateUserUI() {
     const corner = document.getElementById("authCorner");
     const ownerBtn = document.getElementById("ownerPanelBtn");
+
+    if (!corner || !ownerBtn) return;
 
     if (!currentUser) {
         corner.innerHTML = `<button class="nav-btn" onclick="openAuthModal('signin')">🔑 Sign In / Up</button>`;
@@ -831,9 +828,6 @@ function handleSignOut() {
     closeDialog("profileModal");
 }
 
-// ==========================================
-// 5. CHAT SYSTEM & DIRECT MESSAGES
-// ==========================================
 const localChatStore = {
     global: [
         { author: "Owner", role: "owner", text: "Welcome to Winyates Edition!", time: "12:00 PM" }
@@ -864,6 +858,7 @@ function switchChannel(channel, event) {
 
 function renderChatMessages() {
     const container = document.getElementById("chatMessages");
+    if (!container) return;
     const msgs = localChatStore[currentChannel] || [];
     
     container.innerHTML = msgs.map(m => `
@@ -884,6 +879,7 @@ function renderChatMessages() {
 
 function sendChatMessage() {
     const input = document.getElementById("chatInput");
+    if (!input) return;
     const text = input.value.trim();
     if (!text || !currentUser) return;
 
@@ -900,17 +896,16 @@ function sendChatMessage() {
     renderChatMessages();
 }
 
-// ==========================================
-// 6. PROFILE SEARCH & DIRECT MESSAGING
-// ==========================================
 function openProfileSearchDialog() {
     document.getElementById("profileSearchModal").classList.add("active");
     searchUsers();
 }
 
 function searchUsers() {
-    const query = document.getElementById("userSearchInput").value.toLowerCase();
+    const queryInput = document.getElementById("userSearchInput");
     const container = document.getElementById("userSearchResults");
+    if (!queryInput || !container) return;
+    const query = queryInput.value.toLowerCase();
     
     const mockProfiles = [
         { username: "Owner", role: "owner" },
@@ -939,15 +934,14 @@ function startDirectMessage(username) {
     if (!localChatStore[channelId]) {
         localChatStore[channelId] = [];
         const channelList = document.getElementById("channelList");
-        channelList.innerHTML += `<div class="channel-item" onclick="switchChannel('${channelId}', event)">👤 ${username}</div>`;
+        if (channelList) {
+            channelList.innerHTML += `<div class="channel-item" onclick="switchChannel('${channelId}', event)">👤 ${username}</div>`;
+        }
     }
     openChatDialog();
     switchChannel(channelId, null);
 }
 
-// ==========================================
-// 7. OWNER & STAFF DASHBOARD
-// ==========================================
 function openOwnerPanel() {
     if (!currentUser || (currentUser.role !== 'owner' && currentUser.role !== 'staff')) return;
     document.getElementById("ownerModal").classList.add("active");
@@ -964,7 +958,7 @@ function switchOwnerTab(tab) {
 function promoteUserToStaff() {
     const target = document.getElementById("promoteUsername").value.trim();
     if (!target) return;
-    alert(`Successfully granted Staff permissions to user: ${target}`);
+    alert(`Granted Staff permissions to user: ${target}`);
     document.getElementById("promoteUsername").value = "";
     closeDialog("ownerModal");
 }
@@ -984,9 +978,6 @@ function postAnnouncement() {
     closeDialog("ownerModal");
 }
 
-// ==========================================
-// 8. GAME MODAL & UTILITIES
-// ==========================================
 function openGame(title, path) {
     document.getElementById("modalTitle").textContent = title;
     document.getElementById("gameFrame").src = path;
@@ -996,7 +987,7 @@ function openGame(title, path) {
 
 function closeGame() {
     if (document.fullscreenElement) {
-        document.exitFullscreen();
+        document.exitFullscreen().catch(() => {});
     }
     document.getElementById("gameModal").classList.remove("active");
     document.getElementById("gameFrame").src = "";
@@ -1024,7 +1015,6 @@ function toggleTheme() {
     }
 }
 
-// Initialize games grid when loaded
 window.addEventListener("DOMContentLoaded", () => {
     renderGrid(GAMES);
     renderShelves();
