@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Winyates Edition</title>
+<!-- Supabase JS Client v2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
     :root {
         --bg: #f8fafc;
@@ -11,14 +13,15 @@
         --text: #0f172a;
         --text-sub: #64748b;
         --border: #e2e8f0;
-        --header-bg: rgba(255, 255, 255, 0.85);
+        --header-bg: rgba(255, 255, 255, 0.88);
         --accent-orange: #f59e0b;
         --accent-purple: #7c3aed;
-        --card-hover: #ffffff;
         --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         --shadow-hover: 0 20px 25px -5px rgba(124, 58, 237, 0.2);
         --btn-bg: #f1f5f9;
         --school-blue: #2563eb;
+        --owner-gold: #d97706;
+        --staff-green: #059669;
     }
 
     [data-theme="dark"] {
@@ -27,19 +30,21 @@
         --text: #f8fafc;
         --text-sub: #94a3b8;
         --border: #27272a;
-        --header-bg: rgba(20, 20, 25, 0.85);
+        --header-bg: rgba(20, 20, 25, 0.88);
         --accent-orange: #fbbf24;
         --accent-purple: #a78bfa;
-        --card-hover: #1a1a22;
         --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         --shadow-hover: 0 20px 25px -5px rgba(167, 139, 250, 0.25);
         --btn-bg: #27272a;
         --school-blue: #3b82f6;
+        --owner-gold: #f59e0b;
+        --staff-green: #10b981;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
     body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-y: scroll; }
 
+    /* HEADER */
     header {
         position: sticky;
         top: 0;
@@ -48,48 +53,50 @@
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border-bottom: 1px solid var(--border);
-        padding: 0.75rem 2rem;
+        padding: 0.75rem 1.5rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
         box-shadow: var(--shadow);
     }
 
-    .brand-container { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+    .brand-container { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
     .logo-wrapper { background: rgba(124, 58, 237, 0.05); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; }
     .logo-wrapper:hover { transform: rotate(-3deg) scale(1.05); }
-    .logo-img { height: 42px; width: auto; }
-    .brand-title { font-size: 1.4rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .logo-img { height: 38px; width: auto; }
+    .brand-title { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-    /* OWNER BADGE */
-    .owner-badge {
-        background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(245, 158, 11, 0.15));
-        border: 1px solid var(--accent-purple);
+    .header-actions { display: flex; align-items: center; gap: 0.6rem; }
+    
+    .search-container input { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1rem; border-radius: 30px; outline: none; width: 180px; font-size: 0.85rem; }
+    .search-container input:focus { border-color: var(--accent-purple); box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15); width: 220px; }
+
+    /* NAV BUTTONS */
+    .nav-btn {
+        background: var(--btn-bg);
         color: var(--text);
-        padding: 0.4rem 0.8rem;
-        border-radius: 20px;
-        font-weight: 800;
+        border: 1px solid var(--border);
+        padding: 0.5rem 0.9rem;
+        border-radius: 30px;
+        font-weight: 700;
         font-size: 0.8rem;
+        cursor: pointer;
         display: flex;
         align-items: center;
         gap: 6px;
-        letter-spacing: 0.5px;
     }
+    .nav-btn:hover { transform: translateY(-2px); border-color: var(--accent-purple); }
 
-    .header-actions { display: flex; align-items: center; gap: 0.75rem; }
-    .search-container input { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 0.55rem 1.2rem; border-radius: 30px; outline: none; width: 220px; font-size: 0.9rem; }
-    .search-container input:focus { border-color: var(--accent-purple); box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15); width: 250px; }
-
-    /* SCHOOL DROPDOWN MENU */
+    /* SCHOOL DROPDOWN */
     .dropdown { position: relative; display: inline-block; }
     .school-btn {
         background: linear-gradient(135deg, var(--school-blue), #1d4ed8);
         color: #ffffff;
         border: none;
-        padding: 0.55rem 1.1rem;
+        padding: 0.5rem 1rem;
         border-radius: 30px;
         font-weight: 700;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -97,15 +104,13 @@
         box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
     }
     .school-btn:hover { transform: translateY(-2px) scale(1.02); filter: brightness(1.1); }
-    .school-btn:active { transform: translateY(0) scale(0.98); }
-    
     .dropdown-content {
         display: none;
         position: absolute;
         right: 0;
         top: 110%;
         background-color: var(--card-bg);
-        min-width: 200px;
+        min-width: 190px;
         box-shadow: var(--shadow-hover);
         border: 1px solid var(--border);
         border-radius: 12px;
@@ -115,7 +120,7 @@
     }
     .dropdown-content a {
         color: var(--text);
-        padding: 12px 16px;
+        padding: 10px 14px;
         text-decoration: none;
         display: block;
         font-size: 0.85rem;
@@ -123,68 +128,131 @@
         border-bottom: 1px solid var(--border);
     }
     .dropdown-content a:last-child { border-bottom: none; }
-    .dropdown-content a:hover { background-color: var(--btn-bg); color: var(--accent-purple); padding-left: 20px; }
+    .dropdown-content a:hover { background-color: var(--btn-bg); color: var(--accent-purple); padding-left: 18px; }
     .dropdown:hover .dropdown-content { display: block; }
 
-    .theme-toggle { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 0.55rem 1rem; border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
-    .theme-toggle:hover { border-color: var(--accent-orange); transform: translateY(-2px); }
+    /* USER AVATAR BADGE */
+    .user-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 10px 4px 6px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 30px;
+        cursor: pointer;
+    }
+    .user-pill:hover { border-color: var(--accent-purple); transform: translateY(-1px); }
+    .user-avatar-sm { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; background: var(--btn-bg); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; }
+    .user-name-sm { font-size: 0.8rem; font-weight: 700; color: var(--text); }
+    .role-badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 10px; font-weight: 800; text-transform: uppercase; }
+    .role-owner { background: rgba(217, 119, 6, 0.15); color: var(--owner-gold); border: 1px solid var(--owner-gold); }
+    .role-staff { background: rgba(5, 150, 105, 0.15); color: var(--staff-green); border: 1px solid var(--staff-green); }
 
+    /* LAYOUT CONTAINERS */
     .container { max-width: 1400px; margin: 1.5rem auto; padding: 0 1.5rem; width: 100%; flex: 1; }
-    .game-count { margin-bottom: 1.25rem; color: var(--text-sub); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1.25rem; }
+    
+    /* RECENT & FAVORITES BAR */
+    .shelf-section { margin-bottom: 1.5rem; display: none; }
+    .shelf-title { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-sub); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 6px; }
+    .horizontal-scroll { display: flex; gap: 0.8rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: thin; }
+    .shelf-card { min-width: 150px; background: var(--card-bg); border: 1px solid var(--border); padding: 0.8rem; border-radius: 12px; cursor: pointer; text-align: center; flex-shrink: 0; }
+    .shelf-card:hover { border-color: var(--accent-purple); transform: translateY(-3px); }
+    .shelf-card-title { font-size: 0.8rem; font-weight: 700; }
 
-    /* CARD ANIMATIONS */
+    /* MAIN GRID */
+    .game-count { margin-bottom: 1rem; color: var(--text-sub); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.1rem; }
+
+    /* GAME CARD */
     .card {
         background-color: var(--card-bg);
         border: 1px solid var(--border);
         border-radius: 14px;
-        padding: 1.25rem 1rem;
+        padding: 1.1rem 0.9rem;
         cursor: pointer;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
-        min-height: 90px;
+        min-height: 95px;
         position: relative;
         overflow: hidden;
-        animation: fadeScale 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation: fadeScale 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     .card::before { 
-        content: ''; 
-        position: absolute; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 4px; 
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; 
         background: linear-gradient(90deg, var(--accent-purple), var(--accent-orange)); 
-        opacity: 0; 
-        transition: opacity 0.25s ease; 
+        opacity: 0; transition: opacity 0.25s ease; 
     }
-    .card:hover { 
-        transform: translateY(-6px) scale(1.02); 
-        border-color: var(--accent-purple); 
-        box-shadow: var(--shadow-hover); 
-    }
+    .card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--accent-purple); box-shadow: var(--shadow-hover); }
     .card:hover::before { opacity: 1; }
-    .card:active { transform: translateY(-2px) scale(0.99); }
-    .card-title { font-size: 0.95rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .card-title { font-size: 0.9rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .fav-star { position: absolute; top: 8px; right: 8px; font-size: 0.85rem; color: var(--border); cursor: pointer; transition: transform 0.2s; }
+    .fav-star.active { color: var(--accent-orange); }
+    .fav-star:hover { transform: scale(1.3); }
 
-    /* MODAL ANIMATIONS */
-    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px); flex-direction: column; padding: 1rem; opacity: 0; transition: opacity 0.3s ease; }
+    /* MODAL SYSTEM */
+    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px); flex-direction: column; padding: 1rem; opacity: 0; transition: opacity 0.25s ease; }
     .modal.active { display: flex; opacity: 1; }
-    .modal-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); transform: translateY(-10px); transition: transform 0.3s ease; }
-    .modal.active .modal-bar { transform: translateY(0); }
+    .modal-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); }
     .modal-title { font-size: 1.1rem; font-weight: 800; color: var(--text); }
     .modal-controls { display: flex; gap: 0.5rem; }
-    .control-btn { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); padding: 0.45rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
+    .control-btn { background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); padding: 0.4rem 0.9rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
     .control-btn:hover { transform: translateY(-2px); }
     .close-btn { background: #ef4444; color: #fff; border: none; }
 
     .iframe-wrapper { flex: 1; width: 100%; height: 100%; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
     iframe { width: 100%; height: 100%; border: none; }
 
+    /* GENERIC DIALOG POPUPS */
+    .dialog-overlay { display: none; position: fixed; inset: 0; z-index: 1100; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem; }
+    .dialog-overlay.active { display: flex; }
+    .dialog-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 480px; padding: 1.5rem; box-shadow: var(--shadow-hover); position: relative; animation: fadeScale 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+    .dialog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+    .dialog-title { font-size: 1.2rem; font-weight: 800; }
+    .dialog-close { background: none; border: none; color: var(--text-sub); font-size: 1.2rem; cursor: pointer; }
+
+    /* FORM ELEMENTS */
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-sub); text-transform: uppercase; }
+    .form-control { width: 100%; background: var(--btn-bg); border: 1px solid var(--border); color: var(--text); padding: 0.6rem 0.9rem; border-radius: 8px; font-size: 0.9rem; outline: none; }
+    .form-control:focus { border-color: var(--accent-purple); }
+    .btn-primary { width: 100%; background: linear-gradient(135deg, var(--accent-purple), #6d28d9); color: #fff; border: none; padding: 0.7rem; border-radius: 8px; font-weight: 800; font-size: 0.9rem; cursor: pointer; margin-top: 0.5rem; }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .form-toggle-link { text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-sub); }
+    .form-toggle-link span { color: var(--accent-purple); font-weight: 700; cursor: pointer; text-decoration: underline; }
+
+    /* CHAT DIALOG UI */
+    .chat-dialog-card { max-width: 750px; height: 550px; display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+    .chat-layout { display: flex; flex: 1; height: calc(100% - 60px); }
+    .chat-sidebar { width: 220px; border-right: 1px solid var(--border); background: var(--bg); display: flex; flex-direction: column; }
+    .chat-channels { flex: 1; overflow-y: auto; padding: 0.5rem; }
+    .channel-item { padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .channel-item:hover, .channel-item.active { background: var(--card-bg); color: var(--accent-purple); }
+    
+    .chat-main { flex: 1; display: flex; flex-direction: column; background: var(--card-bg); }
+    .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem; }
+    .chat-msg { display: flex; gap: 10px; align-items: flex-start; }
+    .chat-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: var(--btn-bg); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; }
+    .chat-bubble { background: var(--btn-bg); padding: 0.6rem 0.9rem; border-radius: 12px; max-width: 80%; font-size: 0.85rem; }
+    .chat-author { font-weight: 800; font-size: 0.75rem; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
+    .chat-time { font-weight: 400; color: var(--text-sub); font-size: 0.65rem; }
+    .chat-input-area { padding: 0.8rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
+
+    /* SEARCH PROFILES DIALOG UI */
+    .profile-search-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-top: 1rem; }
+    .profile-search-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--btn-bg); border-radius: 10px; border: 1px solid var(--border); }
+    .profile-search-info { display: flex; align-items: center; gap: 10px; }
+
+    /* TABBED OWNER PANEL */
+    .tab-bar { display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 1rem; padding-bottom: 0.5rem; }
+    .tab-btn { background: none; border: none; color: var(--text-sub); font-weight: 700; font-size: 0.85rem; padding: 4px 8px; cursor: pointer; }
+    .tab-btn.active { color: var(--accent-purple); border-bottom: 2px solid var(--accent-purple); }
+
     @keyframes fadeScale {
-        from { opacity: 0; transform: scale(0.92) translateY(10px); }
+        from { opacity: 0; transform: scale(0.95) translateY(8px); }
         to { opacity: 1; transform: scale(1) translateY(0); }
     }
     @keyframes fadeIn {
@@ -209,10 +277,16 @@
             </svg>
         </div>
         <div class="brand-title">Winyates Edition</div>
-        <!-- OWNER BADGE -->
-        <div class="owner-badge">👑 Owner: Roy</div>
     </div>
+
     <div class="header-actions">
+        <!-- CHAT & SEARCH PROFILES BUTTONS -->
+        <button class="nav-btn" onclick="openChatDialog()">💬 Chat</button>
+        <button class="nav-btn" onclick="openProfileSearchDialog()">🔍 Search Users</button>
+
+        <!-- OWNER / STAFF BUTTON (DYNAMIC) -->
+        <button class="nav-btn" id="ownerPanelBtn" style="display:none;" onclick="openOwnerPanel()">👑 Owner Panel</button>
+
         <!-- SCHOOL APPS DROPDOWN -->
         <div class="dropdown">
             <button class="school-btn">🏫 School Apps ▾</button>
@@ -227,15 +301,34 @@
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Search games..." oninput="filterGames()">
         </div>
-        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+
+        <!-- AUTH / USER PROFILE CORNER -->
+        <div id="authCorner">
+            <button class="nav-btn" onclick="openAuthModal('signin')">🔑 Sign In / Up</button>
+        </div>
+
+        <button class="nav-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
     </div>
 </header>
 
 <main class="container">
+    <!-- RECENTLY PLAYED SHELF -->
+    <section class="shelf-section" id="recentSection">
+        <div class="shelf-title">🕒 Recently Played</div>
+        <div class="horizontal-scroll" id="recentGrid"></div>
+    </section>
+
+    <!-- FAVORITES SHELF -->
+    <section class="shelf-section" id="favSection">
+        <div class="shelf-title">⭐ Favorite Games</div>
+        <div class="horizontal-scroll" id="favGrid"></div>
+    </section>
+
     <div class="game-count" id="gameCount">Showing all games</div>
     <div id="gameGrid" class="grid"></div>
 </main>
 
+<!-- GAME MODAL -->
 <div id="gameModal" class="modal">
     <div class="modal-bar">
         <div id="modalTitle" class="modal-title">Game View</div>
@@ -249,7 +342,170 @@
     </div>
 </div>
 
+<!-- AUTH DIALOG (SIGN IN & SIGN UP) -->
+<div id="authModal" class="dialog-overlay">
+    <div class="dialog-card">
+        <div class="dialog-header">
+            <div class="dialog-title" id="authDialogTitle">Sign In</div>
+            <button class="dialog-close" onclick="closeDialog('authModal')">✕</button>
+        </div>
+
+        <!-- SIGN IN FORM -->
+        <form id="signInForm" onsubmit="handleSignIn(event)">
+            <div class="form-group">
+                <label>Username or Email</label>
+                <input type="text" id="signInIdentifier" class="form-control" required placeholder="Owner or email...">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="signInPassword" class="form-control" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn-primary">Sign In</button>
+            <div class="form-toggle-link">
+                Don't have an account? <span onclick="switchAuthView('signup')">Sign Up</span>
+            </div>
+        </form>
+
+        <!-- SIGN UP FORM -->
+        <form id="signUpForm" style="display:none;" onsubmit="handleSignUp(event)">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="signUpUsername" class="form-control" required placeholder="Choose username...">
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="signUpEmail" class="form-control" required placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="signUpPassword" class="form-control" required placeholder="At least 6 chars">
+            </div>
+            <button type="submit" class="btn-primary">Create Account</button>
+            <div class="form-toggle-link">
+                Already have an account? <span onclick="switchAuthView('signin')">Sign In</span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- PROFILE EDIT DIALOG -->
+<div id="profileModal" class="dialog-overlay">
+    <div class="dialog-card">
+        <div class="dialog-header">
+            <div class="dialog-title">Edit Profile</div>
+            <button class="dialog-close" onclick="closeDialog('profileModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Avatar Image URL</label>
+            <input type="url" id="profileAvatarUrl" class="form-control" placeholder="https://example.com/avatar.png">
+        </div>
+        <div class="form-group">
+            <label>Bio</label>
+            <input type="text" id="profileBio" class="form-control" placeholder="Tell us about yourself...">
+        </div>
+        <button class="btn-primary" onclick="saveProfile()">Save Changes</button>
+        <button class="control-btn" style="width:100%; margin-top: 10px;" onclick="handleSignOut()">Sign Out</button>
+    </div>
+</div>
+
+<!-- CHAT DIALOG -->
+<div id="chatModal" class="dialog-overlay">
+    <div class="dialog-card chat-dialog-card">
+        <div class="dialog-header" style="padding: 1rem 1.25rem; margin: 0; border-bottom: 1px solid var(--border);">
+            <div class="dialog-title" id="chatTitle">💬 Community & Direct Chat</div>
+            <button class="dialog-close" onclick="closeDialog('chatModal')">✕</button>
+        </div>
+        <div class="chat-layout">
+            <div class="chat-sidebar">
+                <div style="padding: 8px 12px; font-size: 0.75rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase;">Channels & DMs</div>
+                <div class="chat-channels" id="channelList">
+                    <div class="channel-item active" onclick="switchChannel('global')">🌐 Global Chat</div>
+                    <div class="channel-item" onclick="switchChannel('announcements')">📢 News</div>
+                </div>
+            </div>
+            <div class="chat-main">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input-area">
+                    <input type="text" id="chatInput" class="form-control" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+                    <button class="control-btn" style="background: var(--accent-purple); color: #fff; border: none;" onclick="sendChatMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SEARCH PROFILES DIALOG -->
+<div id="profileSearchModal" class="dialog-overlay">
+    <div class="dialog-card">
+        <div class="dialog-header">
+            <div class="dialog-title">🔍 Search Profiles</div>
+            <button class="dialog-close" onclick="closeDialog('profileSearchModal')">✕</button>
+        </div>
+        <input type="text" id="userSearchInput" class="form-control" placeholder="Type username..." oninput="searchUsers()">
+        <div class="profile-search-list" id="userSearchResults"></div>
+    </div>
+</div>
+
+<!-- OWNER / STAFF MANAGEMENT DIALOG -->
+<div id="ownerModal" class="dialog-overlay">
+    <div class="dialog-card">
+        <div class="dialog-header">
+            <div class="dialog-title">👑 Owner & Staff Dashboard</div>
+            <button class="dialog-close" onclick="closeDialog('ownerModal')">✕</button>
+        </div>
+
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchOwnerTab('addStaff')">Promote Staff</button>
+            <button class="tab-btn" onclick="switchOwnerTab('postNews')">Announce News</button>
+        </div>
+
+        <div id="tabAddStaff">
+            <div class="form-group">
+                <label>Target Username</label>
+                <input type="text" id="promoteUsername" class="form-control" placeholder="Username to promote...">
+            </div>
+            <button class="btn-primary" onclick="promoteUserToStaff()">Grant Staff Status</button>
+        </div>
+
+        <div id="tabPostNews" style="display:none;">
+            <div class="form-group">
+                <label>Announcement Text</label>
+                <input type="text" id="announcementInput" class="form-control" placeholder="Write announcement...">
+            </div>
+            <button class="btn-primary" onclick="postAnnouncement()">Broadcast to News</button>
+        </div>
+    </div>
+</div>
+
 <script>
+// ==========================================
+// 1. SUPABASE INITIALIZATION
+// ==========================================
+// Replace these strings with your actual Supabase credentials in your copy!
+const SUPABASE_URL = "https://kwoqpnhokoqwduvzxpwh.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt3b3Fwbmhva29xd2R1dnp4cHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MjUzMDQsImV4cCI6MjEwNTQwMTMwNH0.94fjKYasm9hRs-kf-1YJHfMYEW4thLt5O2w52mSRpzU";
+
+let supabase = null;
+if (window.supabase) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+// ==========================================
+// 2. STATE & GAME DATA
+// ==========================================
+let currentUser = null; // Local copy of user profile
+let currentChannel = 'global';
+let userFavorites = JSON.parse(localStorage.getItem('winyates_favs') || '[]');
+let userRecents = JSON.parse(localStorage.getItem('winyates_recents') || '[]');
+
+// Hardcoded fallback Owner account setup credentials requested: User: Owner | Pass: Owner@£
+const HARDCODED_OWNER = {
+    username: "Owner",
+    pass: "Owner@£",
+    role: "owner",
+    avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Owner"
+};
+
 const GAMES = [
     { name: "1v1.lol", dir: "1v1lol" },
     { name: "2048", dir: "2048" },
@@ -368,6 +624,9 @@ const GAMES = [
     { name: "Solitaire", dir: "solitaire" }
 ];
 
+// ==========================================
+// 3. UI RENDER ENGINE
+// ==========================================
 function renderGrid(items) {
     const grid = document.getElementById("gameGrid");
     const countEl = document.getElementById("gameCount");
@@ -376,15 +635,55 @@ function renderGrid(items) {
     countEl.textContent = `Showing ${items.length} ${items.length === 1 ? 'game' : 'games'}`;
 
     items.forEach((game, index) => {
+        const isFav = userFavorites.includes(game.name);
         const card = document.createElement("div");
         card.className = "card";
-        card.style.animationDelay = `${Math.min(index * 0.02, 0.4)}s`;
+        card.style.animationDelay = `${Math.min(index * 0.02, 0.3)}s`;
         
         const gamePath = game.file ? `./${game.file}` : `./games/${game.dir}/`;
-        card.onclick = () => openGame(game.name, gamePath);
-        card.innerHTML = `<div class="card-title">${game.name}</div>`;
+        
+        card.innerHTML = `
+            <span class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFav(event, '${game.name}')">★</span>
+            <div class="card-title">${game.name}</div>
+        `;
+        card.onclick = (e) => {
+            if (e.target.classList.contains('fav-star')) return;
+            openGame(game.name, gamePath);
+        };
         grid.appendChild(card);
     });
+}
+
+function renderShelves() {
+    // Recents Shelf
+    const recentSec = document.getElementById("recentSection");
+    const recentGrid = document.getElementById("recentGrid");
+    if (userRecents.length > 0) {
+        recentSec.style.display = "block";
+        recentGrid.innerHTML = userRecents.map(name => {
+            const game = GAMES.find(g => g.name === name);
+            if (!game) return '';
+            const path = game.file ? `./${game.file}` : `./games/${game.dir}/`;
+            return `<div class="shelf-card" onclick="openGame('${game.name}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
+        }).join('');
+    } else {
+        recentSec.style.display = "none";
+    }
+
+    // Favorites Shelf
+    const favSec = document.getElementById("favSection");
+    const favGrid = document.getElementById("favGrid");
+    if (userFavorites.length > 0) {
+        favSec.style.display = "block";
+        favGrid.innerHTML = userFavorites.map(name => {
+            const game = GAMES.find(g => g.name === name);
+            if (!game) return '';
+            const path = game.file ? `./${game.file}` : `./games/${game.dir}/`;
+            return `<div class="shelf-card" onclick="openGame('${game.name}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
+        }).join('');
+    } else {
+        favSec.style.display = "none";
+    }
 }
 
 function filterGames() {
@@ -397,10 +696,314 @@ function filterGames() {
     renderGrid(filtered);
 }
 
+function toggleFav(e, gameName) {
+    e.stopPropagation();
+    if (userFavorites.includes(gameName)) {
+        userFavorites = userFavorites.filter(f => f !== gameName);
+    } else {
+        userFavorites.push(gameName);
+    }
+    localStorage.setItem('winyates_favs', JSON.stringify(userFavorites));
+    renderGrid(GAMES);
+    renderShelves();
+}
+
+function addRecent(gameName) {
+    userRecents = [gameName, ...userRecents.filter(r => r !== gameName)].slice(0, 8);
+    localStorage.setItem('winyates_recents', JSON.stringify(userRecents));
+    renderShelves();
+}
+
+// ==========================================
+// 4. AUTHENTICATION & PROFILE LOGIC
+// ==========================================
+function openAuthModal(view = 'signin') {
+    switchAuthView(view);
+    document.getElementById("authModal").classList.add("active");
+}
+
+function switchAuthView(view) {
+    const isSignIn = view === 'signin';
+    document.getElementById("authDialogTitle").textContent = isSignIn ? "Sign In" : "Create Account";
+    document.getElementById("signInForm").style.display = isSignIn ? "block" : "none";
+    document.getElementById("signUpForm").style.display = isSignIn ? "none" : "block";
+}
+
+function closeDialog(id) {
+    document.getElementById(id).classList.remove("active");
+}
+
+async function handleSignIn(e) {
+    e.preventDefault();
+    const identifier = document.getElementById("signInIdentifier").value.trim();
+    const password = document.getElementById("signInPassword").value;
+
+    // 1. Check Hardcoded Owner Account Request
+    if (identifier.toLowerCase() === HARDCODED_OWNER.username.toLowerCase() && password === HARDCODED_OWNER.pass) {
+        currentUser = { ...HARDCODED_OWNER };
+        updateUserUI();
+        closeDialog("authModal");
+        alert("Welcome back, Owner Roy! 👑");
+        return;
+    }
+
+    // 2. Supabase Auth Fallback
+    if (supabase) {
+        const { data, error } = await supabase.auth.signInWithPassword({ email: identifier, password });
+        if (error) {
+            alert(error.message);
+        } else {
+            loadUserProfile(data.user);
+            closeDialog("authModal");
+        }
+    } else {
+        // Local simulation fallback
+        currentUser = { username: identifier, role: "member", avatar: "" };
+        updateUserUI();
+        closeDialog("authModal");
+    }
+}
+
+async function handleSignUp(e) {
+    e.preventDefault();
+    const username = document.getElementById("signUpUsername").value.trim();
+    const email = document.getElementById("signUpEmail").value.trim();
+    const password = document.getElementById("signUpPassword").value;
+
+    if (supabase) {
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: { data: { username, role: 'member' } }
+        });
+        if (error) {
+            alert(error.message);
+        } else {
+            alert("Account created! You can now log in.");
+            switchAuthView('signin');
+        }
+    } else {
+        alert("Account registered locally! Logging in...");
+        currentUser = { username, role: "member", avatar: "" };
+        updateUserUI();
+        closeDialog("authModal");
+    }
+}
+
+function updateUserUI() {
+    const corner = document.getElementById("authCorner");
+    const ownerBtn = document.getElementById("ownerPanelBtn");
+
+    if (!currentUser) {
+        corner.innerHTML = `<button class="nav-btn" onclick="openAuthModal('signin')">🔑 Sign In / Up</button>`;
+        ownerBtn.style.display = "none";
+        return;
+    }
+
+    // Show User Pill
+    let roleBadge = '';
+    if (currentUser.role === 'owner') roleBadge = `<span class="role-badge role-owner">Owner</span>`;
+    else if (currentUser.role === 'staff') roleBadge = `<span class="role-badge role-staff">Staff</span>`;
+
+    corner.innerHTML = `
+        <div class="user-pill" onclick="openProfileModal()">
+            <div class="user-avatar-sm">${currentUser.avatar ? `<img src="${currentUser.avatar}" style="width:100%;height:100%;border-radius:50%;">` : currentUser.username.charAt(0).toUpperCase()}</div>
+            <span class="user-name-sm">${currentUser.username}</span>
+            ${roleBadge}
+        </div>
+    `;
+
+    // Show Owner / Staff Panel button if permitted
+    if (currentUser.role === 'owner' || currentUser.role === 'staff') {
+        ownerBtn.style.display = "inline-flex";
+        ownerBtn.textContent = currentUser.role === 'owner' ? "👑 Owner Panel" : "🛡️ Staff Panel";
+    } else {
+        ownerBtn.style.display = "none";
+    }
+}
+
+function openProfileModal() {
+    if (!currentUser) return;
+    document.getElementById("profileAvatarUrl").value = currentUser.avatar || '';
+    document.getElementById("profileBio").value = currentUser.bio || '';
+    document.getElementById("profileModal").classList.add("active");
+}
+
+function saveProfile() {
+    if (!currentUser) return;
+    currentUser.avatar = document.getElementById("profileAvatarUrl").value.trim();
+    currentUser.bio = document.getElementById("profileBio").value.trim();
+    updateUserUI();
+    closeDialog("profileModal");
+}
+
+function handleSignOut() {
+    currentUser = null;
+    updateUserUI();
+    closeDialog("profileModal");
+}
+
+// ==========================================
+// 5. CHAT SYSTEM & DIRECT MESSAGES
+// ==========================================
+const localChatStore = {
+    global: [
+        { author: "Roy", role: "owner", text: "Welcome to the new Winyates Edition with chat!", time: "12:00 PM" }
+    ],
+    announcements: [
+        { author: "Roy", role: "owner", text: "Minecraft and Little Alchemy 2 are now live!", time: "10:00 AM" }
+    ]
+};
+
+function openChatDialog() {
+    if (!currentUser) {
+        alert("Please sign in to join the chat!");
+        openAuthModal('signin');
+        return;
+    }
+    document.getElementById("chatModal").classList.add("active");
+    renderChatMessages();
+}
+
+function switchChannel(channel) {
+    currentChannel = channel;
+    document.querySelectorAll(".channel-item").forEach(el => el.classList.remove("active"));
+    event.currentTarget.classList.add("active");
+    renderChatMessages();
+}
+
+function renderChatMessages() {
+    const container = document.getElementById("chatMessages");
+    const msgs = localChatStore[currentChannel] || [];
+    
+    container.innerHTML = msgs.map(m => `
+        <div class="chat-msg">
+            <div class="chat-avatar">${m.author.charAt(0).toUpperCase()}</div>
+            <div class="chat-bubble">
+                <div class="chat-author">
+                    ${m.author} 
+                    ${m.role === 'owner' ? '<span class="role-badge role-owner">Owner</span>' : ''}
+                    <span class="chat-time">${m.time}</span>
+                </div>
+                <div>${m.text}</div>
+            </div>
+        </div>
+    `).join('');
+    container.scrollTop = container.scrollHeight;
+}
+
+function sendChatMessage() {
+    const input = document.getElementById("chatInput");
+    const text = input.value.trim();
+    if (!text || !currentUser) return;
+
+    if (!localChatStore[currentChannel]) localChatStore[currentChannel] = [];
+    
+    localChatStore[currentChannel].push({
+        author: currentUser.username,
+        role: currentUser.role,
+        text: text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    });
+
+    input.value = "";
+    renderChatMessages();
+}
+
+// ==========================================
+// 6. PROFILE SEARCH & DIRECT MESSAGING
+// ==========================================
+function openProfileSearchDialog() {
+    document.getElementById("profileSearchModal").classList.add("active");
+    searchUsers();
+}
+
+function searchUsers() {
+    const query = document.getElementById("userSearchInput").value.toLowerCase();
+    const container = document.getElementById("userSearchResults");
+    
+    // Demo accounts database search
+    const mockProfiles = [
+        { username: "Owner", role: "owner" },
+        { username: "Roy", role: "owner" },
+        { username: "Alex_Gamer", role: "member" },
+        { username: "SchoolStaff", role: "staff" }
+    ];
+
+    const results = mockProfiles.filter(p => p.username.toLowerCase().includes(query));
+    container.innerHTML = results.map(p => `
+        <div class="profile-search-item">
+            <div class="profile-search-info">
+                <div class="user-avatar-sm">${p.username.charAt(0)}</div>
+                <div>
+                    <strong style="font-size:0.85rem;">${p.username}</strong>
+                    ${p.role === 'owner' ? '<span class="role-badge role-owner">Owner</span>' : ''}
+                </div>
+            </div>
+            <button class="control-btn" onclick="startDirectMessage('${p.username}')">Chat</button>
+        </div>
+    `).join('');
+}
+
+function startDirectMessage(username) {
+    closeDialog("profileSearchModal");
+    const channelId = `dm_${username}`;
+    if (!localChatStore[channelId]) {
+        localChatStore[channelId] = [];
+        const channelList = document.getElementById("channelList");
+        channelList.innerHTML += `<div class="channel-item" onclick="switchChannel('${channelId}')">👤 ${username}</div>`;
+    }
+    openChatDialog();
+    switchChannel(channelId);
+}
+
+// ==========================================
+// 7. OWNER & STAFF DASHBOARD
+// ==========================================
+function openOwnerPanel() {
+    if (!currentUser || (currentUser.role !== 'owner' && currentUser.role !== 'staff')) return;
+    document.getElementById("ownerModal").classList.add("active");
+}
+
+function switchOwnerTab(tab) {
+    document.getElementById("tabAddStaff").style.display = tab === 'addStaff' ? 'block' : 'none';
+    document.getElementById("tabPostNews").style.display = tab === 'postNews' ? 'block' : 'none';
+    document.querySelectorAll(".tab-btn").forEach((b, i) => {
+        b.classList.toggle("active", (i === 0 && tab === 'addStaff') || (i === 1 && tab === 'postNews'));
+    });
+}
+
+function promoteUserToStaff() {
+    const target = document.getElementById("promoteUsername").value.trim();
+    if (!target) return;
+    alert(`Successfully granted Staff permissions to user: ${target}`);
+    document.getElementById("promoteUsername").value = "";
+    closeDialog("ownerModal");
+}
+
+function postAnnouncement() {
+    const text = document.getElementById("announcementInput").value.trim();
+    if (!text) return;
+    if (!localChatStore['announcements']) localChatStore['announcements'] = [];
+    localChatStore['announcements'].push({
+        author: currentUser.username,
+        role: currentUser.role,
+        text: text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    });
+    alert("Announcement posted to News channel!");
+    document.getElementById("announcementInput").value = "";
+    closeDialog("ownerModal");
+}
+
+// ==========================================
+// 8. GAME MODAL & UTILITIES
+// ==========================================
 function openGame(title, path) {
     document.getElementById("modalTitle").textContent = title;
     document.getElementById("gameFrame").src = path;
     document.getElementById("gameModal").classList.add("active");
+    addRecent(title);
 }
 
 function closeGame() {
@@ -414,17 +1017,10 @@ function closeGame() {
 function toggleFullscreen() {
     const iframe = document.getElementById("gameFrame");
     if (!document.fullscreenElement) {
-        if (iframe.requestFullscreen) {
-            iframe.requestFullscreen();
-        } else if (iframe.webkitRequestFullscreen) {
-            iframe.webkitRequestFullscreen();
-        } else if (iframe.msRequestFullscreen) {
-            iframe.msRequestFullscreen();
-        }
+        if (iframe.requestFullscreen) iframe.requestFullscreen();
+        else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
     } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        }
+        if (document.exitFullscreen) document.exitFullscreen();
     }
 }
 
@@ -440,7 +1036,9 @@ function toggleTheme() {
     }
 }
 
+// Initial Boot
 renderGrid(GAMES);
+renderShelves();
 </script>
 </body>
 </html>
