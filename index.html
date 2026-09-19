@@ -559,7 +559,7 @@ const GAMES = [
     { name: "Flappy Bird", dir: "flappybird" },
     { name: "Flappy Plane", dir: "flappyplane" },
     { name: "Flight Simulator", dir: "flightsimulator" },
-    { name: "Friday Night Funkin'", dir: "fridaynightfunkin" },
+    { name: "Friday Night Funkin", dir: "fridaynightfunkin" },
     { name: "Friendly Fire", dir: "friendlyfire" },
     { name: "Fruit Ninja", dir: "fruitninja" },
     { name: "Funny Shooter 2", file: "funny-shooter-2.html" },
@@ -621,6 +621,7 @@ const GAMES = [
 function renderGrid(items) {
     const grid = document.getElementById("gameGrid");
     const countEl = document.getElementById("gameCount");
+    if (!grid || !countEl) return;
     grid.innerHTML = "";
 
     countEl.textContent = `Showing ${items.length} ${items.length === 1 ? 'game' : 'games'}`;
@@ -631,9 +632,10 @@ function renderGrid(items) {
         card.className = "card";
         
         const gamePath = game.file ? `./${game.file}` : `./games/${game.dir}/`;
+        const escapedName = game.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
         
         card.innerHTML = `
-            <span class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFav(event, '${game.name.replace(/'/g, "\\'")}')">★</span>
+            <span class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFav(event, '${escapedName}')">★</span>
             <div class="card-title">${game.name}</div>
         `;
         card.onclick = (e) => {
@@ -653,7 +655,8 @@ function renderShelves() {
             const game = GAMES.find(g => g.name === name);
             if (!game) return '';
             const path = game.file ? `./${game.file}` : `./games/${game.dir}/`;
-            return `<div class="shelf-card" onclick="openGame('${game.name.replace(/'/g, "\\'")}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
+            const escapedName = game.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+            return `<div class="shelf-card" onclick="openGame('${escapedName}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
         }).join('');
     } else {
         recentSec.style.display = "none";
@@ -667,7 +670,8 @@ function renderShelves() {
             const game = GAMES.find(g => g.name === name);
             if (!game) return '';
             const path = game.file ? `./${game.file}` : `./games/${game.dir}/`;
-            return `<div class="shelf-card" onclick="openGame('${game.name.replace(/'/g, "\\'")}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
+            const escapedName = game.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+            return `<div class="shelf-card" onclick="openGame('${escapedName}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
         }).join('');
     } else {
         favSec.style.display = "none";
@@ -730,7 +734,7 @@ async function handleSignIn(e) {
         currentUser = { ...HARDCODED_OWNER };
         updateUserUI();
         closeDialog("authModal");
-        alert("Welcome back, Owner Roy! 👑");
+        alert("Welcome back, Owner! 👑");
         return;
     }
 
@@ -832,10 +836,10 @@ function handleSignOut() {
 // ==========================================
 const localChatStore = {
     global: [
-        { author: "Roy", role: "owner", text: "Welcome to the new Winyates Edition with chat!", time: "12:00 PM" }
+        { author: "Owner", role: "owner", text: "Welcome to Winyates Edition!", time: "12:00 PM" }
     ],
     announcements: [
-        { author: "Roy", role: "owner", text: "Minecraft and Little Alchemy 2 are now live!", time: "10:00 AM" }
+        { author: "Owner", role: "owner", text: "Minecraft and Little Alchemy 2 are live!", time: "10:00 AM" }
     ]
 };
 
@@ -910,7 +914,6 @@ function searchUsers() {
     
     const mockProfiles = [
         { username: "Owner", role: "owner" },
-        { username: "Roy", role: "owner" },
         { username: "Alex_Gamer", role: "member" },
         { username: "SchoolStaff", role: "staff" }
     ];
@@ -1021,7 +1024,7 @@ function toggleTheme() {
     }
 }
 
-// Boot up grid on page load
+// Initialize games grid when loaded
 window.addEventListener("DOMContentLoaded", () => {
     renderGrid(GAMES);
     renderShelves();
