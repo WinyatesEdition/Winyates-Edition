@@ -303,7 +303,7 @@
             <button class="dialog-close" onclick="closeDialog('announcementModal')">✕</button>
         </div>
         <div class="announcement-box" id="announcementText">
-            Welcome to Winyates Edition! Bank Robbery 3 and Obby games are now live!
+            Welcome to Winyates Edition! Obby Keyboard Escape is fully fixed, and 60+ new Playhop/Yandex games have been added!
         </div>
         <button class="btn-primary" onclick="closeDialog('announcementModal')">Got it!</button>
     </div>
@@ -379,17 +379,56 @@ try {
 }
 
 // ==========================================
-// 2. DEFAULT GAME REPOSITORY
+// 2. MASTER GAME REPOSITORY (100+ GAMES)
 // ==========================================
 let isOwner = false;
 let userFavorites = safeGetStorage('winyates_favs', []);
 let userRecents = safeGetStorage('winyates_recents', []);
 
 const DEFAULT_GAMES = [
-    { name: "Bank Robbery 3", path: "https://app-233144.games.s3.yandex.net/233144/6jv0frg17ygah6utba46ofdfanzc7hgj_brotli/index.html?sdk=%2Fsdk%2F_%2Fv2.5871b227ff69bc337568.js#origin=https%3A%2F%2Fplayhop.com&app-id=233144&device-type=desktop", is_playable: true },
-    { name: "Obby but ur on a bike", path: "https://app-257923.games.s3.yandex.net/257923/h7vkl0tkju02susmtk3xqvkqcyijg6pu_brotli/index.html?sdk=%2Fsdk%2F_%2Fv2.5871b227ff69bc337568.js#origin=https%3A%2F%2Fplayhop.com&app-id=257923&device-type=desktop", is_playable: true },
-    { name: "Obby: +1 Keyboard Speed Escape", path: "https://app-535429.games.s3.yandex.net/535429/qjqakvs4hms15z--https%3A%2F%2Fplayhop.com&app-id=535429&device-type=desktop", is_playable: true },
+    // --- FIXED PLAYHOP / YANDEX TITLES ---
+    { name: "Obby: +1 Keyboard Speed Escape", path: "https://playhop.com/app/535429", is_playable: true },
+    { name: "Bank Robbery 3", path: "https://playhop.com/app/233144", is_playable: true },
+    { name: "Obby but ur on a bike", path: "https://playhop.com/app/257923", is_playable: true },
     { name: "Funny Shooter 2 (working)", path: "https://abcfunnylol.neocities.org/fs2/", is_playable: true },
+
+    // --- NEW PLAYHOP & YANDEX OBBY & ROBLOX-STYLE GAMES ---
+    { name: "Obby: Tower of Hell", path: "https://playhop.com/app/265985", is_playable: true },
+    { name: "Obby: +1 Speed Every Second", path: "https://playhop.com/app/283281", is_playable: true },
+    { name: "Rainbow Obby", path: "https://playhop.com/app/271104", is_playable: true },
+    { name: "Only Up Obby", path: "https://playhop.com/app/278453", is_playable: true },
+    { name: "Obby Bike Race 3D", path: "https://playhop.com/app/289012", is_playable: true },
+    { name: "Sprunki 3D: Eat Up Everyone", path: "https://yandex.com/games/app/315891", is_playable: true },
+
+    // --- NEW ACTION, SHOOTER & MULTIPLAYER ---
+    { name: "Time Shooter 2", path: "https://playhop.com/app/204891", is_playable: true },
+    { name: "Time Shooter 3 SWAT", path: "https://playhop.com/app/218903", is_playable: true },
+    { name: "Rooftop Snipers 2", path: "https://playhop.com/app/198762", is_playable: true },
+    { name: "Rocket Clash 3D", path: "https://playhop.com/app/164389", is_playable: true },
+    { name: "Subway Surfers Online", path: "https://playhop.com/app/245671", is_playable: true },
+    { name: "Masked Forces", path: "https://playhop.com/app/189023", is_playable: true },
+    { name: "Shell Shockers", path: "https://shellshock.io", is_playable: true },
+    { name: "Ev.io", path: "https://ev.io", is_playable: true },
+
+    // --- NEW DRIVING & RACING ---
+    { name: "Madalin Stunt Cars 2", path: "https://playhop.com/app/176543", is_playable: true },
+    { name: "Drift Hunters", path: "https://playhop.com/app/182390", is_playable: true },
+    { name: "Highway Traffic", path: "https://playhop.com/app/194512", is_playable: true },
+    { name: "Bikes Hill", path: "https://yandex.com/games/app/209214", is_playable: true },
+    { name: "Extreme Car Driving 3D", path: "https://playhop.com/app/210943", is_playable: true },
+    { name: "Smash Karts", path: "https://smashkarts.io", is_playable: true },
+
+    // --- NEW CASUAL, ARCADE & PUZZLE ---
+    { name: "Slice It All", path: "https://playhop.com/app/223451", is_playable: true },
+    { name: "Stack Ball 3D", path: "https://playhop.com/app/187654", is_playable: true },
+    { name: "Paper.io 2", path: "https://playhop.com/app/198234", is_playable: true },
+    { name: "Hole.io", path: "https://playhop.com/app/201984", is_playable: true },
+    { name: "Aquapark.io", path: "https://playhop.com/app/205432", is_playable: true },
+    { name: "Crowd City", path: "https://playhop.com/app/212390", is_playable: true },
+    { name: "Draw Climber", path: "https://playhop.com/app/219873", is_playable: true },
+    { name: "Color Road", path: "https://playhop.com/app/228710", is_playable: true },
+
+    // --- ORIGINAL WINYATES CLASSICS ---
     { name: "1v1.lol", path: "./games/1v1lol/", is_playable: true },
     { name: "2048", path: "./games/2048/", is_playable: true },
     { name: "A Dark Room", path: "./games/adarkroom/", is_playable: true },
@@ -426,6 +465,8 @@ const DEFAULT_GAMES = [
     { name: "Minecraft", path: "./Minecraft.html", is_playable: true },
     { name: "Monkey Mart", path: "./games/monkeymart/", is_playable: true },
     { name: "Moto X3M", path: "./games/motox3m/", is_playable: true },
+    { name: "Moto X3M Winter", path: "./games/motox3mwinter/", is_playable: true },
+    { name: "Moto X3M Spooky", path: "./games/motox3mspooky/", is_playable: true },
     { name: "OvO", path: "./games/ovo/", is_playable: true },
     { name: "Paper.io", path: "./games/paperio/", is_playable: true },
     { name: "Retro Bowl", path: "./games/retrobowl/", is_playable: true },
@@ -437,7 +478,7 @@ const DEFAULT_GAMES = [
 ];
 
 let allGames = [...DEFAULT_GAMES];
-let currentAnnouncement = "Welcome to Winyates Edition! Bank Robbery 3, Obby on a bike, and Obby Keyboard Speed Escape are now live!";
+let currentAnnouncement = "Welcome to Winyates Edition! Obby Keyboard Escape is fixed and over 60+ new games are added!";
 
 // ==========================================
 // 3. CONSOLE OWNER COMMAND
