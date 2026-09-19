@@ -41,7 +41,7 @@
         --staff-green: #10b981;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease; }
     body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-y: scroll; }
 
     /* HEADER */
@@ -116,7 +116,6 @@
         border-radius: 12px;
         overflow: hidden;
         z-index: 200;
-        animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .dropdown-content a {
         color: var(--text);
@@ -179,7 +178,6 @@
         min-height: 95px;
         position: relative;
         overflow: hidden;
-        animation: fadeScale 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     .card::before { 
         content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; 
@@ -194,8 +192,8 @@
     .fav-star:hover { transform: scale(1.3); }
 
     /* MODAL SYSTEM */
-    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px); flex-direction: column; padding: 1rem; opacity: 0; transition: opacity 0.25s ease; }
-    .modal.active { display: flex; opacity: 1; }
+    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px); flex-direction: column; padding: 1rem; }
+    .modal.active { display: flex; }
     .modal-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); }
     .modal-title { font-size: 1.1rem; font-weight: 800; color: var(--text); }
     .modal-controls { display: flex; gap: 0.5rem; }
@@ -209,7 +207,7 @@
     /* GENERIC DIALOG POPUPS */
     .dialog-overlay { display: none; position: fixed; inset: 0; z-index: 1100; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem; }
     .dialog-overlay.active { display: flex; }
-    .dialog-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 480px; padding: 1.5rem; box-shadow: var(--shadow-hover); position: relative; animation: fadeScale 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+    .dialog-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 480px; padding: 1.5rem; box-shadow: var(--shadow-hover); position: relative; }
     .dialog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
     .dialog-title { font-size: 1.2rem; font-weight: 800; }
     .dialog-close { background: none; border: none; color: var(--text-sub); font-size: 1.2rem; cursor: pointer; }
@@ -250,15 +248,6 @@
     .tab-bar { display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 1rem; padding-bottom: 0.5rem; }
     .tab-btn { background: none; border: none; color: var(--text-sub); font-weight: 700; font-size: 0.85rem; padding: 4px 8px; cursor: pointer; }
     .tab-btn.active { color: var(--accent-purple); border-bottom: 2px solid var(--accent-purple); }
-
-    @keyframes fadeScale {
-        from { opacity: 0; transform: scale(0.95) translateY(8px); }
-        to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-6px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
 </style>
 </head>
 <body>
@@ -284,7 +273,7 @@
         <button class="nav-btn" onclick="openChatDialog()">💬 Chat</button>
         <button class="nav-btn" onclick="openProfileSearchDialog()">🔍 Search Users</button>
 
-        <!-- OWNER / STAFF BUTTON (DYNAMIC) -->
+        <!-- OWNER / STAFF BUTTON -->
         <button class="nav-btn" id="ownerPanelBtn" style="display:none;" onclick="openOwnerPanel()">👑 Owner Panel</button>
 
         <!-- SCHOOL APPS DROPDOWN -->
@@ -302,7 +291,7 @@
             <input type="text" id="searchInput" placeholder="Search games..." oninput="filterGames()">
         </div>
 
-        <!-- AUTH / USER PROFILE CORNER -->
+        <!-- AUTH CORNER -->
         <div id="authCorner">
             <button class="nav-btn" onclick="openAuthModal('signin')">🔑 Sign In / Up</button>
         </div>
@@ -342,7 +331,7 @@
     </div>
 </div>
 
-<!-- AUTH DIALOG (SIGN IN & SIGN UP) -->
+<!-- AUTH DIALOG -->
 <div id="authModal" class="dialog-overlay">
     <div class="dialog-card">
         <div class="dialog-header">
@@ -417,10 +406,10 @@
         </div>
         <div class="chat-layout">
             <div class="chat-sidebar">
-                <div style="padding: 8px 12px; font-size: 0.75rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase;">Channels & DMs</div>
+                <div style="padding: 8px 12px; font-size: 0.75rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase;">Channels</div>
                 <div class="chat-channels" id="channelList">
-                    <div class="channel-item active" onclick="switchChannel('global')">🌐 Global Chat</div>
-                    <div class="channel-item" onclick="switchChannel('announcements')">📢 News</div>
+                    <div class="channel-item active" onclick="switchChannel('global', event)">🌐 Global Chat</div>
+                    <div class="channel-item" onclick="switchChannel('announcements', event)">📢 News</div>
                 </div>
             </div>
             <div class="chat-main">
@@ -481,24 +470,26 @@
 // ==========================================
 // 1. SUPABASE INITIALIZATION
 // ==========================================
-// Replace these strings with your actual Supabase credentials in your copy!
 const SUPABASE_URL = "https://kwoqpnhokoqwduvzxpwh.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt3b3Fwbmhva29xd2R1dnp4cHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MjUzMDQsImV4cCI6MjEwNTQwMTMwNH0.94fjKYasm9hRs-kf-1YJHfMYEW4thLt5O2w52mSRpzU";
 
 let supabase = null;
-if (window.supabase) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+try {
+    if (window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+} catch (e) {
+    console.warn("Supabase client failed to initialize:", e);
 }
 
 // ==========================================
 // 2. STATE & GAME DATA
 // ==========================================
-let currentUser = null; // Local copy of user profile
+let currentUser = null;
 let currentChannel = 'global';
 let userFavorites = JSON.parse(localStorage.getItem('winyates_favs') || '[]');
 let userRecents = JSON.parse(localStorage.getItem('winyates_recents') || '[]');
 
-// Hardcoded fallback Owner account setup credentials requested: User: Owner | Pass: Owner@£
 const HARDCODED_OWNER = {
     username: "Owner",
     pass: "Owner@£",
@@ -634,16 +625,15 @@ function renderGrid(items) {
 
     countEl.textContent = `Showing ${items.length} ${items.length === 1 ? 'game' : 'games'}`;
 
-    items.forEach((game, index) => {
+    items.forEach((game) => {
         const isFav = userFavorites.includes(game.name);
         const card = document.createElement("div");
         card.className = "card";
-        card.style.animationDelay = `${Math.min(index * 0.02, 0.3)}s`;
         
         const gamePath = game.file ? `./${game.file}` : `./games/${game.dir}/`;
         
         card.innerHTML = `
-            <span class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFav(event, '${game.name}')">★</span>
+            <span class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFav(event, '${game.name.replace(/'/g, "\\'")}')">★</span>
             <div class="card-title">${game.name}</div>
         `;
         card.onclick = (e) => {
@@ -655,7 +645,6 @@ function renderGrid(items) {
 }
 
 function renderShelves() {
-    // Recents Shelf
     const recentSec = document.getElementById("recentSection");
     const recentGrid = document.getElementById("recentGrid");
     if (userRecents.length > 0) {
@@ -664,13 +653,12 @@ function renderShelves() {
             const game = GAMES.find(g => g.name === name);
             if (!game) return '';
             const path = game.file ? `./${game.file}` : `./games/${game.dir}/`;
-            return `<div class="shelf-card" onclick="openGame('${game.name}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
+            return `<div class="shelf-card" onclick="openGame('${game.name.replace(/'/g, "\\'")}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
         }).join('');
     } else {
         recentSec.style.display = "none";
     }
 
-    // Favorites Shelf
     const favSec = document.getElementById("favSection");
     const favGrid = document.getElementById("favGrid");
     if (userFavorites.length > 0) {
@@ -679,7 +667,7 @@ function renderShelves() {
             const game = GAMES.find(g => g.name === name);
             if (!game) return '';
             const path = game.file ? `./${game.file}` : `./games/${game.dir}/`;
-            return `<div class="shelf-card" onclick="openGame('${game.name}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
+            return `<div class="shelf-card" onclick="openGame('${game.name.replace(/'/g, "\\'")}', '${path}')"><div class="shelf-card-title">${game.name}</div></div>`;
         }).join('');
     } else {
         favSec.style.display = "none";
@@ -738,7 +726,6 @@ async function handleSignIn(e) {
     const identifier = document.getElementById("signInIdentifier").value.trim();
     const password = document.getElementById("signInPassword").value;
 
-    // 1. Check Hardcoded Owner Account Request
     if (identifier.toLowerCase() === HARDCODED_OWNER.username.toLowerCase() && password === HARDCODED_OWNER.pass) {
         currentUser = { ...HARDCODED_OWNER };
         updateUserUI();
@@ -747,17 +734,16 @@ async function handleSignIn(e) {
         return;
     }
 
-    // 2. Supabase Auth Fallback
     if (supabase) {
         const { data, error } = await supabase.auth.signInWithPassword({ email: identifier, password });
         if (error) {
             alert(error.message);
         } else {
-            loadUserProfile(data.user);
+            currentUser = { username: data.user.user_metadata.username || identifier, role: "member", avatar: "" };
+            updateUserUI();
             closeDialog("authModal");
         }
     } else {
-        // Local simulation fallback
         currentUser = { username: identifier, role: "member", avatar: "" };
         updateUserUI();
         closeDialog("authModal");
@@ -783,7 +769,7 @@ async function handleSignUp(e) {
             switchAuthView('signin');
         }
     } else {
-        alert("Account registered locally! Logging in...");
+        alert("Account registered! Logging in...");
         currentUser = { username, role: "member", avatar: "" };
         updateUserUI();
         closeDialog("authModal");
@@ -800,7 +786,6 @@ function updateUserUI() {
         return;
     }
 
-    // Show User Pill
     let roleBadge = '';
     if (currentUser.role === 'owner') roleBadge = `<span class="role-badge role-owner">Owner</span>`;
     else if (currentUser.role === 'staff') roleBadge = `<span class="role-badge role-staff">Staff</span>`;
@@ -813,7 +798,6 @@ function updateUserUI() {
         </div>
     `;
 
-    // Show Owner / Staff Panel button if permitted
     if (currentUser.role === 'owner' || currentUser.role === 'staff') {
         ownerBtn.style.display = "inline-flex";
         ownerBtn.textContent = currentUser.role === 'owner' ? "👑 Owner Panel" : "🛡️ Staff Panel";
@@ -865,10 +849,12 @@ function openChatDialog() {
     renderChatMessages();
 }
 
-function switchChannel(channel) {
+function switchChannel(channel, event) {
     currentChannel = channel;
     document.querySelectorAll(".channel-item").forEach(el => el.classList.remove("active"));
-    event.currentTarget.classList.add("active");
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add("active");
+    }
     renderChatMessages();
 }
 
@@ -922,7 +908,6 @@ function searchUsers() {
     const query = document.getElementById("userSearchInput").value.toLowerCase();
     const container = document.getElementById("userSearchResults");
     
-    // Demo accounts database search
     const mockProfiles = [
         { username: "Owner", role: "owner" },
         { username: "Roy", role: "owner" },
@@ -951,10 +936,10 @@ function startDirectMessage(username) {
     if (!localChatStore[channelId]) {
         localChatStore[channelId] = [];
         const channelList = document.getElementById("channelList");
-        channelList.innerHTML += `<div class="channel-item" onclick="switchChannel('${channelId}')">👤 ${username}</div>`;
+        channelList.innerHTML += `<div class="channel-item" onclick="switchChannel('${channelId}', event)">👤 ${username}</div>`;
     }
     openChatDialog();
-    switchChannel(channelId);
+    switchChannel(channelId, null);
 }
 
 // ==========================================
@@ -1036,9 +1021,11 @@ function toggleTheme() {
     }
 }
 
-// Initial Boot
-renderGrid(GAMES);
-renderShelves();
+// Boot up grid on page load
+window.addEventListener("DOMContentLoaded", () => {
+    renderGrid(GAMES);
+    renderShelves();
+});
 </script>
 </body>
 </html>
