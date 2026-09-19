@@ -303,7 +303,7 @@
             <button class="dialog-close" onclick="closeDialog('announcementModal')">✕</button>
         </div>
         <div class="announcement-box" id="announcementText">
-            Welcome to Winyates Edition! Funny Shooter 2 (working) is now live!
+            Welcome to Winyates Edition! Bank Robbery 3 and Obby games are now live!
         </div>
         <button class="btn-primary" onclick="closeDialog('announcementModal')">Got it!</button>
     </div>
@@ -386,6 +386,9 @@ let userFavorites = safeGetStorage('winyates_favs', []);
 let userRecents = safeGetStorage('winyates_recents', []);
 
 const DEFAULT_GAMES = [
+    { name: "Bank Robbery 3", path: "https://app-233144.games.s3.yandex.net/233144/6jv0frg17ygah6utba46ofdfanzc7hgj_brotli/index.html?sdk=%2Fsdk%2F_%2Fv2.5871b227ff69bc337568.js#origin=https%3A%2F%2Fplayhop.com&app-id=233144&device-type=desktop", is_playable: true },
+    { name: "Obby but ur on a bike", path: "https://app-257923.games.s3.yandex.net/257923/h7vkl0tkju02susmtk3xqvkqcyijg6pu_brotli/index.html?sdk=%2Fsdk%2F_%2Fv2.5871b227ff69bc337568.js#origin=https%3A%2F%2Fplayhop.com&app-id=257923&device-type=desktop", is_playable: true },
+    { name: "Obby: +1 Keyboard Speed Escape", path: "https://app-535429.games.s3.yandex.net/535429/qjqakvs4hms15z--https%3A%2F%2Fplayhop.com&app-id=535429&device-type=desktop", is_playable: true },
     { name: "Funny Shooter 2 (working)", path: "https://abcfunnylol.neocities.org/fs2/", is_playable: true },
     { name: "1v1.lol", path: "./games/1v1lol/", is_playable: true },
     { name: "2048", path: "./games/2048/", is_playable: true },
@@ -434,7 +437,7 @@ const DEFAULT_GAMES = [
 ];
 
 let allGames = [...DEFAULT_GAMES];
-let currentAnnouncement = "Welcome to Winyates Edition! Check out Funny Shooter 2 (working) now live!";
+let currentAnnouncement = "Welcome to Winyates Edition! Bank Robbery 3, Obby on a bike, and Obby Keyboard Speed Escape are now live!";
 
 // ==========================================
 // 3. CONSOLE OWNER COMMAND
