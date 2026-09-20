@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Winyates Edition - Unblocked Hub</title>
+<title>Winyates Edition</title>
 <!-- Supabase JS Client v2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -291,11 +291,7 @@
         </div>
     </div>
     <div class="iframe-wrapper">
-        <iframe id="gameFrame" 
-                allow="autoplay; fullscreen; pointer-lock; gamepad; accelerometer; gyroscope; focus-without-user-activation; camera; microphone" 
-                sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-                referrerpolicy="no-referrer"
-                crossorigin="anonymous"></iframe>
+        <iframe id="gameFrame" allow="autoplay; gamepad; fullscreen; focus-without-user-activation"></iframe>
     </div>
 </div>
 
@@ -307,7 +303,7 @@
             <button class="dialog-close" onclick="closeDialog('announcementModal')">✕</button>
         </div>
         <div class="announcement-box" id="announcementText">
-            Welcome to Winyates Edition! All game embeds have been switched to clean direct CDN channels that bypass Playhop & Yandex origin checks on Chrome, Edge, and Firefox.
+            Welcome to Winyates Edition! Bank Robbery 3 and Obby games are now live!
         </div>
         <button class="btn-primary" onclick="closeDialog('announcementModal')">Got it!</button>
     </div>
@@ -343,8 +339,8 @@
                 <input type="text" id="newGameTitle" class="form-control" required placeholder="e.g. Retro Space Shooter">
             </div>
             <div class="form-group">
-                <label>Game Path or Direct Embed URL</label>
-                <input type="text" id="newGamePath" class="form-control" required placeholder="e.g. https://example.com/embed OR ./games/mygame/">
+                <label>Game Path or Full URL</label>
+                <input type="text" id="newGamePath" class="form-control" required placeholder="e.g. https://example.com/game OR ./games/mygame/">
             </div>
             <button type="submit" class="btn-primary">Add Game for Everyone</button>
         </form>
@@ -352,6 +348,9 @@
 </div>
 
 <script>
+// ==========================================
+// 1. LOCALSTORAGE & SUPABASE SETUP
+// ==========================================
 function safeGetStorage(key, fallback) {
     try {
         const item = localStorage.getItem(key);
@@ -379,24 +378,18 @@ try {
     console.warn("Supabase bypassed:", e);
 }
 
+// ==========================================
+// 2. DEFAULT GAME REPOSITORY
+// ==========================================
 let isOwner = false;
 let userFavorites = safeGetStorage('winyates_favs', []);
 let userRecents = safeGetStorage('winyates_recents', []);
 
-// REPLACED ALL BROKEN PLAYHOP ORIGIN EMBEDS WITH CROSS-ORIGIN VERIFIED ENGINE LOADERS
 const DEFAULT_GAMES = [
-    { name: "Obby: +1 Keyboard Speed Escape", path: "https://html5.gamedistribution.com/rvvAS300/535429/", is_playable: true },
-    { name: "Bank Robbery 3", path: "https://html5.gamedistribution.com/a42f60269094406bb1d1c5a98d3637e1/", is_playable: true },
-    { name: "Obby but ur on a bike", path: "https://html5.gamedistribution.com/f04c63bf128a417da534bf60c3cb4527/", is_playable: true },
-    { name: "Time Shooter 2", path: "https://html5.gamedistribution.com/e2815bc184024b07a511ec5a452bf9b4/", is_playable: true },
-    { name: "Time Shooter 3 SWAT", path: "https://html5.gamedistribution.com/6c42a222854045f9b4dd6bfa2f741c88/", is_playable: true },
-    { name: "Rooftop Snipers 2", path: "https://html5.gamedistribution.com/262294bfd0a54a7c8d9101b7a2d812ed/", is_playable: true },
-    { name: "Funny Shooter 2", path: "https://html5.gamedistribution.com/7b2e3ffb0c514d7a96ef8c1fa877c427/", is_playable: true },
-    { name: "Subway Surfers", path: "https://html5.gamedistribution.com/f3e8f85d26a24446a81bf6dfd8471e8c/", is_playable: true },
-    { name: "Slope Unblocked", path: "https://kripdev.github.io/slope/", is_playable: true },
-    { name: "Retro Bowl Unblocked", path: "https://game316009.konggames.com/gamez/0031/6009/live/index.html", is_playable: true },
-    { name: "Shell Shockers", path: "https://shellshock.io", is_playable: true },
-    { name: "Smash Karts", path: "https://smashkarts.io", is_playable: true },
+    { name: "Bank Robbery 3", path: "https://app-233144.games.s3.yandex.net/233144/6jv0frg17ygah6utba46ofdfanzc7hgj_brotli/index.html?sdk=%2Fsdk%2F_%2Fv2.5871b227ff69bc337568.js#origin=https%3A%2F%2Fplayhop.com&app-id=233144&device-type=desktop", is_playable: true },
+    { name: "Obby but ur on a bike", path: "https://app-257923.games.s3.yandex.net/257923/h7vkl0tkju02susmtk3xqvkqcyijg6pu_brotli/index.html?sdk=%2Fsdk%2F_%2Fv2.5871b227ff69bc337568.js#origin=https%3A%2F%2Fplayhop.com&app-id=257923&device-type=desktop", is_playable: true },
+    { name: "Obby: +1 Keyboard Speed Escape", path: "https://app-535429.games.s3.yandex.net/535429/qjqakvs4hms15z--https%3A%2F%2Fplayhop.com&app-id=535429&device-type=desktop", is_playable: true },
+    { name: "Funny Shooter 2 (working)", path: "https://abcfunnylol.neocities.org/fs2/", is_playable: true },
     { name: "1v1.lol", path: "./games/1v1lol/", is_playable: true },
     { name: "2048", path: "./games/2048/", is_playable: true },
     { name: "A Dark Room", path: "./games/adarkroom/", is_playable: true },
@@ -420,10 +413,11 @@ const DEFAULT_GAMES = [
     { name: "Drive Mad", path: "./games/drivemad/", is_playable: true },
     { name: "Duck Life 4", path: "./games/ducklife4/", is_playable: true },
     { name: "Eggy Car", path: "./games/eggycar/", is_playable: true },
-    { name: "Fireboy & Watergirl", path: "./games/fireboyandwatergirlforesttemple/", is_playable: true },
+    { name: "Fireboy & Watergirl: Forest Temple", path: "./games/fireboyandwatergirlforesttemple/", is_playable: true },
     { name: "Flappy Bird", path: "./games/flappybird/", is_playable: true },
     { name: "Friday Night Funkin'", path: "./games/fridaynightfunkin/", is_playable: true },
     { name: "Fruit Ninja", path: "./games/fruitninja/", is_playable: true },
+    { name: "Funny Shooter 2", path: "./funny-shooter-2.html", is_playable: true },
     { name: "Geometry Dash", path: "./games/geometrydash/", is_playable: true },
     { name: "Getaway Shootout", path: "./games/getawayshootoutnew/", is_playable: true },
     { name: "Google Snake", path: "./games/googlesnake/", is_playable: true },
@@ -432,19 +426,22 @@ const DEFAULT_GAMES = [
     { name: "Minecraft", path: "./Minecraft.html", is_playable: true },
     { name: "Monkey Mart", path: "./games/monkeymart/", is_playable: true },
     { name: "Moto X3M", path: "./games/motox3m/", is_playable: true },
-    { name: "Moto X3M Winter", path: "./games/motox3mwinter/", is_playable: true },
-    { name: "Moto X3M Spooky", path: "./games/motox3mspooky/", is_playable: true },
     { name: "OvO", path: "./games/ovo/", is_playable: true },
     { name: "Paper.io", path: "./games/paperio/", is_playable: true },
+    { name: "Retro Bowl", path: "./games/retrobowl/", is_playable: true },
     { name: "Rooftop Snipers", path: "./games/rooftopsnipers/", is_playable: true },
     { name: "Run 3", path: "./games/run3/", is_playable: true },
     { name: "Slither.io", path: "./games/slitherio/", is_playable: true },
+    { name: "Slope", path: "./games/slope/", is_playable: true },
     { name: "Soccer Random", path: "./games/soccerrandom/", is_playable: true }
 ];
 
 let allGames = [...DEFAULT_GAMES];
-let currentAnnouncement = "Welcome to Winyates Edition! All Playhop and web game embeds are updated with origin-verified direct channels for Chrome, Edge, and Firefox.";
+let currentAnnouncement = "Welcome to Winyates Edition! Bank Robbery 3, Obby on a bike, and Obby Keyboard Speed Escape are now live!";
 
+// ==========================================
+// 3. CONSOLE OWNER COMMAND
+// ==========================================
 window.owner = function(pass) {
     if (pass === "Owner123") {
         isOwner = true;
@@ -452,18 +449,24 @@ window.owner = function(pass) {
         document.getElementById("addGameBtn").style.display = "inline-flex";
         document.getElementById("editAnnouncementBtn").style.display = "inline-flex";
         renderGrid(allGames);
+        console.log("✅ Owner mode activated!");
         return "Owner mode activated successfully!";
     } else {
+        console.error("❌ Invalid password.");
         return "Incorrect password.";
     }
 };
 
+// ==========================================
+// 4. SUPABASE GLOBAL DATA SYNC
+// ==========================================
 async function loadGlobalData() {
     const localCustoms = safeGetStorage('winyates_custom_games', []);
     allGames = [...DEFAULT_GAMES, ...localCustoms];
 
     if (supabaseClient) {
         try {
+            // Load custom games
             const { data: dbGames } = await supabaseClient.from('games').select('*');
             if (dbGames && dbGames.length > 0) {
                 const gameMap = new Map();
@@ -472,6 +475,7 @@ async function loadGlobalData() {
                 allGames = Array.from(gameMap.values());
             }
 
+            // Load announcement
             const { data: annData } = await supabaseClient.from('announcements').select('*').order('created_at', { ascending: false }).limit(1);
             if (annData && annData.length > 0) {
                 currentAnnouncement = annData[0].message;
@@ -540,6 +544,9 @@ async function saveAnnouncementGlobal(message) {
     showAnnouncement();
 }
 
+// ==========================================
+// 5. ANNOUNCEMENT SYSTEM
+// ==========================================
 function showAnnouncement() {
     const annBox = document.getElementById("announcementText");
     if (annBox) {
@@ -563,6 +570,9 @@ function handleAnnouncementSubmit(e) {
     }
 }
 
+// ==========================================
+// 6. UI RENDER ENGINE
+// ==========================================
 function renderGrid(items) {
     const grid = document.getElementById("gameGrid");
     const countEl = document.getElementById("gameCount");
@@ -666,6 +676,9 @@ function handleTogglePlayable(e, gameName) {
     toggleGamePlayable(gameName);
 }
 
+// ==========================================
+// 7. MODALS & GAME LAUNCHER
+// ==========================================
 function openAddGameModal() {
     document.getElementById("addGameModal").classList.add("active");
 }
@@ -695,8 +708,7 @@ function handleAddGameSubmit(e) {
 
 function openGame(title, path) {
     document.getElementById("modalTitle").textContent = title;
-    const frame = document.getElementById("gameFrame");
-    frame.src = path;
+    document.getElementById("gameFrame").src = path;
     document.getElementById("gameModal").classList.add("active");
     addRecent(title);
 }
@@ -731,6 +743,7 @@ function toggleTheme() {
     }
 }
 
+// Initialize application
 window.addEventListener("DOMContentLoaded", () => {
     loadGlobalData();
 });
