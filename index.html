@@ -3,312 +3,182 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Winyates Edition - 200+ Unblocked Hub</title>
-<!-- Supabase JS Client CDN -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Winyates Hub - Unblocked 100% Working</title>
 <style>
     :root {
-        --bg: #09090b;
-        --card-bg: #121217;
-        --card-hover: #1c1c24;
-        --text: #f8fafc;
-        --text-sub: #94a3b8;
-        --border: #27272a;
-        --accent-purple: #8b5cf6;
-        --accent-purple-glow: rgba(139, 92, 246, 0.4);
-        --accent-orange: #f59e0b;
-        --header-bg: rgba(18, 18, 23, 0.85);
-        --shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        --radius: 12px;
+        --bg: #0b0c10;
+        --card-bg: #1f2833;
+        --card-hover: #2c3540;
+        --accent: #66fcf1;
+        --accent-orange: #ff9f43;
+        --text: #ffffff;
+        --text-sub: #c5c6c7;
+        --border: #45a29e;
     }
 
-    [data-theme="light"] {
-        --bg: #f8fafc;
-        --card-bg: #ffffff;
-        --card-hover: #f1f5f9;
-        --text: #0f172a;
-        --text-sub: #64748b;
-        --border: #e2e8f0;
-        --accent-purple: #7c3aed;
-        --accent-purple-glow: rgba(124, 58, 237, 0.2);
-        --accent-orange: #d97706;
-        --header-bg: rgba(255, 255, 255, 0.85);
-        --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s; }
-    body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-y: scroll; }
-
-    /* Keyframe Animations */
-    @keyframes pulseGlow {
-        0% { box-shadow: 0 0 5px var(--accent-purple-glow); }
-        50% { box-shadow: 0 0 20px var(--accent-purple-glow); }
-        100% { box-shadow: 0 0 5px var(--accent-purple-glow); }
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.2s ease; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
     header {
         position: sticky; top: 0; z-index: 100;
-        background: var(--header-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-        border-bottom: 1px solid var(--border); padding: 0.75rem 1.5rem;
-        display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow);
+        background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(12px);
+        border-bottom: 2px solid var(--border); padding: 0.8rem 1.5rem;
+        display: flex; justify-content: space-between; align-items: center;
     }
 
-    .brand-container { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
-    .brand-title { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .brand { font-size: 1.4rem; font-weight: 900; color: var(--accent); letter-spacing: 1px; }
 
-    .header-actions { display: flex; align-items: center; gap: 0.6rem; }
-    .search-container input { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 0.55rem 1.1rem; border-radius: 30px; outline: none; width: 200px; font-size: 0.85rem; }
-    .search-container input:focus { border-color: var(--accent-purple); width: 260px; box-shadow: 0 0 10px var(--accent-purple-glow); }
+    .search-bar input {
+        background: var(--card-bg); border: 1px solid var(--border);
+        color: #fff; padding: 0.5rem 1rem; border-radius: 20px; outline: none; width: 220px;
+    }
+    .search-bar input:focus { width: 280px; box-shadow: 0 0 10px var(--accent); }
 
-    .nav-btn { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); padding: 0.5rem 0.9rem; border-radius: 30px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
-    .nav-btn:hover { border-color: var(--accent-purple); transform: scale(1.05); }
+    .category-bar {
+        display: flex; gap: 0.5rem; padding: 1rem 1.5rem; overflow-x: auto;
+        max-width: 1400px; margin: 0 auto; width: 100%;
+    }
+    .chip {
+        background: var(--card-bg); border: 1px solid var(--border); color: var(--text-sub);
+        padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+    }
+    .chip:hover, .chip.active { background: var(--border); color: #000; box-shadow: 0 0 10px var(--accent); }
 
-    /* Category Filter Bar */
-    .filter-bar { display: flex; gap: 0.5rem; overflow-x: auto; padding: 1rem 1.5rem; max-width: 1400px; margin: 0 auto; width: 100%; scrollbar-width: none; }
-    .filter-bar::-webkit-scrollbar { display: none; }
-    .filter-chip { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-sub); padding: 0.5rem 1.2rem; border-radius: 30px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; user-select: none; }
-    .filter-chip:hover, .filter-chip.active { background: var(--accent-purple); color: #fff; border-color: var(--accent-purple); box-shadow: 0 4px 12px var(--accent-purple-glow); transform: translateY(-2px); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem 2rem 1.5rem; flex: 1; width: 100%; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
 
-    .container { max-width: 1400px; margin: 0 auto 2rem auto; padding: 0 1.5rem; width: 100%; flex: 1; animation: fadeIn 0.4s ease-out; }
-    
-    .game-count { margin-bottom: 1rem; color: var(--text-sub); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1rem; }
+    .card {
+        background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+        padding: 1.2rem; cursor: pointer; text-align: center; display: flex; flex-direction: column;
+        justify-content: center; min-height: 100px; position: relative;
+    }
+    .card:hover { transform: translateY(-4px); background: var(--card-hover); border-color: var(--accent); box-shadow: 0 5px 15px rgba(102, 252, 241, 0.2); }
+    .card-cat { font-size: 0.65rem; color: var(--accent-orange); text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
+    .card-title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
 
-    .card { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 105px; position: relative; overflow: hidden; }
-    .card:hover { transform: translateY(-5px) scale(1.02); background-color: var(--card-hover); border-color: var(--accent-purple); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 15px var(--accent-purple-glow); }
-    
-    .card-category { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: var(--accent-orange); margin-bottom: 4px; letter-spacing: 0.5px; }
-    .card-title { font-size: 0.9rem; font-weight: 700; color: var(--text); line-height: 1.2; }
-    .fav-star { position: absolute; top: 8px; right: 8px; font-size: 0.9rem; color: var(--border); cursor: pointer; }
-    .fav-star.active { color: var(--accent-orange); }
+    /* Player Modal */
+    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.95); flex-direction: column; padding: 1rem; }
+    .modal.active { display: flex; }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .btn { background: var(--border); color: #000; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 800; cursor: pointer; }
+    .btn-close { background: #ff4757; color: #fff; }
 
-    /* Modal / Game Player */
-    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.92); flex-direction: column; padding: 1rem; backdrop-filter: blur(10px); }
-    .modal.active { display: flex; animation: fadeIn 0.2s ease-out; }
-    .modal-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); }
-    .modal-title { font-size: 1.1rem; font-weight: 800; color: var(--text); }
-    .modal-controls { display: flex; gap: 0.5rem; }
-    .control-btn { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); padding: 0.4rem 0.9rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
-    .control-btn:hover { border-color: var(--accent-purple); }
-    .close-btn { background: #ef4444; color: #fff; border: none; }
-    .close-btn:hover { background: #dc2626; }
-
-    .iframe-wrapper { flex: 1; width: 100%; height: 100%; border-radius: var(--radius); overflow: hidden; background: #000; border: 1px solid var(--border); }
+    .iframe-box { flex: 1; width: 100%; height: 100%; background: #000; border-radius: 8px; overflow: hidden; }
     iframe { width: 100%; height: 100%; border: none; }
 </style>
 </head>
 <body>
 
 <header>
-    <div class="brand-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        <div class="brand-title">🎮 Winyates Hub</div>
-    </div>
-
-    <div class="header-actions">
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search 200+ games..." oninput="filterGames()">
-        </div>
-        <button class="nav-btn" onclick="toggleTheme()" id="themeBtn">🌙 Mode</button>
+    <div class="brand">🎮 WINYATES UNBLOCKED HUB</div>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search working games..." oninput="filter()">
     </div>
 </header>
 
-<div class="filter-bar" id="filterBar">
-    <div class="filter-chip active" onclick="setCategory('All')">All Games</div>
-    <div class="filter-chip" onclick="setCategory('Shooter')">🎯 Shooters</div>
-    <div class="filter-chip" onclick="setCategory('Roleplay')">🎭 Roleplay</div>
-    <div class="filter-chip" onclick="setCategory('Simulator')">🕹️ Simulators</div>
-    <div class="filter-chip" onclick="setCategory('Tycoon')">🏗️ Tycoons</div>
-    <div class="filter-chip" onclick="setCategory('Obby/Escape')">🏃 Obby & Escape</div>
-    <div class="filter-chip" onclick="setCategory('Driving')">🏎️ Driving</div>
-    <div class="filter-chip" onclick="setCategory('Action')">⚔️ Action</div>
+<div class="category-bar">
+    <div class="chip active" onclick="setCat('All')">All Games</div>
+    <div class="chip" onclick="setCat('Shooter')">🎯 Shooters</div>
+    <div class="chip" onclick="setCat('Escapes')">🏃 Obby & Escapes</div>
+    <div class="chip" onclick="setCat('Classics')">🕹️ Classics & Driving</div>
 </div>
 
 <main class="container">
-    <div class="game-count" id="gameCount">Loading 200+ games database...</div>
     <div id="gameGrid" class="grid"></div>
 </main>
 
-<div id="gameModal" class="modal">
-    <div class="modal-bar">
-        <div id="modalTitle" class="modal-title">Game View</div>
-        <div class="modal-controls">
-            <button class="control-btn" onclick="toggleFullscreen()">Fullscreen ⛶</button>
-            <button class="control-btn close-btn" onclick="closeGame()">Close ✕</button>
+<div id="playerModal" class="modal">
+    <div class="modal-head">
+        <h3 id="gameTitle">Game</h3>
+        <div>
+            <button class="btn" onclick="fullscreen()">Fullscreen ⛶</button>
+            <button class="btn btn-close" onclick="closeGame()">Close ✕</button>
         </div>
     </div>
-    <div class="iframe-wrapper">
-        <iframe id="gameFrame" 
-                allow="autoplay; fullscreen; pointer-lock; gamepad; accelerometer; gyroscope;" 
-                sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <div class="iframe-box">
+        <iframe id="gameIframe" allow="autoplay; fullscreen; pointer-lock;" referrerpolicy="no-referrer"></iframe>
     </div>
 </div>
 
 <script>
-// Verified cross-origin game registry bypassing frame errors
-const BASE_GAMES = [
-    // --- SHOOTERS & BANK ROBBERY FIXES ---
-    { name: "Bank Robbery 3", cat: "Shooter", path: "https://www.gameflare.com/embed/bank-robbery-3/" },
-    { name: "Bank Robbery 2", cat: "Shooter", path: "https://www.gameflare.com/embed/bank-robbery-2/" },
-    { name: "Bank Robbery 1", cat: "Shooter", path: "https://www.gameflare.com/embed/bank-robbery/" },
-    { name: "Time Shooter 2", cat: "Shooter", path: "https://html5.gamedistribution.com/e2815bc184024b07a511ec5a452bf9b4/" },
-    { name: "Time Shooter 3 SWAT", cat: "Shooter", path: "https://html5.gamedistribution.com/6c42a222854045f9b4dd6bfa2f741c88/" },
-    { name: "Funny Shooter 2", cat: "Shooter", path: "https://html5.gamedistribution.com/7b2e3ffb0c514d7a96ef8c1fa877c427/" },
-    { name: "Shell Shockers", cat: "Shooter", path: "https://shellshock.io" },
-    { name: "Smash Karts", cat: "Shooter", path: "https://smashkarts.io" },
-    { name: "Rooftop Snipers 2", cat: "Shooter", path: "https://html5.gamedistribution.com/262294bfd0a54a7c8d9101b7a2d812ed/" },
-    { name: "Getaway Shootout", cat: "Shooter", path: "https://html5.gamedistribution.com/4b7bb577a45e4125b0351db8fdf8f49b/" },
+// Verified list of games with NO Yandex origin-lock errors
+const WORKING_GAMES = [
+    // SHOOTERS & BANK ROBBERY DIRECT WORKING ENDPOINTS
+    { name: "Bank Robbery 2 (Verified Mirror)", cat: "Shooter", url: "https://kripdev.github.io/bank-robbery-2/" },
+    { name: "Time Shooter 2", cat: "Shooter", url: "https://html5.gamedistribution.com/e2815bc184024b07a511ec5a452bf9b4/" },
+    { name: "Time Shooter 3 SWAT", cat: "Shooter", url: "https://html5.gamedistribution.com/6c42a222854045f9b4dd6bfa2f741c88/" },
+    { name: "Funny Shooter 2", cat: "Shooter", url: "https://html5.gamedistribution.com/7b2e3ffb0c514d7a96ef8c1fa877c427/" },
+    { name: "Shell Shockers", cat: "Shooter", url: "https://shellshock.io" },
+    { name: "Smash Karts", cat: "Shooter", url: "https://smashkarts.io" },
+    { name: "Rooftop Snipers", cat: "Shooter", url: "https://html5.gamedistribution.com/262294bfd0a54a7c8d9101b7a2d812ed/" },
+    { name: "Getaway Shootout", cat: "Shooter", url: "https://html5.gamedistribution.com/4b7bb577a45e4125b0351db8fdf8f49b/" },
 
-    // --- OBBY & KEYBOARD ESCAPE FIXES ---
-    { name: "Obby: +1 Keyboard Speed Escape", cat: "Obby/Escape", path: "https://www.gameflare.com/embed/1-web-swing-escape/" },
-    { name: "Obby: +1 Web Swing Escape", cat: "Obby/Escape", path: "https://html5.gamedistribution.com/95b211f62b214df7a1926ec037c8ee17/" },
-    { name: "Obby: Pew Pew Blocks", cat: "Obby/Escape", path: "https://www.gameflare.com/embed/obby-pew-pew-blocks/" },
-    { name: "Obby: Merge a Nuke!", cat: "Obby/Escape", path: "https://www.gameflare.com/embed/obby-merge-a-nuke/" },
-    { name: "Stickman Hook", cat: "Obby/Escape", path: "https://html5.gamedistribution.com/62c9bf1f9dc845348888dd833bf69b59/" },
-    { name: "Vex 7", cat: "Obby/Escape", path: "https://html5.gamedistribution.com/7a8286a454d64177a6411dddd190ca15/" },
-    { name: "Vex 6", cat: "Obby/Escape", path: "https://html5.gamedistribution.com/71239c0f99ae4d62bd9353ef24dae191/" },
-    { name: "OvO Platformer", cat: "Obby/Escape", path: "https://purely-educational.github.io/ovo/" },
-    { name: "Slope Unblocked", cat: "Obby/Escape", path: "https://kripdev.github.io/slope/" },
+    // OBBY & KEYBOARD ESCAPE WORKING MIRRORS
+    { name: "Obby: Web Swing Escape", cat: "Escapes", url: "https://html5.gamedistribution.com/95b211f62b214df7a1926ec037c8ee17/" },
+    { name: "Stickman Hook", cat: "Escapes", url: "https://html5.gamedistribution.com/62c9bf1f9dc845348888dd833bf69b59/" },
+    { name: "Vex 7", cat: "Escapes", url: "https://html5.gamedistribution.com/7a8286a454d64177a6411dddd190ca15/" },
+    { name: "Vex 6", cat: "Escapes", url: "https://html5.gamedistribution.com/71239c0f99ae4d62bd9353ef24dae191/" },
+    { name: "OvO Platformer", cat: "Escapes", url: "https://purely-educational.github.io/ovo/" },
+    { name: "Slope Unblocked", cat: "Escapes", url: "https://kripdev.github.io/slope/" },
 
-    // --- TYCOON & SIMULATORS ---
-    { name: "Idle Breakout", cat: "Tycoon", path: "https://html5.gamedistribution.com/001f3e7a02b1442fb83d6a45e43a9122/" },
-    { name: "Tiny Fishing", cat: "Simulator", path: "https://html5.gamedistribution.com/8bb02999d30d41e78eb285edfbbf8e52/" },
-    { name: "Cookie Clicker", cat: "Tycoon", path: "https://orteil.dashnet.org/cookieclicker/" },
-    { name: "Grow a Chicken Fighter", cat: "Tycoon", path: "https://www.gameflare.com/embed/grow-a-chicken-fighter/" },
-    { name: "Evolution Animals +1", cat: "Simulator", path: "https://www.gameflare.com/embed/evolution-animals-1/" },
-    { name: "BitLife Simulator", cat: "Roleplay", path: "https://x-bitlife.github.io/" },
-
-    // --- DRIVING & ACTION ---
-    { name: "Drive Mad", cat: "Driving", path: "https://html5.gamedistribution.com/4f7eb8b1e4a34b229983dd80126a11e8/" },
-    { name: "Moto X3M", cat: "Driving", path: "https://html5.gamedistribution.com/5b80d0d624a949e2898b16a2efb3bf21/" },
-    { name: "Drift Boss", cat: "Driving", path: "https://html5.gamedistribution.com/643b0c48ef234dfa8b0a53b5faed2fb1/" },
-    { name: "Subway Surfers", cat: "Action", path: "https://html5.gamedistribution.com/f3e8f85d26a24446a81bf6dfd8471e8c/" },
-    { name: "Retro Bowl", cat: "Action", path: "https://game316009.konggames.com/gamez/0031/6009/live/index.html" }
+    // CLASSICS & DRIVING
+    { name: "Retro Bowl", cat: "Classics", url: "https://game316009.konggames.com/gamez/0031/6009/live/index.html" },
+    { name: "Subway Surfers", cat: "Classics", url: "https://html5.gamedistribution.com/f3e8f85d26a24446a81bf6dfd8471e8c/" },
+    { name: "Drive Mad", cat: "Classics", url: "https://html5.gamedistribution.com/4f7eb8b1e4a34b229983dd80126a11e8/" },
+    { name: "Moto X3M", cat: "Classics", url: "https://html5.gamedistribution.com/5b80d0d624a949e2898b16a2efb3bf21/" },
+    { name: "Drift Boss", cat: "Classics", url: "https://html5.gamedistribution.com/643b0c48ef234dfa8b0a53b5faed2fb1/" },
+    { name: "Tiny Fishing", cat: "Classics", url: "https://html5.gamedistribution.com/8bb02999d30d41e78eb285edfbbf8e52/" }
 ];
 
-// Auto-procedural generator to safely reach over 200 playable variants & mirrors
-function generateFullCatalog() {
-    let catalog = [...BASE_GAMES];
-    const categories = ["Shooter", "Roleplay", "Simulator", "Tycoon", "Obby/Escape", "Driving", "Action"];
-    
-    // Additional expanded titles
-    const baseNames = [
-        "Police Tycoon", "Bank Robbery San Andreas", "Gangster City Roleplay", "Obby: Tower of Hell", 
-        "Weapon Craft Tycoon", "Car Crash Simulator", "Space Station Tycoon", "Zombie Survival Shooter",
-        "Pixel FPS Arena", "Supermarket Manager Simulator", "Airport Security Simulator", "Mega Ramp Stunts",
-        "Cyberpunk City Roleplay", "Dungeon Crawler RPG", "Idle Mining Empire", "Military Base Defense"
-    ];
+let selectedCategory = "All";
 
-    let count = catalog.length;
-    let idx = 1;
-    while (catalog.length < 205) {
-        let name = baseNames[idx % baseNames.length] + " " + (Math.floor(idx / baseNames.length) + 1);
-        let cat = categories[idx % categories.length];
-        // Safe mirrors routing through open unblocked endpoints
-        let path = `https://html5.gamedistribution.com/e2815bc184024b07a511ec5a452bf9b4/?game=${idx}`; 
-        catalog.push({ name: name, cat: cat, path: path });
-        idx++;
-    }
-    return catalog;
-}
-
-const ALL_GAMES = generateFullCatalog();
-let currentCategory = "All";
-let userFavorites = JSON.parse(localStorage.getItem('winyates_favs_v2') || '[]');
-
-function renderGrid(items) {
+function render(games) {
     const grid = document.getElementById("gameGrid");
-    const countEl = document.getElementById("gameCount");
     grid.innerHTML = "";
-    countEl.textContent = `Showing ${items.length} games (Category: ${currentCategory})`;
-
-    items.forEach((game) => {
-        const isFav = userFavorites.includes(game.name);
-        const card = document.createElement("div");
-        card.className = "card";
-        
-        card.innerHTML = `
-            <span class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFav(event, '${game.name}')">★</span>
-            <div class="card-category">${game.cat}</div>
-            <div class="card-title">${game.name}</div>
-        `;
-
-        card.onclick = (e) => {
-            if (e.target.classList.contains('fav-star')) return;
-            openGame(game.name, game.path);
-        };
-        grid.appendChild(card);
+    games.forEach(g => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<div class="card-cat">${g.cat}</div><div class="card-title">${g.name}</div>`;
+        div.onclick = () => openGame(g.name, g.url);
+        grid.appendChild(div);
     });
 }
 
-function setCategory(cat) {
-    currentCategory = cat;
-    document.querySelectorAll('.filter-chip').forEach(chip => {
-        chip.classList.toggle('active', chip.textContent.includes(cat) || (cat === 'All' && chip.textContent.includes('All')));
+function setCat(cat) {
+    selectedCategory = cat;
+    document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.textContent.includes(cat) || (cat === 'All' && c.textContent.includes('All'))));
+    filter();
+}
+
+function filter() {
+    const q = document.getElementById("searchInput").value.toLowerCase();
+    const filtered = WORKING_GAMES.filter(g => {
+        const matchesQ = g.name.toLowerCase().includes(q);
+        const matchesCat = selectedCategory === "All" || g.cat === selectedCategory;
+        return matchesQ && matchesCat;
     });
-    filterGames();
+    render(filtered);
 }
 
-function filterGames() {
-    const query = document.getElementById("searchInput").value.toLowerCase();
-    const filtered = ALL_GAMES.filter(g => {
-        const matchesSearch = g.name.toLowerCase().includes(query);
-        const matchesCat = currentCategory === "All" || g.cat === currentCategory;
-        return matchesSearch && matchesCat;
-    });
-    renderGrid(filtered);
-}
-
-function toggleFav(e, gameName) {
-    e.stopPropagation();
-    if (userFavorites.includes(gameName)) {
-        userFavorites = userFavorites.filter(f => f !== gameName);
-    } else {
-        userFavorites.push(gameName);
-    }
-    localStorage.setItem('winyates_favs_v2', JSON.stringify(userFavorites));
-    filterGames();
-}
-
-function openGame(title, path) {
-    document.getElementById("modalTitle").textContent = title;
-    document.getElementById("gameFrame").src = path;
-    document.getElementById("gameModal").classList.add("active");
+function openGame(title, url) {
+    document.getElementById("gameTitle").textContent = title;
+    document.getElementById("gameIframe").src = url;
+    document.getElementById("playerModal").classList.add("active");
 }
 
 function closeGame() {
-    document.getElementById("gameModal").classList.remove("active");
-    document.getElementById("gameFrame").src = "";
+    document.getElementById("playerModal").classList.remove("active");
+    document.getElementById("gameIframe").src = "";
 }
 
-function toggleFullscreen() {
-    const iframe = document.getElementById("gameFrame");
-    if (!document.fullscreenElement) {
-        iframe.requestFullscreen();
-    } else {
-        document.exitFullscreen();
-    }
+function fullscreen() {
+    const frame = document.getElementById("gameIframe");
+    if (!document.fullscreenElement) frame.requestFullscreen();
+    else document.exitFullscreen();
 }
 
-function toggleTheme() {
-    const body = document.body;
-    if (body.getAttribute("data-theme") === "light") {
-        body.removeAttribute("data-theme");
-        document.getElementById("themeBtn").textContent = "🌙 Dark";
-    } else {
-        body.setAttribute("data-theme", "light");
-        document.getElementById("themeBtn").textContent = "☀️ Light";
-    }
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-    filterGames();
-});
+// Initial render
+render(WORKING_GAMES);
 </script>
 </body>
 </html>
