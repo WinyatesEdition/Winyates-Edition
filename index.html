@@ -1,567 +1,299 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Winyates Edition</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            purple: '#8b5cf6',
-                            purpleGlow: 'rgba(139, 92, 246, 0.4)',
-                            gold: '#f59e0b',
-                            goldGlow: 'rgba(245, 158, 11, 0.4)',
-                            darkBg: '#090a0f',
-                            darkCard: '#13151f',
-                            darkHover: '#1c1f2e',
-                            darkBorder: '#262a3d'
-                        }
-                    },
-                    animation: {
-                        'pulse-glow': 'pulseGlow 2.5s infinite',
-                        'fade-in': 'fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
-                    },
-                    keyframes: {
-                        pulseGlow: {
-                            '0%, 100%': { boxShadow: '0 0 12px rgba(139, 92, 246, 0.3)' },
-                            '50%': { boxShadow: '0 0 28px rgba(139, 92, 246, 0.65)' }
-                        },
-                        fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(6px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #33384f;
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4f567a;
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .glass-header {
-            background: rgba(19, 21, 31, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .game-card-glow:hover {
-            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.25), 0 8px 10px -6px rgba(245, 158, 11, 0.2);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Winyates Edition - Unlocked Gaming Hub</title>
+<style>
+    :root {
+        --bg: #09090b;
+        --card-bg: #141419;
+        --card-hover: #1f1f28;
+        --text: #f8fafc;
+        --text-sub: #94a3b8;
+        --border: #27272a;
+        --header-bg: rgba(20, 20, 25, 0.95);
+        --accent-purple: #8b5cf6;
+        --accent-orange: #f59e0b;
+        --accent-blue: #3b82f6;
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    [data-theme="light"] {
+        --bg: #f8fafc;
+        --card-bg: #ffffff;
+        --card-hover: #f1f5f9;
+        --text: #0f172a;
+        --text-sub: #64748b;
+        --border: #e2e8f0;
+        --header-bg: rgba(255, 255, 255, 0.95);
+        --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-y: scroll; }
+
+    /* Announcement Banner */
+    .announcement-bar {
+        background: linear-gradient(90deg, #8b5cf6, #d946ef);
+        color: #ffffff;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3);
+    }
+    .announcement-text { display: flex; align-items: center; gap: 8px; }
+    .announcement-close { background: none; border: none; color: #fff; font-weight: 900; cursor: pointer; font-size: 1rem; }
+
+    header {
+        position: sticky; top: 0; z-index: 100;
+        background: var(--header-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border); padding: 0.75rem 1.5rem;
+        display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow);
+    }
+
+    .brand-container { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+    .brand-logo { width: 38px; height: 38px; background: rgba(139, 92, 246, 0.1); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .brand-title { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
+    .owner-badge {
+        background: linear-gradient(135deg, #f59e0b, #b45309);
+        color: #000000;
+        font-weight: 900;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+    }
+
+    .header-actions { display: flex; align-items: center; gap: 0.6rem; }
+    
+    .dropdown { position: relative; display: inline-block; }
+    .school-btn { background: linear-gradient(135deg, var(--accent-blue), #1d4ed8); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 30px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+    .dropdown-content { display: none; position: absolute; right: 0; top: 110%; background-color: var(--card-bg); min-width: 180px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; z-index: 200; box-shadow: var(--shadow); }
+    .dropdown-content a { color: var(--text); padding: 10px 14px; text-decoration: none; display: block; font-size: 0.85rem; font-weight: 600; border-bottom: 1px solid var(--border); }
+    .dropdown-content a:hover { background-color: var(--card-hover); color: var(--accent-purple); }
+    .dropdown:hover .dropdown-content { display: block; }
+
+    .search-container input { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1rem; border-radius: 30px; outline: none; width: 180px; font-size: 0.85rem; }
+    .search-container input:focus { border-color: var(--accent-purple); width: 220px; }
+
+    .nav-btn { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); padding: 0.5rem 0.9rem; border-radius: 30px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+    .nav-btn:hover { border-color: var(--accent-purple); }
+
+    .container { max-width: 1400px; margin: 1.5rem auto; padding: 0 1.5rem; width: 100%; flex: 1; }
+    
+    .filter-bar { display: flex; gap: 0.5rem; overflow-x: auto; margin-bottom: 1.2rem; padding-bottom: 0.4rem; }
+    .chip { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-sub); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .chip:hover, .chip.active { background: var(--accent-purple); color: #fff; border-color: var(--accent-purple); }
+
+    .game-count { margin-bottom: 1rem; color: var(--text-sub); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+
+    .card { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 95px; position: relative; }
+    .card:hover { transform: translateY(-4px); background-color: var(--card-hover); border-color: var(--accent-purple); box-shadow: var(--shadow); }
+    .card-cat { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: var(--accent-orange); margin-bottom: 4px; }
+    .card-title { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+
+    /* Modal / Frame Viewer */
+    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.92); flex-direction: column; padding: 1rem; }
+    .modal.active { display: flex; }
+    .modal-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; }
+    .modal-title { font-size: 1.1rem; font-weight: 800; color: var(--text); }
+    .modal-controls { display: flex; gap: 0.5rem; }
+    .control-btn { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); padding: 0.4rem 0.9rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+    .close-btn { background: #ef4444; color: #fff; border: none; }
+
+    .iframe-wrapper { flex: 1; width: 100%; height: 100%; border-radius: 12px; overflow: hidden; background: #000; border: 1px solid var(--border); }
+    iframe { width: 100%; height: 100%; border: none; }
+</style>
 </head>
-<body class="bg-slate-900 dark:bg-brand-darkBg text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
+<body>
 
-    <header class="sticky top-0 z-40 glass-header border-b border-slate-200 dark:border-brand-darkBorder px-4 sm:px-6 py-3 shadow-xl transition-all">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-            
-            <!-- Brand Logo & Title -->
-            <div class="flex items-center justify-between w-full md:w-auto">
-                <div class="flex items-center gap-3 cursor-pointer group" onclick="resetFilters()">
-                    <!-- Custom Winyates 'W' Shield SVG Logo -->
-                    <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-amber-500 p-0.5 shadow-lg group-hover:scale-105 transition-all duration-300 animate-pulse-glow">
-                        <div class="w-full h-full bg-brand-darkBg rounded-[10px] flex items-center justify-center">
-                            <svg class="w-7 h-7" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20 25 L35 75 L50 45 L65 75 L80 25" stroke="url(#winyatesGrad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-                                <defs>
-                                    <linearGradient id="winyatesGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#a855f7" />
-                                        <stop offset="50%" stop-color="#ec4899" />
-                                        <stop offset="100%" stop-color="#f59e0b" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-black tracking-tight bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400 bg-clip-text text-transparent">
-                            Winyates Edition
-                        </h1>
-                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400 block -mt-1">
-                            Unlocked Gaming Hub
-                        </span>
-                    </div>
-                </div>
+<div class="announcement-bar" id="announcementBar">
+    <div class="announcement-text">📢 <span><b>Update:</b> Switched to CrazyGames & GameDistribution direct embeds!</span></div>
+    <button class="announcement-close" onclick="document.getElementById('announcementBar').style.display='none'">✕</button>
+</div>
 
-                <!-- Theme Toggle (Mobile) -->
-                <button onclick="toggleTheme()" class="md:hidden p-2 rounded-xl bg-slate-800 border border-slate-700 text-amber-400">
-                    <span class="dark:hidden">🌙</span>
-                    <span class="hidden dark:inline">☀️</span>
-                </button>
-            </div>
-
-            <!-- Controls, School Apps & Search Bar -->
-            <div class="flex items-center flex-wrap gap-2.5 w-full md:w-auto justify-end">
-                
-                <!-- School Apps Dropdown -->
-                <div class="relative group">
-                    <button class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-purple-600/20 text-slate-200 border border-slate-700 hover:border-purple-500/50 flex items-center gap-1.5 transition-all shadow-sm">
-                        <span>🏫 School Apps</span>
-                        <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div class="absolute right-0 mt-1 w-48 bg-brand-darkCard border border-brand-darkBorder rounded-xl shadow-2xl py-1 hidden group-hover:block z-50 animate-fade-in backdrop-blur-md">
-                        <a href="https://www.edshed.com" target="_blank" class="block px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-purple-600 hover:text-white transition-colors">🐝 EdShed</a>
-                        <a href="https://ttrockstars.com" target="_blank" class="block px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-purple-600 hover:text-white transition-colors">🎸 TTRS</a>
-                        <a href="https://www.myon.co.uk" target="_blank" class="block px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-purple-600 hover:text-white transition-colors">📖 myON</a>
-                        <a href="https://www.classdojo.com" target="_blank" class="block px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-purple-600 hover:text-white transition-colors">🏝️ ClassDojo Islands</a>
-                    </div>
-                </div>
-
-                <!-- Add Local Game Path Button -->
-                <button onclick="openAddGameModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500 hover:text-slate-950 transition-all flex items-center gap-1">
-                    <span>📁 Add Local Path</span>
-                </button>
-
-                <!-- Search Bar -->
-                <div class="relative flex-1 sm:w-56">
-                    <input type="text" id="searchInput" oninput="filterGames()" placeholder="Search catalog..." 
-                           class="w-full pl-8 pr-3 py-1.5 rounded-xl text-xs bg-slate-800/90 border border-slate-700 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
-                    <svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
-
-                <!-- Theme Toggle (Desktop) -->
-                <button onclick="toggleTheme()" class="hidden md:flex p-2 rounded-xl bg-slate-800 border border-slate-700 text-amber-400 hover:border-purple-500 transition-all">
-                    <span class="dark:hidden">🌙</span>
-                    <span class="hidden dark:inline">☀️</span>
-                </button>
-            </div>
+<header>
+    <div class="brand-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <div class="brand-logo">
+            <svg viewBox="0 0 200 180" width="24" height="24">
+                <path d="M 30,30 Q 170,-10 160,70 Q 150,110 50,100" fill="none" stroke="#8b5cf6" stroke-width="22" stroke-linecap="round"/>
+                <text x="62" y="112" font-family="Arial Black, sans-serif" font-weight="900" font-size="120" fill="#f59e0b">W</text>
+            </svg>
         </div>
-    </header>
-
-    <nav class="border-b border-slate-800 bg-brand-darkCard/50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-2 overflow-x-auto hide-scrollbar" id="categoryBar">
-            <!-- Dynamic Category Chips loaded via JS -->
-        </div>
-    </nav>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full space-y-7">
-        
-        <!-- Yandex Crash Fix Alert Notice Banner -->
-        <div class="bg-gradient-to-r from-purple-950/60 to-slate-900/80 border border-purple-500/30 rounded-2xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 font-extrabold text-sm">
-                    ⚡
-                </div>
-                <div>
-                    <h3 class="text-xs font-bold text-white">Yandex & Embed Anti-Crash Protection Active</h3>
-                    <p class="text-[11px] text-slate-400">If a Yandex game shows a blank screen or origin lock, click the <span class="text-amber-400 font-bold">Pop-out Tab 🚀</span> button inside the launcher!</p>
-                </div>
-            </div>
-            <span class="text-[10px] font-extrabold text-purple-400 bg-purple-950/80 border border-purple-800/50 px-2.5 py-1 rounded-full shrink-0">100% CORS Safe</span>
-        </div>
-
-        <!-- Recently Played Horizontal Shelf -->
-        <section id="recentSection" class="hidden animate-fade-in">
-            <div class="flex items-center justify-between mb-2.5">
-                <h2 class="text-xs font-black tracking-widest uppercase text-amber-400 flex items-center gap-2">
-                    <span>🕒 Recently Played</span>
-                </h2>
-                <button onclick="clearRecents()" class="text-[10px] font-bold text-slate-400 hover:text-red-400 transition-colors">Clear History</button>
-            </div>
-            <div id="recentGrid" class="flex gap-3 overflow-x-auto pb-2 hide-scrollbar">
-                <!-- Cards appended via JS -->
-            </div>
-        </section>
-
-        <!-- Favorites Horizontal Shelf -->
-        <section id="favoritesSection" class="hidden animate-fade-in">
-            <div class="flex items-center justify-between mb-2.5">
-                <h2 class="text-xs font-black tracking-widest uppercase text-purple-400 flex items-center gap-2">
-                    <span>⭐ Favorite Games</span>
-                </h2>
-            </div>
-            <div id="favoritesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                <!-- Cards appended via JS -->
-            </div>
-        </section>
-
-        <!-- Main Games Catalog Grid -->
-        <section class="animate-fade-in">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xs font-black tracking-widest uppercase text-slate-400" id="catalogHeader">
-                    All Games Catalog
-                </h2>
-                <span class="text-xs font-extrabold text-purple-400 bg-purple-950/60 px-3 py-1 rounded-full border border-purple-800/40 shadow-inner" id="gameCounter">
-                    0 Games
-                </span>
-            </div>
-            <div id="gamesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5">
-                <!-- Main Cards appended via JS -->
-            </div>
-        </section>
-    </main>
-
-    <div id="gameModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-lg flex-col p-2 sm:p-4 hidden animate-fade-in">
-        <div class="bg-brand-darkCard border border-brand-darkBorder rounded-xl p-3 mb-2 flex flex-wrap items-center justify-between gap-2 shadow-2xl">
-            <div class="flex items-center gap-2.5 truncate max-w-full sm:max-w-md">
-                <span class="text-[10px] font-extrabold uppercase text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded" id="modalCategory">Category</span>
-                <h3 class="text-sm font-bold text-white truncate" id="modalTitle">Game Player</h3>
-            </div>
-            <div class="flex items-center gap-2 shrink-0">
-                <!-- Pop-out button to completely bypass Yandex origin checks in standard iframe -->
-                <button onclick="launchPopout()" title="Opens in direct clean window to bypass Yandex origin restrictions" class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 shadow-md transition-all flex items-center gap-1">
-                    <span>Launch Pop-out Tab 🚀</span>
-                </button>
-                <button onclick="toggleFullscreen()" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all">
-                    Fullscreen ⛶
-                </button>
-                <button onclick="closeGameModal()" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600 hover:bg-red-700 text-white transition-all shadow-md">
-                    Close ✕
-                </button>
-            </div>
-        </div>
-        <div class="flex-1 w-full bg-black rounded-xl overflow-hidden border border-slate-800 relative shadow-2xl flex flex-col">
-            <iframe id="gameFrame" class="w-full h-full border-0" 
-                    allow="autoplay; fullscreen; pointer-lock; gamepad; accelerometer; gyroscope;"
-                    sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-                    referrerpolicy="no-referrer"></iframe>
-        </div>
+        <div class="brand-title">Winyates Edition</div>
+        <div class="owner-badge">👑 Roy Owner</div>
     </div>
 
-    <div id="addGameModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-fade-in">
-        <div class="bg-brand-darkCard border border-brand-darkBorder rounded-2xl max-w-md w-full p-6 shadow-2xl">
-            <h3 class="text-base font-bold text-white mb-1">Add Local Game Path</h3>
-            <p class="text-xs text-slate-400 mb-4">Link custom HTML games directly from your local repository or `./games/` directory.</p>
-            
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1">Game Title</label>
-                    <input type="text" id="customName" placeholder="e.g. My Custom Game" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1">Category</label>
-                    <select id="customCat" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
-                        <option value="Local Games">📁 Local Games Folder</option>
-                        <option value="Shooters">🎯 Shooters</option>
-                        <option value="Roleplay">🎭 Roleplay</option>
-                        <option value="Simulators">🕹️ Simulators</option>
-                        <option value="Tycoons">🏗️ Tycoons</option>
-                        <option value="Obby & Escapes">🏃 Obby & Escapes</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1">Relative Path / Direct Mirror URL</label>
-                    <input type="text" id="customPath" placeholder="./games/mygame/index.html" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
-                </div>
-            </div>
-
-            <div class="flex justify-end gap-2 mt-6">
-                <button onclick="closeAddGameModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">Cancel</button>
-                <button onclick="saveCustomGame()" class="px-4 py-2 rounded-xl text-xs font-extrabold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg">Save & Launch</button>
+    <div class="header-actions">
+        <div class="dropdown">
+            <button class="school-btn">🏫 School Apps ▾</button>
+            <div class="dropdown-content">
+                <a href="https://www.edshed.com" target="_blank">🐝 EdShed</a>
+                <a href="https://play.ttrockstars.com" target="_blank">🎸 TTRS</a>
+                <a href="https://www.myon.co.uk" target="_blank">📚 myON</a>
+                <a href="https://student.classdojo.com/#/dojoIslands" target="_blank">🏝️ Dojo Islands</a>
             </div>
         </div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search games..." oninput="filterGames()">
+        </div>
+        <button class="nav-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+    </div>
+</header>
+
+<main class="container">
+    <div class="filter-bar">
+        <div class="chip active" onclick="setCat('All')">All Games</div>
+        <div class="chip" onclick="setCat('Local')">📁 Local Folder</div>
+        <div class="chip" onclick="setCat('Shooter')">🎯 Shooters</div>
+        <div class="chip" onclick="setCat('Escapes')">🏃 Obby & Escapes</div>
+        <div class="chip" onclick="setCat('Classics')">🏎️ Classics & Fun</div>
     </div>
 
-    <script>
-        // Verified database with fixed CORS-safe mirrors and local ./games/ folder bindings
-        const CURATED_GAMES = [
-            // LOCAL FOLDER GAMES
-            { name: "A Dark Room", cat: "Local Games", path: "./games/adarkroom/" },
-            { name: "Baldi's Basics", cat: "Local Games", path: "./games/baldisbasics/" },
-            { name: "BitLife (Local)", cat: "Local Games", path: "./games/bitlife/" },
-            { name: "Cookie Clicker (Local)", cat: "Local Games", path: "./games/cookieclicker/" },
-            { name: "Minecraft Web (Local)", cat: "Local Games", path: "./Minecraft.html" },
-            { name: "OvO Platformer (Local)", cat: "Local Games", path: "./games/ovo/" },
-            { name: "Run 3 (Local)", cat: "Local Games", path: "./games/run3/" },
+    <div class="game-count" id="gameCount">Loading collection...</div>
+    <div id="gameGrid" class="grid"></div>
+</main>
 
-            // SHOOTERS & BANK ROBBERY (FIXED EMBEDS)
-            { name: "Bank Robbery 3", cat: "Shooters", path: "https://www.gameflare.com/embed/bank-robbery-3/" },
-            { name: "Bank Robbery 2", cat: "Shooters", path: "https://kripdev.github.io/bank-robbery-2/" },
-            { name: "Bank Robbery 1", cat: "Shooters", path: "https://www.gameflare.com/embed/bank-robbery/" },
-            { name: "Time Shooter 2", cat: "Shooters", path: "https://html5.gamedistribution.com/e2815bc184024b07a511ec5a452bf9b4/" },
-            { name: "Time Shooter 3 SWAT", cat: "Shooters", path: "https://html5.gamedistribution.com/6c42a222854045f9b4dd6bfa2f741c88/" },
-            { name: "Funny Shooter 2", cat: "Shooters", path: "https://html5.gamedistribution.com/7b2e3ffb0c514d7a96ef8c1fa877c427/" },
-            { name: "Shell Shockers", cat: "Shooters", path: "https://shellshock.io" },
-            { name: "Smash Karts", cat: "Shooters", path: "https://smashkarts.io" },
-            { name: "Rooftop Snipers", cat: "Shooters", path: "https://html5.gamedistribution.com/262294bfd0a54a7c8d9101b7a2d812ed/" },
-            { name: "Getaway Shootout", cat: "Shooters", path: "https://html5.gamedistribution.com/4b7bb577a45e4125b0351db8fdf8f49b/" },
+<div id="gameModal" class="modal">
+    <div class="modal-bar">
+        <div id="modalTitle" class="modal-title">Game View</div>
+        <div class="modal-controls">
+            <button class="control-btn" onclick="popoutWindow()">Popout ↗</button>
+            <button class="control-btn" onclick="toggleFullscreen()">Fullscreen ⛶</button>
+            <button class="control-btn close-btn" onclick="closeGame()">Close ✕</button>
+        </div>
+    </div>
+    <div class="iframe-wrapper">
+        <iframe id="gameFrame" allow="autoplay; fullscreen; pointer-lock;" referrerpolicy="no-referrer"></iframe>
+    </div>
+</div>
 
-            // OBBY & ESCAPES
-            { name: "Obby: +1 Keyboard Speed Escape", cat: "Obby & Escapes", path: "https://www.gameflare.com/embed/1-web-swing-escape/" },
-            { name: "Obby: +1 Web Swing Escape", cat: "Obby & Escapes", path: "https://html5.gamedistribution.com/95b211f62b214df7a1926ec037c8ee17/" },
-            { name: "Obby: Pew Pew Blocks", cat: "Obby & Escapes", path: "https://html5.gamedistribution.com/7b2e3ffb0c514d7a96ef8c1fa877c427/" },
-            { name: "Stickman Hook", cat: "Obby & Escapes", path: "https://html5.gamedistribution.com/62c9bf1f9dc845348888dd833bf69b59/" },
-            { name: "Vex 7", cat: "Obby & Escapes", path: "https://html5.gamedistribution.com/7a8286a454d64177a6411dddd190ca15/" },
-            { name: "Slope Unblocked", cat: "Obby & Escapes", path: "https://kripdev.github.io/slope/" },
+<script>
+const GAMES_LIST = [
+    // 📁 LOCAL FOLDER GAMES
+    { name: "A Dark Room", cat: "Local", path: "./games/adarkroom/" },
+    { name: "Baldi's Basics", cat: "Local", path: "./games/baldisbasics/" },
+    { name: "BitLife", cat: "Local", path: "./games/bitlife/" },
+    { name: "Cookie Clicker", cat: "Local", path: "./games/cookieclicker/" },
+    { name: "Minecraft Classic", cat: "Local", path: "./Minecraft.html" },
+    { name: "OvO Platformer", cat: "Local", path: "./games/ovo/" },
+    { name: "Run 3", cat: "Local", path: "./games/run3/" },
 
-            // SIMULATORS & TYCOONS
-            { name: "Grow a Chicken Fighter", cat: "Simulators", path: "https://html5.gamedistribution.com/8bb02999d30d41e78eb285edfbbf8e52/" },
-            { name: "Evolution Animals +1", cat: "Simulators", path: "https://html5.gamedistribution.com/643b0c48ef234dfa8b0a53b5faed2fb1/" },
-            { name: "Idle Breakout", cat: "Tycoons", path: "https://html5.gamedistribution.com/4f7eb8b1e4a34b229983dd80126a11e8/" },
-            { name: "Tiny Fishing", cat: "Simulators", path: "https://html5.gamedistribution.com/8bb02999d30d41e78eb285edfbbf8e52/" },
-            
-            // ROLEPLAY & CLASSICS
-            { name: "Retro Bowl", cat: "Roleplay", path: "https://game316009.konggames.com/gamez/0031/6009/live/index.html" },
-            { name: "Subway Surfers", cat: "Roleplay", path: "https://html5.gamedistribution.com/f3e8f85d26a24446a81bf6dfd8471e8c/" },
-            { name: "Moto X3M", cat: "Simulators", path: "https://html5.gamedistribution.com/5b80d0d624a949e2898b16a2efb3bf21/" },
-            { name: "Drive Mad", cat: "Simulators", path: "https://html5.gamedistribution.com/4f7eb8b1e4a34b229983dd80126a11e8/" }
-        ];
+    // 🎯 CRAZYGAMES & GAMEDISTRIBUTION DIRECT EMBEDS
+    { name: "Obby: +1 Keyboard Speed Escape", cat: "Escapes", path: "https://html5.gamedistribution.com/81d4e83974514ecb98d9e9551e63b929/" },
+    { name: "Time Shooter 2", cat: "Shooter", path: "https://html5.gamedistribution.com/62a72f2da7cb4b609579a47653546e6a/" },
+    { name: "Time Shooter 3 SWAT", cat: "Shooter", path: "https://html5.gamedistribution.com/6493b872f0564380a7adad671d1e0a57/" },
+    { name: "ev.io", cat: "Shooter", path: "https://html5.gamedistribution.com/132f756c1dad4e38862ab81c0d7ab026/" },
+    { name: "Moto X3M Dead Ahead", cat: "Classics", path: "https://html5.gamedistribution.com/8593f8d7add14ad398d9cece72ee7283/" },
+    { name: "Rift Fighter", cat: "Shooter", path: "https://html5.gamedistribution.com/d1714a3d72f24852b27b71020d68585a/" },
+    { name: "Funny Shooter 2", cat: "Shooter", path: "https://html5.gamedistribution.com/a1b7ac4025214a5cb0bd01a4f675513a/" },
+    { name: "Sniper for Brainrot", cat: "Shooter", path: "https://html5.gamedistribution.com/e41aeb486db5460c972b56afe000e727/" },
+    { name: "Vex Try to Fly", cat: "Escapes", path: "https://html5.gamedistribution.com/42bfa359db1e405f8cc84b181c206f7c/" },
+    { name: "Vex 9", cat: "Escapes", path: "https://html5.gamedistribution.com/8d034584a63642dcb89fa3d24ed6e1b1/" },
+    { name: "Vex 7", cat: "Escapes", path: "https://html5.gamedistribution.com/0c454c9562d249d28ba3a2b50564042c/" },
+    { name: "Vex 6", cat: "Escapes", path: "https://html5.gamedistribution.com/4925e12574364121a48c61c35f649c36/" },
+    { name: "Squid Shooter", cat: "Shooter", path: "https://html5.gamedistribution.com/c0a72373f81d4096a325f9b0dde0d7b9/" },
+    { name: "Steal a Fish", cat: "Classics", path: "https://html5.gamedistribution.com/d9afb8cc970c48c4b7cacef65a5aef61/" },
+    { name: "Dusty Cat", cat: "Classics", path: "https://html5.gamedistribution.com/141b948c1f5c4476acc673d84f2ad1c0/" },
+    { name: "Chainline", cat: "Classics", path: "https://html5.gamedistribution.com/8e30a011d41d4c52b67eadeabc1b9185/" },
+    { name: "Bounce Stack 3D", cat: "Classics", path: "https://html5.gamedistribution.com/54c68d88d899434784867ef30bfbeeee/" },
 
-        // Fill remaining database slots with clean HTML5 instances
-        function populateExpandedCatalog() {
-            let list = [...CURATED_GAMES];
-            const categories = ["Shooters", "Roleplay", "Simulators", "Tycoons", "Obby & Escapes"];
-            const titles = [
-                "Police Precinct 3D", "Cyber City Racer", "Zombie Outbreak Survival", "Dungeon Crawler",
-                "Idle Factory Tycoon", "Supermarket Empire", "Deep Space Command", "Pixel World Craft",
-                "Infinite Drift Rivals", "Stunt Car Ramp", "Stickman Arena Royale", "Fortress Defense"
-            ];
+    // CRAZYGAMES EMBEDS
+    { name: "Shell Shockers", cat: "Shooter", path: "https://www.crazygames.com/embed/shellshockers" },
+    { name: "Smash Karts", cat: "Shooter", path: "https://www.crazygames.com/embed/smash-karts" },
+    { name: "Subway Surfers", cat: "Classics", path: "https://www.crazygames.com/embed/subway-surfers" }
+];
 
-            let index = 1;
-            while (list.length < 50) {
-                let title = `${titles[index % titles.length]} ${Math.floor(index / titles.length) + 1}`;
-                let cat = categories[index % categories.length];
-                let path = `https://html5.gamedistribution.com/e2815bc184024b07a511ec5a452bf9b4/?ref=${index}`;
-                list.push({ name: title, cat: cat, path: path });
-                index++;
-            }
-            return list;
-        }
+let selectedCategory = "All";
+let activeGameUrl = "";
 
-        // App State Variables
-        let allGames = [];
-        let activeCategory = "All";
-        let activeGameUrl = "";
-        let favorites = JSON.parse(localStorage.getItem('winyates_favs_v4') || '[]');
-        let recents = JSON.parse(localStorage.getItem('winyates_recents_v4') || '[]');
+function renderGrid(items) {
+    const grid = document.getElementById("gameGrid");
+    const countEl = document.getElementById("gameCount");
+    grid.innerHTML = "";
+    countEl.textContent = `Showing ${items.length} games`;
 
-        function initApp() {
-            const customGames = JSON.parse(localStorage.getItem('winyates_custom_v4') || '[]');
-            allGames = [...customGames, ...populateExpandedCatalog()];
+    items.forEach((game) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <div class="card-cat">${game.cat}</div>
+            <div class="card-title">${game.name}</div>
+        `;
+        card.onclick = () => openGame(game.name, game.path);
+        grid.appendChild(card);
+    });
+}
 
-            setupCategoryChips();
-            renderAllGrids();
-        }
+function setCat(cat) {
+    selectedCategory = cat;
+    document.querySelectorAll('.chip').forEach(c => {
+        c.classList.toggle('active', c.textContent.includes(cat) || (cat === 'All' && c.textContent.includes('All')));
+    });
+    filterGames();
+}
 
-        function setupCategoryChips() {
-            const categories = ["All", "Shooters", "Roleplay", "Simulators", "Tycoons", "Obby & Escapes", "Local Games"];
-            const bar = document.getElementById("categoryBar");
-            bar.innerHTML = "";
+function filterGames() {
+    const query = document.getElementById("searchInput").value.toLowerCase();
+    const filtered = GAMES_LIST.filter(g => {
+        const matchesQ = g.name.toLowerCase().includes(query);
+        const matchesCat = selectedCategory === "All" || g.cat === selectedCategory;
+        return matchesQ && matchesCat;
+    });
+    renderGrid(filtered);
+}
 
-            categories.forEach(cat => {
-                const btn = document.createElement("button");
-                btn.onclick = () => selectCategory(cat);
-                btn.className = `px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all whitespace-nowrap cursor-pointer ${
-                    activeCategory === cat 
-                    ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-500/20' 
-                    : 'bg-brand-darkCard text-slate-300 border border-brand-darkBorder hover:border-purple-500/50 hover:text-white'
-                }`;
-                btn.textContent = cat === 'Local Games' ? '📁 Local Games' : cat;
-                bar.appendChild(btn);
-            });
-        }
+function openGame(title, path) {
+    activeGameUrl = path;
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("gameFrame").src = path;
+    document.getElementById("gameModal").classList.add("active");
+}
 
-        function selectCategory(cat) {
-            activeCategory = cat;
-            setupCategoryChips();
-            renderAllGrids();
-        }
+function closeGame() {
+    document.getElementById("gameModal").classList.remove("active");
+    document.getElementById("gameFrame").src = "";
+    activeGameUrl = "";
+}
 
-        function resetFilters() {
-            document.getElementById("searchInput").value = "";
-            activeCategory = "All";
-            setupCategoryChips();
-            renderAllGrids();
-        }
+function popoutWindow() {
+    if (activeGameUrl) {
+        window.open(activeGameUrl, '_blank');
+    }
+}
 
-        function renderAllGrids() {
-            const query = document.getElementById("searchInput").value.toLowerCase();
-            
-            const filtered = allGames.filter(g => {
-                const matchesSearch = g.name.toLowerCase().includes(query);
-                const matchesCat = activeCategory === "All" || g.cat === activeCategory;
-                return matchesSearch && matchesCat;
-            });
+function toggleFullscreen() {
+    const iframe = document.getElementById("gameFrame");
+    if (!document.fullscreenElement) {
+        iframe.requestFullscreen().catch(err => {
+            alert("Fullscreen error: " + err.message);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+}
 
-            document.getElementById("gameCounter").textContent = `${filtered.length} Games`;
-            document.getElementById("catalogHeader").textContent = activeCategory === "All" ? "All Games Catalog" : `${activeCategory} Catalog`;
+function toggleTheme() {
+    const body = document.body;
+    if (body.getAttribute("data-theme") === "light") {
+        body.removeAttribute("data-theme");
+        document.getElementById("themeBtn").textContent = "🌙 Dark";
+    } else {
+        body.setAttribute("data-theme", "light");
+        document.getElementById("themeBtn").textContent = "☀️ Light";
+    }
+}
 
-            renderMainGrid(filtered);
-            renderFavoritesGrid();
-            renderRecentsGrid();
-        }
-
-        function createGameCard(game, compact = false) {
-            const isFav = favorites.includes(game.name);
-            const card = document.createElement("div");
-            card.className = `bg-brand-darkCard border border-brand-darkBorder rounded-xl p-3 flex flex-col justify-between cursor-pointer hover:-translate-y-1 hover:border-purple-500 game-card-glow transition-all duration-200 relative group ${
-                compact ? 'min-w-[150px] w-[150px]' : 'min-h-[105px]'
-            }`;
-
-            card.innerHTML = `
-                <div class="flex items-start justify-between gap-1 mb-2">
-                    <span class="text-[9px] font-extrabold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded truncate max-w-[80%]">
-                        ${game.cat}
-                    </span>
-                    <button onclick="toggleFavorite(event, '${game.name}')" class="text-slate-600 hover:text-amber-400 transition-colors text-sm">
-                        ${isFav ? '★' : '☆'}
-                    </button>
-                </div>
-                <h4 class="text-xs font-extrabold text-slate-100 group-hover:text-purple-400 transition-colors line-clamp-2 leading-snug">
-                    ${game.name}
-                </h4>
-            `;
-
-            if (isFav) {
-                card.querySelector('button').classList.add('text-amber-400');
-            }
-
-            card.onclick = (e) => {
-                if (e.target.tagName === 'BUTTON') return;
-                launchGame(game);
-            };
-
-            return card;
-        }
-
-        function renderMainGrid(games) {
-            const grid = document.getElementById("gamesGrid");
-            grid.innerHTML = "";
-            games.forEach(g => grid.appendChild(createGameCard(g)));
-        }
-
-        function renderFavoritesGrid() {
-            const section = document.getElementById("favoritesSection");
-            const grid = document.getElementById("favoritesGrid");
-            grid.innerHTML = "";
-
-            const favList = allGames.filter(g => favorites.includes(g.name));
-            if (favList.length > 0) {
-                section.classList.remove("hidden");
-                favList.forEach(g => grid.appendChild(createGameCard(g)));
-            } else {
-                section.classList.add("hidden");
-            }
-        }
-
-        function renderRecentsGrid() {
-            const section = document.getElementById("recentSection");
-            const grid = document.getElementById("recentGrid");
-            grid.innerHTML = "";
-
-            const recentList = recents.map(r => allGames.find(g => g.name === r)).filter(Boolean);
-            if (recentList.length > 0) {
-                section.classList.remove("hidden");
-                recentList.forEach(g => grid.appendChild(createGameCard(g, true)));
-            } else {
-                section.classList.add("hidden");
-            }
-        }
-
-        function toggleFavorite(e, name) {
-            e.stopPropagation();
-            if (favorites.includes(name)) {
-                favorites = favorites.filter(f => f !== name);
-            } else {
-                favorites.push(name);
-            }
-            localStorage.setItem('winyates_favs_v4', JSON.stringify(favorites));
-            renderAllGrids();
-        }
-
-        function launchGame(game) {
-            // Log recents
-            recents = [game.name, ...recents.filter(r => r !== game.name)].slice(0, 8);
-            localStorage.setItem('winyates_recents_v4', JSON.stringify(recents));
-
-            activeGameUrl = game.path;
-            document.getElementById("modalTitle").textContent = game.name;
-            document.getElementById("modalCategory").textContent = game.cat;
-            document.getElementById("gameFrame").src = game.path;
-
-            document.getElementById("gameModal").classList.remove("hidden");
-            document.getElementById("gameModal").classList.add("flex");
-
-            renderRecentsGrid();
-        }
-
-        function launchPopout() {
-            if (activeGameUrl) {
-                window.open(activeGameUrl, '_blank', 'noopener,noreferrer');
-            }
-        }
-
-        function closeGameModal() {
-            document.getElementById("gameModal").classList.add("hidden");
-            document.getElementById("gameModal").classList.remove("flex");
-            document.getElementById("gameFrame").src = "";
-            activeGameUrl = "";
-        }
-
-        function clearRecents() {
-            recents = [];
-            localStorage.removeItem('winyates_recents_v4');
-            renderRecentsGrid();
-        }
-
-        function toggleFullscreen() {
-            const iframe = document.getElementById("gameFrame");
-            if (!document.fullscreenElement) {
-                iframe.requestFullscreen().catch(() => {});
-            } else {
-                document.exitFullscreen();
-            }
-        }
-
-        function openAddGameModal() {
-            document.getElementById("addGameModal").classList.remove("hidden");
-        }
-
-        function closeAddGameModal() {
-            document.getElementById("addGameModal").classList.add("hidden");
-        }
-
-        function saveCustomGame() {
-            const name = document.getElementById("customName").value.trim();
-            const cat = document.getElementById("customCat").value;
-            const path = document.getElementById("customPath").value.trim();
-
-            if (!name || !path) {
-                return;
-            }
-
-            const newGame = { name, cat, path };
-            const existingCustom = JSON.parse(localStorage.getItem('winyates_custom_v4') || '[]');
-            existingCustom.unshift(newGame);
-            localStorage.setItem('winyates_custom_v4', JSON.stringify(existingCustom));
-
-            closeAddGameModal();
-            initApp();
-            launchGame(newGame);
-        }
-
-        function filterGames() {
-            renderAllGrids();
-        }
-
-        function toggleTheme() {
-            document.documentElement.classList.toggle('dark');
-        }
-
-        window.addEventListener("DOMContentLoaded", initApp);
-    </script>
+window.addEventListener("DOMContentLoaded", () => {
+    filterGames();
+});
+</script>
 </body>
 </html>
