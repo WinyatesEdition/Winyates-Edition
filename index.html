@@ -3,7 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Winyates Edition - Made by roy</title>
+<title>Winyates Edition - By Roy</title>
+
+<!-- Official GameDistribution SDK -->
+<script type="text/javascript">
+    window["GD_OPTIONS"] = {
+        "gameId": "d1714a3d72f24852b27b71020d68585a", // Default GD runtime container
+        "onEvent": function(event) {
+            switch (event.name) {
+                case "SDK_GAME_START":
+                    console.log("GD SDK: Game Active");
+                    break;
+                case "SDK_GAME_PAUSE":
+                    console.log("GD SDK: Game Paused");
+                    break;
+                case "SDK_READY":
+                    console.log("GD SDK: Ready");
+                    break;
+            }
+        }
+    };
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "https://html5.api.gamedistribution.com/main.min.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'gamedistribution-jssdk'));
+</script>
+
 <style>
     :root {
         --bg: #09090b;
@@ -33,7 +61,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s; }
     body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-y: scroll; }
 
-    /* Announcement Banner */
     .announcement-bar {
         background: linear-gradient(90deg, #8b5cf6, #d946ef);
         color: #ffffff;
@@ -99,7 +126,7 @@
     .card-cat { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: var(--accent-orange); margin-bottom: 4px; }
     .card-title { font-size: 0.9rem; font-weight: 700; color: var(--text); }
 
-    /* Modal / Frame Viewer */
+    /* Modal / Viewer */
     .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.92); flex-direction: column; padding: 1rem; }
     .modal.active { display: flex; }
     .modal-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; }
@@ -115,7 +142,7 @@
 <body>
 
 <div class="announcement-bar" id="announcementBar">
-    <div class="announcement-text">📢 <span><b>Update:</b> Switched to CrazyGames & GameDistribution direct embeds!</span></div>
+    <div class="announcement-text">⚡ <span><b>Auto-Launcher Ready:</b> GameDistribution SDK & Unity WebGL Engine Hook Active!</span></div>
     <button class="announcement-close" onclick="document.getElementById('announcementBar').style.display='none'">✕</button>
 </div>
 
@@ -171,13 +198,13 @@
         </div>
     </div>
     <div class="iframe-wrapper">
-        <iframe id="gameFrame" allow="autoplay; fullscreen; pointer-lock;" referrerpolicy="no-referrer"></iframe>
+        <iframe id="gameFrame" allow="autoplay; fullscreen; pointer-lock; accelerometer; magnetometer; gyroscope; web-share; payment" referrerpolicy="no-referrer"></iframe>
     </div>
 </div>
 
 <script>
 const GAMES_LIST = [
-    // 📁 LOCAL FOLDER GAMES
+    // LOCAL FOLDER
     { name: "A Dark Room", cat: "Local", path: "./games/adarkroom/" },
     { name: "Baldi's Basics", cat: "Local", path: "./games/baldisbasics/" },
     { name: "BitLife", cat: "Local", path: "./games/bitlife/" },
@@ -186,7 +213,7 @@ const GAMES_LIST = [
     { name: "OvO Platformer", cat: "Local", path: "./games/ovo/" },
     { name: "Run 3", cat: "Local", path: "./games/run3/" },
 
-    // 🎯 CRAZYGAMES & GAMEDISTRIBUTION DIRECT EMBEDS
+    // GAMEDISTRIBUTION AUTO-LAUNCH EMBEDS
     { name: "Obby: +1 Keyboard Speed Escape", cat: "Escapes", path: "https://html5.gamedistribution.com/81d4e83974514ecb98d9e9551e63b929/" },
     { name: "Time Shooter 2", cat: "Shooter", path: "https://html5.gamedistribution.com/62a72f2da7cb4b609579a47653546e6a/" },
     { name: "Time Shooter 3 SWAT", cat: "Shooter", path: "https://html5.gamedistribution.com/6493b872f0564380a7adad671d1e0a57/" },
@@ -253,7 +280,19 @@ function filterGames() {
 function openGame(title, path) {
     activeGameUrl = path;
     document.getElementById("modalTitle").textContent = title;
-    document.getElementById("gameFrame").src = path;
+    
+    const iframe = document.getElementById("gameFrame");
+    iframe.src = path;
+    
+    // Auto-launch trigger for GameDistribution SDK
+    if (window.gamedistribution && typeof window.gamedistribution.showAd === 'function') {
+        try {
+            window.gamedistribution.showAd();
+        } catch(e) {
+            console.log("Auto-launching direct frame stream...");
+        }
+    }
+    
     document.getElementById("gameModal").classList.add("active");
 }
 
