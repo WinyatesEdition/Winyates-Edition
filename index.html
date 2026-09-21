@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Winyates Edition (By Roy)</title>
+<title>Winyates Edition By Roy</title>
 
 <style>
     :root {
@@ -18,7 +18,8 @@
         --accent-gold: #fbbf24;
         --header-bg: #090a0e;
         --input-bg: #141722;
-        --button-blue: #3b82f6;
+        --button-blue: #2563eb;
+        --button-hover: #1d4ed8;
     }
 
     [data-theme="light"] {
@@ -35,7 +36,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     body { background-color: var(--bg-main); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; overflow-y: scroll; }
 
-    /* Announcement Banner */
     .announcement {
         background: linear-gradient(90deg, #7c3aed, #c026d3);
         color: #ffffff;
@@ -45,10 +45,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        box-shadow: 0 2px 10px rgba(124, 58, 237, 0.3);
     }
-    .announcement-close { background: none; border: none; color: #fff; cursor: pointer; font-size: 0.9rem; font-weight: 800; }
+    .announcement-close { background: none; border: none; color: #fff; cursor: pointer; font-size: 0.9rem; font-weight: 800; padding: 0 4px; }
 
-    /* Header Bar */
     header {
         background-color: var(--header-bg);
         border-bottom: 1px solid var(--card-border);
@@ -57,6 +57,7 @@
         align-items: center;
         justify-content: space-between;
         position: sticky; top: 0; z-index: 100;
+        backdrop-filter: blur(8px);
     }
 
     .brand-section { display: flex; align-items: center; gap: 12px; cursor: pointer; }
@@ -85,7 +86,7 @@
 
     .header-controls { display: flex; align-items: center; gap: 0.75rem; }
 
-    /* School Apps Dropdown */
+    /* Dropdown UI */
     .dropdown { position: relative; display: inline-block; }
     .school-apps-btn {
         background-color: var(--button-blue);
@@ -99,7 +100,10 @@
         display: flex;
         align-items: center;
         gap: 6px;
+        transition: background 0.2s;
     }
+    .school-apps-btn:hover { background-color: var(--button-hover); }
+
     .dropdown-content {
         display: none;
         position: absolute; right: 0; top: 115%;
@@ -139,10 +143,8 @@
         cursor: pointer;
     }
 
-    /* Main Container */
     .container { max-width: 1400px; margin: 1.5rem auto; padding: 0 1.5rem; width: 100%; flex: 1; }
 
-    /* Category Chips */
     .categories { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; overflow-x: auto; padding-bottom: 0.25rem; }
     .chip {
         background: var(--card-bg);
@@ -154,25 +156,25 @@
         font-weight: 700;
         cursor: pointer;
         white-space: nowrap;
+        transition: all 0.2s;
     }
     .chip:hover, .chip.active { background: var(--button-blue); color: #fff; border-color: var(--button-blue); }
 
     .game-count { color: var(--text-secondary); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 0.5px; }
 
-    /* Game Cards Grid */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1rem; }
 
     .card {
         background-color: var(--card-bg);
         border: 1px solid var(--card-border);
         border-radius: 10px;
-        padding: 1.5rem 1rem;
+        padding: 1.25rem 1rem;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
-        min-height: 105px;
+        min-height: 100px;
         cursor: pointer;
         position: relative;
         transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
@@ -184,7 +186,7 @@
     }
 
     .card-cat {
-        font-size: 0.68rem;
+        font-size: 0.65rem;
         font-weight: 900;
         text-transform: uppercase;
         color: var(--accent-gold);
@@ -192,13 +194,13 @@
         margin-bottom: 6px;
     }
     .card-title {
-        font-size: 0.95rem;
+        font-size: 0.92rem;
         font-weight: 800;
         color: var(--text-primary);
         line-height: 1.3;
     }
 
-    /* Modal Launcher */
+    /* Modal Styling */
     .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.93); flex-direction: column; padding: 1rem; }
     .modal.active { display: flex; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; }
@@ -209,28 +211,19 @@
 
     .iframe-box { flex: 1; width: 100%; height: 100%; border-radius: 10px; overflow: hidden; background: #000; border: 1px solid var(--card-border); position: relative; }
     iframe { width: 100%; height: 100%; border: none; }
-
-    .fallback-overlay {
-        position: absolute; inset: 0; display: none; flex-direction: column;
-        align-items: center; justify-content: center; background: #12141c;
-        color: #fff; padding: 2rem; text-align: center; gap: 1rem;
-    }
-    .fallback-btn {
-        background: var(--button-blue); color: #fff; border: none;
-        padding: 0.75rem 1.5rem; border-radius: 30px; font-weight: 800; cursor: pointer;
-    }
 </style>
 </head>
 <body>
 
 <div class="announcement" id="banner">
-    <div>🚀 <span><b>Update:</b> Added local paths for Time Shooter series, Tanuki Sunset, Drive Mad & full gfiles catalog!</span></div>
+    <div>🚀 <span><b>Winyates Hub:</b> All local games set to direct folder execution paths for fast offline loading!</span></div>
     <button class="announcement-close" onclick="document.getElementById('banner').style.display='none'">✕</button>
 </div>
 
 <header>
     <div class="brand-section" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        <svg viewBox="0 0 200 180" width="30" height="30">
+        <!-- SVG Tornado Swirl Logo matching exact brand theme -->
+        <svg viewBox="0 0 200 180" width="32" height="32">
             <path d="M 30,30 Q 170,-10 160,70 Q 150,110 50,100" fill="none" stroke="#7c3aed" stroke-width="22" stroke-linecap="round"/>
             <path d="M 45,75 Q 150,45 140,110 Q 130,140 60,135" fill="none" stroke="#2563eb" stroke-width="18" stroke-linecap="round"/>
             <path d="M 60,110 Q 130,95 120,138 Q 110,160 70,155" fill="none" stroke="#16a34a" stroke-width="14" stroke-linecap="round"/>
@@ -283,22 +276,17 @@
     </div>
     <div class="iframe-box">
         <iframe id="gameFrame" allow="autoplay; fullscreen; pointer-lock; accelerometer; magnetometer; gyroscope;" referrerpolicy="no-referrer"></iframe>
-        <div id="fallbackOverlay" class="fallback-overlay">
-            <h3>⚠️ This game host blocked direct embedding</h3>
-            <p>Click below to open and play directly in a clean popout tab!</p>
-            <button class="fallback-btn" onclick="popoutGame()">Launch Game Popout ↗</button>
-        </div>
     </div>
 </div>
 
 <script>
 const GAMES_LIST = [
-    // 📁 LOCAL GFILES GAMES
+    // --- EXACT LOCAL GFILES DIRECTORY MATCHES ---
     { name: "Time Shooter 1", cat: "Local", path: "gfiles/timeshooter/" },
-    { name: "Time Shooter 2 (Local)", cat: "Local", path: "gfiles/timeshooter2/" },
-    { name: "Time Shooter 3 SWAT (Local)", cat: "Local", path: "gfiles/timeshooter3/" },
+    { name: "Time Shooter 2", cat: "Local", path: "gfiles/timeshooter2/" },
+    { name: "Time Shooter 3 SWAT", cat: "Local", path: "gfiles/timeshooter3/" },
     { name: "Tanuki Sunset", cat: "Local", path: "gfiles/tanukisunset/" },
-    { name: "Drive Mad (Local)", cat: "Local", path: "gfiles/drivemad/" },
+    { name: "Drive Mad", cat: "Local", path: "gfiles/drivemad/" },
     { name: "1v1.lol", cat: "Local", path: "gfiles/1v1lol/" },
     { name: "2048", cat: "Local", path: "gfiles/2048/" },
     { name: "A Dark Room", cat: "Local", path: "gfiles/adarkroom/" },
@@ -355,10 +343,10 @@ const GAMES_LIST = [
     { name: "Flappy Bird", cat: "Local", path: "gfiles/flappybird/" },
     { name: "Flappy Plane", cat: "Local", path: "gfiles/flappyplane/" },
     { name: "Flight Simulator", cat: "Local", path: "gfiles/flightsimulator/" },
-    { name: "Friday Night Funkin (Local)", cat: "Local", path: "gfiles/fridaynightfunkin/" },
+    { name: "Friday Night Funkin", cat: "Local", path: "gfiles/fridaynightfunkin/" },
     { name: "Friendly Fire", cat: "Local", path: "gfiles/friendlyfire/" },
     { name: "Fruit Ninja", cat: "Local", path: "gfiles/fruitninja/" },
-    { name: "Geometry Dash (Local)", cat: "Local", path: "gfiles/geometrydash/" },
+    { name: "Geometry Dash", cat: "Local", path: "gfiles/geometrydash/" },
     { name: "Getaway Shootout", cat: "Local", path: "gfiles/getawayshootoutnew/" },
     { name: "GlaDinhoppers", cat: "Local", path: "gfiles/gladihoppers/" },
     { name: "Google Snake", cat: "Local", path: "gfiles/googlesnake/" },
@@ -380,7 +368,7 @@ const GAMES_LIST = [
     { name: "OvO", cat: "Local", path: "gfiles/ovo/" },
     { name: "OvO 2", cat: "Local", path: "gfiles/ovo2/" },
     { name: "Packabunchas", cat: "Local", path: "gfiles/packabunchas/" },
-    { name: "Pacman (Local)", cat: "Local", path: "gfiles/pacman/" },
+    { name: "Pacman", cat: "Local", path: "gfiles/pacman/" },
     { name: "Paper.io", cat: "Local", path: "gfiles/paperio/" },
     { name: "Particle Clicker", cat: "Local", path: "gfiles/particleclicker/" },
     { name: "Pushback", cat: "Local", path: "gfiles/pushback/" },
@@ -394,17 +382,17 @@ const GAMES_LIST = [
     { name: "Ritz", cat: "Local", path: "gfiles/ritz/" },
     { name: "Roadblocks", cat: "Local", path: "gfiles/roadblocks/" },
     { name: "Rooftop Snipers", cat: "Local", path: "gfiles/rooftopsnipers/" },
-    { name: "Run 3 (Local)", cat: "Local", path: "gfiles/run3/" },
+    { name: "Run 3", cat: "Local", path: "gfiles/run3/" },
     { name: "Scrap Metal 3", cat: "Local", path: "gfiles/scrapmetal3/" },
     { name: "Shuttle Deck", cat: "Local", path: "gfiles/shuttledeck/" },
     { name: "Sketchbook 04", cat: "Local", path: "gfiles/sketchbook04/" },
     { name: "Sleeping Beauty", cat: "Local", path: "gfiles/sleepingbeauty/" },
-    { name: "Slither.io (Local)", cat: "Local", path: "gfiles/slitherio/" },
+    { name: "Slither.io", cat: "Local", path: "gfiles/slitherio/" },
     { name: "Slope", cat: "Local", path: "gfiles/slope/" },
     { name: "Slope 2", cat: "Local", path: "gfiles/slope2/" },
     { name: "Snake", cat: "Local", path: "gfiles/snake/" },
     { name: "Snowbattle", cat: "Local", path: "gfiles/snowbattle/" },
-    { name: "Soccer Random (Local)", cat: "Local", path: "gfiles/soccerrandom/" },
+    { name: "Soccer Random", cat: "Local", path: "gfiles/soccerrandom/" },
     { name: "Solitaire", cat: "Local", path: "gfiles/solitaire/" },
     { name: "Space Company", cat: "Local", path: "gfiles/spacecompany/" },
     { name: "Space Garden", cat: "Local", path: "gfiles/spacegarden/" },
@@ -432,9 +420,8 @@ const GAMES_LIST = [
     { name: "XX142B2EXE", cat: "Local", path: "gfiles/xx142b2exe/" },
     { name: "Zombs Royale", cat: "Local", path: "gfiles/zombsroyale/" },
 
-    // 🎯 MINIPLAY & FEATURED ONLINE GAMES
-    { name: "Funny Shooter 2", cat: "Shooter", path: "https://www.miniplay.com/embed/funny-shooter-2" },
-    { name: "Time Shooter 2", cat: "Shooter", path: "https://www.miniplay.com/embed/time-shooter-2" },
+    // --- SECONDARY MINIPLAY / ONLINE EMBEDS ---
+    { name: "Funny Shooter 2 (Online)", cat: "Shooter", path: "https://www.miniplay.com/embed/funny-shooter-2" },
     { name: "Steal an Egg", cat: "Classics", path: "https://www.miniplay.com/embed/steal-an-egg" },
     { name: "+1 Keyboard Speed Escape", cat: "Escapes", path: "https://www.miniplay.com/embed/1-speed-asrm-keyboard-escape" },
     { name: "Melon Sandbox", cat: "Classics", path: "https://www.miniplay.com/embed/melon-sandbox" },
@@ -445,10 +432,7 @@ const GAMES_LIST = [
     { name: "20 Minutes Till Dawn", cat: "Shooter", path: "https://www.miniplay.com/embed/20-minutes-till-dawn" },
     { name: "Paint Hide and Seek", cat: "Classics", path: "https://www.miniplay.com/embed/paint-hide-and-seek" },
     { name: "Cuphead", cat: "Classics", path: "https://www.miniplay.com/embed/cuphead" },
-    { name: "Escape Road 3", cat: "Escapes", path: "https://www.miniplay.com/embed/escape-road-3" },
-    { name: "Shell Shockers", cat: "Shooter", path: "https://www.crazygames.com/embed/shellshockers" },
-    { name: "Smash Karts", cat: "Shooter", path: "https://www.crazygames.com/embed/smash-karts" },
-    { name: "Subway Surfers", cat: "Classics", path: "https://www.crazygames.com/embed/subway-surfers" }
+    { name: "Escape Road 3", cat: "Escapes", path: "https://www.miniplay.com/embed/escape-road-3" }
 ];
 
 let activeCategory = "All";
@@ -495,9 +479,6 @@ function openGame(title, path) {
     document.getElementById("modalTitle").textContent = title;
     
     const iframe = document.getElementById("gameFrame");
-    const fallback = document.getElementById("fallbackOverlay");
-    
-    fallback.style.display = "none";
     iframe.src = path;
     
     document.getElementById("gameModal").classList.add("active");
@@ -506,7 +487,6 @@ function openGame(title, path) {
 function closeModal() {
     document.getElementById("gameModal").classList.remove("active");
     document.getElementById("gameFrame").src = "";
-    document.getElementById("fallbackOverlay").style.display = "none";
     currentGamePath = "";
 }
 
@@ -520,7 +500,7 @@ function toggleFullscreen() {
     const frame = document.getElementById("gameFrame");
     if (!document.fullscreenElement) {
         frame.requestFullscreen().catch(err => {
-            alert("Fullscreen blocked by browser settings: " + err.message);
+            console.error(err);
         });
     } else {
         document.exitFullscreen();
