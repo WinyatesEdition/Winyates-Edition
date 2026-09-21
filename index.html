@@ -3,34 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Winyates Edition - By Roy</title>
-
-<!-- Official GameDistribution SDK -->
-<script type="text/javascript">
-    window["GD_OPTIONS"] = {
-        "gameId": "d1714a3d72f24852b27b71020d68585a", // Default GD runtime container
-        "onEvent": function(event) {
-            switch (event.name) {
-                case "SDK_GAME_START":
-                    console.log("GD SDK: Game Active");
-                    break;
-                case "SDK_GAME_PAUSE":
-                    console.log("GD SDK: Game Paused");
-                    break;
-                case "SDK_READY":
-                    console.log("GD SDK: Ready");
-                    break;
-            }
-        }
-    };
-    (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "https://html5.api.gamedistribution.com/main.min.js";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'gamedistribution-jssdk'));
-</script>
+<title>Winyates Edition - Roy Onah </title>
 
 <style>
     :root {
@@ -142,7 +115,7 @@
 <body>
 
 <div class="announcement-bar" id="announcementBar">
-    <div class="announcement-text">⚡ <span><b>Auto-Launcher Ready:</b> GameDistribution SDK & Unity WebGL Engine Hook Active!</span></div>
+    <div class="announcement-text">🎮 <span><b>Updated:</b> Replaced all external links with Minigiochi / Miniplay & Local games!</span></div>
     <button class="announcement-close" onclick="document.getElementById('announcementBar').style.display='none'">✕</button>
 </div>
 
@@ -181,7 +154,7 @@
         <div class="chip" onclick="setCat('Local')">📁 Local Folder</div>
         <div class="chip" onclick="setCat('Shooter')">🎯 Shooters</div>
         <div class="chip" onclick="setCat('Escapes')">🏃 Obby & Escapes</div>
-        <div class="chip" onclick="setCat('Classics')">🏎️ Classics & Fun</div>
+        <div class="chip" onclick="setCat('Classics')">🏎️ Action & Fun</div>
     </div>
 
     <div class="game-count" id="gameCount">Loading collection...</div>
@@ -198,13 +171,13 @@
         </div>
     </div>
     <div class="iframe-wrapper">
-        <iframe id="gameFrame" allow="autoplay; fullscreen; pointer-lock; accelerometer; magnetometer; gyroscope; web-share; payment" referrerpolicy="no-referrer"></iframe>
+        <iframe id="gameFrame" allow="autoplay; fullscreen; pointer-lock; accelerometer; magnetometer; gyroscope;" referrerpolicy="no-referrer"></iframe>
     </div>
 </div>
 
 <script>
 const GAMES_LIST = [
-    // LOCAL FOLDER
+    // 📁 LOCAL FOLDER GAMES
     { name: "A Dark Room", cat: "Local", path: "./games/adarkroom/" },
     { name: "Baldi's Basics", cat: "Local", path: "./games/baldisbasics/" },
     { name: "BitLife", cat: "Local", path: "./games/bitlife/" },
@@ -213,26 +186,23 @@ const GAMES_LIST = [
     { name: "OvO Platformer", cat: "Local", path: "./games/ovo/" },
     { name: "Run 3", cat: "Local", path: "./games/run3/" },
 
-    // GAMEDISTRIBUTION AUTO-LAUNCH EMBEDS
-    { name: "Obby: +1 Keyboard Speed Escape", cat: "Escapes", path: "https://html5.gamedistribution.com/81d4e83974514ecb98d9e9551e63b929/" },
-    { name: "Time Shooter 2", cat: "Shooter", path: "https://html5.gamedistribution.com/62a72f2da7cb4b609579a47653546e6a/" },
-    { name: "Time Shooter 3 SWAT", cat: "Shooter", path: "https://html5.gamedistribution.com/6493b872f0564380a7adad671d1e0a57/" },
-    { name: "ev.io", cat: "Shooter", path: "https://html5.gamedistribution.com/132f756c1dad4e38862ab81c0d7ab026/" },
-    { name: "Moto X3M Dead Ahead", cat: "Classics", path: "https://html5.gamedistribution.com/8593f8d7add14ad398d9cece72ee7283/" },
-    { name: "Rift Fighter", cat: "Shooter", path: "https://html5.gamedistribution.com/d1714a3d72f24852b27b71020d68585a/" },
-    { name: "Funny Shooter 2", cat: "Shooter", path: "https://html5.gamedistribution.com/a1b7ac4025214a5cb0bd01a4f675513a/" },
-    { name: "Sniper for Brainrot", cat: "Shooter", path: "https://html5.gamedistribution.com/e41aeb486db5460c972b56afe000e727/" },
-    { name: "Vex Try to Fly", cat: "Escapes", path: "https://html5.gamedistribution.com/42bfa359db1e405f8cc84b181c206f7c/" },
-    { name: "Vex 9", cat: "Escapes", path: "https://html5.gamedistribution.com/8d034584a63642dcb89fa3d24ed6e1b1/" },
-    { name: "Vex 7", cat: "Escapes", path: "https://html5.gamedistribution.com/0c454c9562d249d28ba3a2b50564042c/" },
-    { name: "Vex 6", cat: "Escapes", path: "https://html5.gamedistribution.com/4925e12574364121a48c61c35f649c36/" },
-    { name: "Squid Shooter", cat: "Shooter", path: "https://html5.gamedistribution.com/c0a72373f81d4096a325f9b0dde0d7b9/" },
-    { name: "Steal a Fish", cat: "Classics", path: "https://html5.gamedistribution.com/d9afb8cc970c48c4b7cacef65a5aef61/" },
-    { name: "Dusty Cat", cat: "Classics", path: "https://html5.gamedistribution.com/141b948c1f5c4476acc673d84f2ad1c0/" },
-    { name: "Chainline", cat: "Classics", path: "https://html5.gamedistribution.com/8e30a011d41d4c52b67eadeabc1b9185/" },
-    { name: "Bounce Stack 3D", cat: "Classics", path: "https://html5.gamedistribution.com/54c68d88d899434784867ef30bfbeeee/" },
+    // 🎮 MINIGIOCHI & MINIPLAY EMBEDS
+    { name: "Time Shooter 3 SWAT", cat: "Shooter", path: "https://www.minigiochi.com/embed/time-shooter-3-swat" },
+    { name: "Funny Shooter 2", cat: "Shooter", path: "https://www.minigiochi.com/embed/funny-shooter-2" },
+    { name: "Time Shooter 2", cat: "Shooter", path: "https://www.minigiochi.com/embed/time-shooter-2" },
+    { name: "Steal an Egg", cat: "Classics", path: "https://www.minigiochi.com/embed/steal-an-egg" },
+    { name: "+1 Keyboard Speed Escape", cat: "Escapes", path: "https://www.minigiochi.com/embed/1-speed-asrm-keyboard-escape" },
+    { name: "Melon Sandbox", cat: "Classics", path: "https://www.miniplay.com/embed/melon-sandbox" },
+    { name: "My Mini Mart", cat: "Classics", path: "https://www.miniplay.com/embed/my-mini-mart" },
+    { name: "Merge a Nuke", cat: "Classics", path: "https://www.miniplay.com/embed/merge-a-nuke" },
+    { name: "Bank Robbery 3", cat: "Shooter", path: "https://www.miniplay.com/embed/bank-robbery-3" },
+    { name: "Veck.io", cat: "Shooter", path: "https://www.miniplay.com/embed/veck-io" },
+    { name: "20 Minutes Till Dawn", cat: "Shooter", path: "https://www.miniplay.com/embed/20-minutes-till-dawn" },
+    { name: "Paint Hide and Seek", cat: "Classics", path: "https://www.miniplay.com/embed/paint-hide-and-seek" },
+    { name: "Cuphead", cat: "Classics", path: "https://www.miniplay.com/embed/cuphead" },
+    { name: "Escape Road 3", cat: "Escapes", path: "https://www.miniplay.com/embed/escape-road-3" },
 
-    // CRAZYGAMES EMBEDS
+    // 🕹️ CRAZYGAMES EMBEDS
     { name: "Shell Shockers", cat: "Shooter", path: "https://www.crazygames.com/embed/shellshockers" },
     { name: "Smash Karts", cat: "Shooter", path: "https://www.crazygames.com/embed/smash-karts" },
     { name: "Subway Surfers", cat: "Classics", path: "https://www.crazygames.com/embed/subway-surfers" }
@@ -283,15 +253,6 @@ function openGame(title, path) {
     
     const iframe = document.getElementById("gameFrame");
     iframe.src = path;
-    
-    // Auto-launch trigger for GameDistribution SDK
-    if (window.gamedistribution && typeof window.gamedistribution.showAd === 'function') {
-        try {
-            window.gamedistribution.showAd();
-        } catch(e) {
-            console.log("Auto-launching direct frame stream...");
-        }
-    }
     
     document.getElementById("gameModal").classList.add("active");
 }
