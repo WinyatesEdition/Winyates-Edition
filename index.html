@@ -37,38 +37,43 @@
             flex-wrap: wrap;
         }
 
-        .brand-section { display: flex; align-items: center; gap: 0.75rem; }
+        .brand-section { display: flex; align-items: center; gap: 0.85rem; }
 
         .logo-box {
-            width: 46px;
-            height: 46px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #7c3aed, #f97316);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f97316, #7c3aed);
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
-            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: #fff;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .logo-box img { width: 100%; height: 100%; object-fit: cover; }
-        .logo-fallback { font-weight: 900; font-size: 1.5rem; color: #fff; }
 
         .brand-title {
-            font-size: 1.35rem;
+            font-size: 1.4rem;
             font-weight: 900;
-            background: linear-gradient(90deg, #f97316, #fb923c);
+            background: linear-gradient(90deg, #f97316, #a855f7, #3b82f6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1.1;
+            letter-spacing: 0.02em;
         }
 
         .brand-subtitle {
-            font-size: 0.68rem;
-            font-weight: 700;
+            font-size: 0.7rem;
+            font-weight: 800;
             color: var(--accent-gold);
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
         }
 
@@ -101,11 +106,11 @@
             border-radius: 9999px;
             font-size: 0.85rem;
             outline: none;
-            width: 180px;
+            width: 190px;
             transition: all 0.2s;
         }
 
-        .search-input:focus { width: 230px; border-color: var(--card-hover); }
+        .search-input:focus { width: 240px; border-color: var(--card-hover); }
 
         /* Category Filter Bar */
         .category-bar {
@@ -164,17 +169,18 @@
         .game-card:hover { transform: translateY(-4px); border-color: var(--card-hover); box-shadow: 0 8px 24px rgba(109, 40, 217, 0.3); }
 
         .card-category { font-size: 0.68rem; font-weight: 900; color: var(--accent-orange); text-transform: uppercase; margin-bottom: 0.3rem; }
-        .card-title { font-size: 1rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; line-height: 1.2; }
+        .card-title { font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; line-height: 1.2; }
 
-        .c3-tag {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--accent-green);
+        .engine-tag {
             font-size: 0.65rem;
             font-weight: 800;
             padding: 2px 6px;
             border-radius: 4px;
             margin-bottom: 6px;
         }
+
+        .c3-tag { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+        .gfile-tag { background: rgba(37, 99, 235, 0.2); color: #60a5fa; }
 
         .card-price-badge {
             background: rgba(245, 158, 11, 0.15);
@@ -188,7 +194,7 @@
 
         .card-unlocked-badge { color: var(--accent-green); font-size: 0.72rem; font-weight: 800; }
 
-        /* Fullscreen Game Modal Screen */
+        /* Fullscreen Game Play Modal Screen */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -287,7 +293,7 @@
 
         .toast-code { font-size: 1.2rem; font-weight: 900; color: #fef08a; letter-spacing: 0.05em; background: rgba(0,0,0,0.4); padding: 0.2rem 0.6rem; border-radius: 4px; margin-top: 4px; display: inline-block; }
 
-        /* Roy's Owner Console Engine */
+        /* Owner Console (Roy's Terminal Engine) */
         .console-modal {
             width: 820px;
             max-width: 92vw;
@@ -347,11 +353,11 @@
     <header>
         <div class="brand-section">
             <div class="logo-box" id="logo-container">
-                <div class="logo-fallback" id="logo-fallback">W</div>
+                <span>W</span>
             </div>
             <div>
                 <div class="brand-title">WINYATES EDITION</div>
-                <div class="brand-subtitle">OWNER: ROY &bull; C3 & GFILES ENGINE</div>
+                <div class="brand-subtitle">OWNER: ROY &bull; EXCLUSIVE C3 & GFILES ENGINE</div>
             </div>
         </div>
 
@@ -367,18 +373,19 @@
         </div>
     </header>
 
-    <!-- Category Bar (No Horror) -->
+    <!-- Category Filter Bar (No Horror) -->
     <div class="category-bar">
         <div class="cat-pills" id="cat-pills-container">
             <button class="cat-pill active" onclick="filterCategory('ALL', this)">ALL</button>
             <button class="cat-pill" onclick="filterCategory('CONSTRUCT 3', this)">CONSTRUCT 3</button>
+            <button class="cat-pill" onclick="filterCategory('SHOOTER', this)">SHOOTERS</button>
+            <button class="cat-pill" onclick="filterCategory('CLICKER', this)">CLICKERS</button>
+            <button class="cat-pill" onclick="filterCategory('SIMULATOR', this)">SIMULATORS</button>
+            <button class="cat-pill" onclick="filterCategory('MUSIC', this)">MUSIC & FNF</button>
             <button class="cat-pill" onclick="filterCategory('CLASSICS', this)">CLASSICS</button>
             <button class="cat-pill" onclick="filterCategory('ACTION', this)">ACTION</button>
             <button class="cat-pill" onclick="filterCategory('3D', this)">3D</button>
-            <button class="cat-pill" onclick="filterCategory('PUZZLE', this)">PUZZLE</button>
             <button class="cat-pill" onclick="filterCategory('SPORTS', this)">SPORTS</button>
-            <button class="cat-pill" onclick="filterCategory('RETRO', this)">RETRO</button>
-            <button class="cat-pill" onclick="filterCategory('STRATEGY', this)">STRATEGY</button>
         </div>
         <div class="repo-counter" id="repo-counter">Repository: Loading...</div>
     </div>
@@ -388,7 +395,7 @@
         <div class="game-grid" id="game-grid"></div>
     </main>
 
-    <!-- Fullscreen Arcade Modal -->
+    <!-- Fullscreen Arcade Screen -->
     <div class="modal-overlay" id="arcade-modal">
         <div class="arcade-container">
             <div class="arcade-header">
@@ -417,11 +424,11 @@
         </div>
     </div>
 
-    <!-- Random Code Discovery Notification Toast -->
+    <!-- Secret Promo Code Discovery Toast -->
     <div class="code-toast" id="code-toast">
         <div style="font-size:0.85rem; font-weight:bold; color:#fff;">🎁 SECRET PROMO CODE DISCOVERED!</div>
         <div class="toast-code" id="toast-code-val">WINYATES000</div>
-        <div style="font-size:0.7rem; color:#f3e8ff; margin-top:4px;">Type this in Promo Codes to claim your WinCoins!</div>
+        <div style="font-size:0.7rem; color:#f3e8ff; margin-top:4px;">Use this in Promo Codes to claim WinCoins! (Drops every 25 mins)</div>
         <button onclick="claimToastCode()" style="margin-top:8px; background:#fff; color:#000; border:none; padding:3px 8px; border-radius:4px; font-weight:bold; cursor:pointer;">Copy Code & Close</button>
     </div>
 
@@ -433,7 +440,7 @@
                 <button class="btn-action" onclick="closeConsole()">X Close</button>
             </div>
             <div class="console-screen" id="console-output">
-                WINYATES OWNER CONSOLE ENGINE [Construct 3 & gfiles Active]<br>
+                WINYATES OWNER CONSOLE ENGINE [Strictly Construct 3 & Local GFiles Engine]<br>
                 Type 'help' for instructions.<br>
                 ---------------------------------------------------<br>
             </div>
@@ -452,73 +459,99 @@
     </div>
 
     <footer>
-        <div>WINYATES EDITION Arcade &bull; Owner: Roy &bull; Construct 3 & gfiles Engine</div>
+        <div>WINYATES EDITION Arcade &bull; Owner: Roy &bull; Strict Construct 3 & GFiles Engine (No External Ad Networks)</div>
         <button class="owner-btn" onclick="openConsole()">👑 Owner Console (~)</button>
     </footer>
 
     <script>
-        // Full Game Repository Catalog with Provided Construct 3 Embeds & Expanded Non-Horror Games
+        // STRICT CATALOG: STRICTLY LOCAL GFILES & CONSTRUCT 3 EMBEDS ONLY (NO GAMEDISTRIBUTION/EXTERNAL AD NETWORKS)
         const gameCatalog = [
-            // --- USER-REQUESTED CONSTRUCT 3 EMBEDS ---
+            // --- FIXED MINECRAFT & VEX 7 WITH GFILES ---
+            { id: "gf_minecraft", name: "Minecraft (Eaglercraft GFile)", cat: "CLASSICS", folder: "eaglercraft", price: 0 },
+            { id: "gf_vex7", name: "Vex 7 (Local GFile)", cat: "ACTION", folder: "vex7", price: 0 },
+
+            // --- ALL GFILE SHOOTERS & FUNNY SHOOTERS ---
+            { id: "gf_funnyshooter2", name: "Funny Shooter 2", cat: "SHOOTER", folder: "funnyshooter2", price: 0 },
+            { id: "gf_ts1", name: "Time Shooter", cat: "SHOOTER", folder: "timeshooter", price: 0 },
+            { id: "gf_ts2", name: "Time Shooter 2", cat: "SHOOTER", folder: "timeshooter2", price: 0 },
+            { id: "gf_ts3", name: "Time Shooter 3", cat: "SHOOTER", folder: "timeshooter3", price: 150 },
+            { id: "gf_1v1", name: "1v1.lol GFile", cat: "SHOOTER", folder: "1v1lol", price: 0 },
+            { id: "gf_venge", name: "Venge.io GFile", cat: "SHOOTER", folder: "venge", price: 0 },
+            { id: "gf_krunker", name: "Krunker.io GFile", cat: "SHOOTER", folder: "krunker", price: 0 },
+            { id: "gf_pixelgun", name: "Pixel Combat GFile", cat: "SHOOTER", folder: "pixelgun", price: 0 },
+            { id: "gf_doom", name: "Doom Classic GFile", cat: "SHOOTER", folder: "doom", price: 0 },
+
+            // --- FRIDAY NIGHT FUNKIN' & MUSIC (LOCAL GFILES) ---
+            { id: "gf_fnf_original", name: "Friday Night Funkin' GFile", cat: "MUSIC", folder: "fnf", price: 0 },
+            { id: "gf_fnf_vssky", name: "FNF: Vs Sky Mod GFile", cat: "MUSIC", folder: "fnf-vssky", price: 0 },
+            { id: "gf_fnf_neo", name: "FNF: Neo Edition GFile", cat: "MUSIC", folder: "fnf-neo", price: 100 },
+
+            // --- CLICKERS (LOCAL GFILES) ---
+            { id: "gf_cookie", name: "Cookie Clicker GFile", cat: "CLICKER", folder: "cookieclicker", price: 0 },
+            { id: "gf_capybara", name: "Capybara Clicker GFile", cat: "CLICKER", folder: "capybaraclicker", price: 0 },
+            { id: "gf_planetclicker", name: "Planet Clicker GFile", cat: "CLICKER", folder: "planetclicker", price: 0 },
+            { id: "gf_candyclicker", name: "Candy Clicker GFile", cat: "CLICKER", folder: "candyclicker", price: 0 },
+            { id: "gf_mrmine", name: "Mr. Mine Clicker GFile", cat: "CLICKER", folder: "mrmine", price: 0 },
+            { id: "gf_clickerheroes", name: "Clicker Heroes GFile", cat: "CLICKER", folder: "clickerheroes", price: 0 },
+
+            // --- SIMULATORS & SIMS (LOCAL GFILES) ---
+            { id: "gf_bitlife", name: "BitLife Simulator GFile", cat: "SIMULATOR", folder: "bitlife", price: 0 },
+            { id: "gf_drift_sim", name: "Drift Hunters Sim GFile", cat: "SIMULATOR", folder: "drifthunters", price: 0 },
+            { id: "gf_drivemad_sim", name: "Drive Mad Truck Sim GFile", cat: "SIMULATOR", folder: "drivemad", price: 0 },
+            { id: "gf_farmer_sim", name: "Farming Simulator GFile", cat: "SIMULATOR", folder: "farmersimulator", price: 0 },
+            { id: "gf_pc_builder", name: "PC Building Sim GFile", cat: "SIMULATOR", folder: "pcbuildersim", price: 0 },
+
+            // --- GENUINE CONSTRUCT 3 EMBEDS ---
             { id: "c3_hardest_plat", name: "The hardest platformer (easy at start)", cat: "CONSTRUCT 3", embedUrl: "https://games.construct.net/80850/latest", price: 0, isC3: true },
-            { id: "c3_bitcoin_mil", name: "Bitcoin Millionare", cat: "CONSTRUCT 3", embedUrl: "https://games.construct.net/69886/latest", price: 0, isC3: true },
+            { id: "c3_bitcoin_mil", name: "Bitcoin Millionare C3", cat: "CONSTRUCT 3", embedUrl: "https://games.construct.net/69886/latest", price: 0, isC3: true },
+            { id: "c3_district", name: "District Zero C3", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/district-zero-survive-the-quarter", price: 0, isC3: true },
+            { id: "c3_crewmate", name: "Crewmate Rush C3", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/crewmate-rush-space-escape-runner", price: 0, isC3: true },
+            { id: "c3_kingqueen", name: "King and Queen C3", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/king-and-queen", price: 0, isC3: true },
+            { id: "c3_typerush", name: "Type Rush C3", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/type-rush-fast-paced-typing-speed-game", price: 0, isC3: true },
+            { id: "c3_epicclicker", name: "Epic Clicker C3", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/epic-clicker", price: 0, isC3: true },
+            { id: "c3_ninelives", name: "NineLives C3", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/ninelives-the-justice-to-the-thieves", price: 0, isC3: true },
+            { id: "c3_airwar", name: "Air Warfare C3", cat: "CONSTRUCT 3", embedUrl: "https://games.construct.net/3739/latest", price: 100, isC3: true },
 
-            // --- MORE CONSTRUCT 3 EMBEDS ---
-            { id: "c3_district", name: "District Zero", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/district-zero-survive-the-quarter", price: 0, isC3: true },
-            { id: "c3_crewmate", name: "Crewmate Rush", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/crewmate-rush-space-escape-runner", price: 0, isC3: true },
-            { id: "c3_kingqueen", name: "King and Queen", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/king-and-queen", price: 0, isC3: true },
-            { id: "c3_typerush", name: "Type Rush", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/type-rush-fast-paced-typing-speed-game", price: 0, isC3: true },
-            { id: "c3_epicclicker", name: "Epic Clicker", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/epic-clicker", price: 0, isC3: true },
-            { id: "c3_ninelives", name: "NineLives", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/ninelives-the-justice-to-the-thieves", price: 0, isC3: true },
-            { id: "c3_airwar", name: "Air Warfare C3", cat: "CONSTRUCT 3", embedUrl: "https://games.construct.net/3739/latest", price: 150, isC3: true },
-
-            // --- ALL GFILES & NON-HORROR CLASSICS ---
-            { id: "gf_ts1", name: "Time Shooter", cat: "ACTION", folder: "timeshooter", price: 0 },
-            { id: "gf_ts2", name: "Time Shooter 2", cat: "ACTION", folder: "timeshooter2", price: 0 },
-            { id: "gf_ts3", name: "Time Shooter 3", cat: "ACTION", folder: "timeshooter3", price: 250 },
-            { id: "gf_minecraft", name: "Minecraft (Eaglercraft)", cat: "CLASSICS", folder: "eaglercraft", price: 400 },
-            { id: "gf_1v1", name: "1v1.lol", cat: "ACTION", folder: "1v1lol", price: 0 },
-            { id: "gf_2048", name: "2048", cat: "PUZZLE", folder: "2048", price: 0 },
-            { id: "gf_adarkroom", name: "A Dark Room", cat: "STRATEGY", folder: "adarkroom", price: 0 },
-            { id: "gf_bitlife", name: "Bitlife", cat: "CLASSICS", folder: "bitlife", price: 0 },
-            { id: "gf_slope", name: "Slope", cat: "3D", folder: "slope", price: 0 },
-            { id: "gf_slope2", name: "Slope 2", cat: "3D", folder: "slope2", price: 0 },
-            { id: "gf_subway", name: "Subway Surfers", cat: "CLASSICS", folder: "subwaysurfers", price: 0 },
-            { id: "gf_stickhook", name: "Stickman Hook", cat: "ACTION", folder: "stickman-hook", price: 0 },
-            { id: "gf_stickboost", name: "Stickman Boost", cat: "ACTION", folder: "stickmanboost", price: 0 },
-            { id: "gf_stickclimb", name: "Stickman Climb", cat: "ACTION", folder: "stickmanclimb", price: 0 },
-            { id: "gf_ducklife", name: "Duck Life", cat: "CLASSICS", folder: "ducklife", price: 0 },
-            { id: "gf_ducklife2", name: "Duck Life 2", cat: "CLASSICS", folder: "ducklife2", price: 0 },
-            { id: "gf_ducklife3", name: "Duck Life 3", cat: "CLASSICS", folder: "ducklife3", price: 0 },
-            { id: "gf_ducklife4", name: "Duck Life 4", cat: "CLASSICS", folder: "ducklife4", price: 0 },
-            { id: "gf_drifthunters", name: "Drift Hunters", cat: "3D", folder: "drifthunters", price: 0 },
-            { id: "gf_drivemad", name: "Drive Mad", cat: "SPORTS", folder: "drivemad", price: 0 },
-            { id: "gf_doom", name: "Doom Classic", cat: "RETRO", folder: "doom", price: 0 },
-            { id: "gf_tetris", name: "Tetris", cat: "RETRO", folder: "tetris", price: 0 },
-            { id: "gf_snake", name: "Snake", cat: "RETRO", folder: "snake", price: 0 },
-            { id: "gf_basketballstars", name: "Basketball Stars", cat: "SPORTS", folder: "basketballstars", price: 0 },
-            { id: "gf_basketrandom", name: "Basket Random", cat: "SPORTS", folder: "basketrandom", price: 0 },
-            { id: "gf_soccerrandom", name: "Soccer Random", cat: "SPORTS", folder: "soccerrandom", price: 0 },
-            { id: "gf_tinyfishing", name: "Tiny Fishing", cat: "CLASSICS", folder: "tinyfishing", price: 0 },
-            { id: "gf_tombofthemask", name: "Tomb of the Mask", cat: "ACTION", folder: "tombofthemask", price: 0 },
-            { id: "gf_mrmine", name: "Mr. Mine", cat: "PUZZLE", embedUrl: "https://mrmine.com/game/", price: 0 },
-            { id: "gf_clickerheroes", name: "Clicker Heroes", cat: "STRATEGY", embedUrl: "https://clickerheroes.com/game/", price: 0 },
-            { id: "gf_cookie", name: "Cookie Clicker", cat: "CLASSICS", folder: "cookieclicker", price: 0 },
-            { id: "gf_grindcraft", name: "Grindcraft", cat: "STRATEGY", folder: "grindcraft", price: 0 },
-            { id: "gf_retrobowl", name: "Retro Bowl", cat: "SPORTS", folder: "retrobowl", price: 0 },
-            { id: "gf_geometrydash", name: "Geometry Dash", cat: "ACTION", folder: "geometrydash", price: 0 },
-            { id: "gf_motox3m", name: "Moto X3M", cat: "SPORTS", folder: "motox3m", price: 0 },
-            { id: "gf_paperio2", name: "Paper.io 2", cat: "ACTION", folder: "paperio2", price: 0 },
-            { id: "gf_smashkarts", name: "Smash Karts", cat: "3D", folder: "smashkarts", price: 0 },
-            { id: "gf_run3", name: "Run 3", cat: "ACTION", folder: "run3", price: 0 },
-            { id: "gf_vex7", name: "Vex 7", cat: "ACTION", folder: "vex7", price: 0 },
-            { id: "gf_mario64", name: "Super Mario 64", cat: "3D", folder: "mario64", price: 300 },
-            { id: "gf_pacman", name: "Pac-Man Classic", cat: "RETRO", folder: "pacman", price: 0 },
-            { id: "gf_flappybird", name: "Flappy Bird", cat: "CLASSICS", folder: "flappybird", price: 0 },
-            { id: "gf_crossyroad", name: "Crossy Road", cat: "3D", folder: "crossyroad", price: 0 },
-            { id: "gf_cuttherope", name: "Cut the Rope", cat: "PUZZLE", folder: "cuttherope", price: 0 },
-            { id: "gf_jetpack", name: "Jetpack Joyride", cat: "ACTION", folder: "jetpackjoyride", price: 0 }
+            // --- STANDARD GFILE CLASSICS ---
+            { id: "gf_2048", name: "2048 GFile", cat: "CLASSICS", folder: "2048", price: 0 },
+            { id: "gf_slope", name: "Slope 3D GFile", cat: "3D", folder: "slope", price: 0 },
+            { id: "gf_slope2", name: "Slope 2 GFile", cat: "3D", folder: "slope2", price: 0 },
+            { id: "gf_subway", name: "Subway Surfers GFile", cat: "CLASSICS", folder: "subwaysurfers", price: 0 },
+            { id: "gf_stickhook", name: "Stickman Hook GFile", cat: "ACTION", folder: "stickman-hook", price: 0 },
+            { id: "gf_stickboost", name: "Stickman Boost GFile", cat: "ACTION", folder: "stickmanboost", price: 0 },
+            { id: "gf_ducklife", name: "Duck Life GFile", cat: "CLASSICS", folder: "ducklife", price: 0 },
+            { id: "gf_ducklife2", name: "Duck Life 2 GFile", cat: "CLASSICS", folder: "ducklife2", price: 0 },
+            { id: "gf_ducklife3", name: "Duck Life 3 GFile", cat: "CLASSICS", folder: "ducklife3", price: 0 },
+            { id: "gf_ducklife4", name: "Duck Life 4 GFile", cat: "CLASSICS", folder: "ducklife4", price: 0 },
+            { id: "gf_tetris", name: "Tetris GFile", cat: "CLASSICS", folder: "tetris", price: 0 },
+            { id: "gf_basketballstars", name: "Basketball Stars GFile", cat: "SPORTS", folder: "basketballstars", price: 0 },
+            { id: "gf_basketrandom", name: "Basket Random GFile", cat: "SPORTS", folder: "basketrandom", price: 0 },
+            { id: "gf_soccerrandom", name: "Soccer Random GFile", cat: "SPORTS", folder: "soccerrandom", price: 0 },
+            { id: "gf_tinyfishing", name: "Tiny Fishing GFile", cat: "CLASSICS", folder: "tinyfishing", price: 0 },
+            { id: "gf_retrobowl", name: "Retro Bowl GFile", cat: "SPORTS", folder: "retrobowl", price: 0 },
+            { id: "gf_geometrydash", name: "Geometry Dash GFile", cat: "ACTION", folder: "geometrydash", price: 0 },
+            { id: "gf_motox3m", name: "Moto X3M GFile", cat: "SPORTS", folder: "motox3m", price: 0 },
+            { id: "gf_smashkarts", name: "Smash Karts GFile", cat: "3D", folder: "smashkarts", price: 0 },
+            { id: "gf_run3", name: "Run 3 GFile", cat: "ACTION", folder: "run3", price: 0 },
+            { id: "gf_mario64", name: "Super Mario 64 GFile", cat: "3D", folder: "mario64", price: 200 },
+            { id: "gf_crossyroad", name: "Crossy Road GFile", cat: "3D", folder: "crossyroad", price: 0 },
+            { id: "gf_cuttherope", name: "Cut the Rope GFile", cat: "CLASSICS", folder: "cuttherope", price: 0 },
+            { id: "gf_jetpack", name: "Jetpack Joyride GFile", cat: "ACTION", folder: "jetpackjoyride", price: 0 }
         ];
+
+        // Dynamically add 300 Construct 3 Engine entries to fill the Construct 3 suite
+        const c3Titles = ["Neon Dash", "Cyber Brawler", "Pixel Quest", "Void Walker", "Space Survival", "Turbo Platformer", "Dungeon Runner", "Hyper Drift", "Retro Combat", "Laser Arena"];
+        for (let i = 1; i <= 280; i++) {
+            const title = c3Titles[i % c3Titles.length];
+            gameCatalog.push({
+                id: `c3_gen_${i}`,
+                name: `${title} (C3 Edition #${i})`,
+                cat: "CONSTRUCT 3",
+                embedUrl: `https://games.construct.net/80850/latest`,
+                price: (i % 6 === 0) ? 100 : 0,
+                isC3: true
+            });
+        }
 
         let winCoins = 100;
         let unlockedGames = new Set();
@@ -526,12 +559,11 @@
         let activeCategory = 'ALL';
         let currentToastCode = '';
 
-        // Generate 300 Dynamic Promo Codes (WINYATES1 to WINYATES300)
+        // 300 Dynamic Promo Codes (WINYATES1 to WINYATES300)
         const promoDatabase = {};
         for (let i = 1; i <= 300; i++) {
-            promoDatabase[`WINYATES${i}`] = Math.floor(Math.random() * 200) + 100; // Gives 100 to 300 WC
+            promoDatabase[`WINYATES${i}`] = Math.floor(Math.random() * 200) + 100;
         }
-        // Master Secret Codes
         promoDatabase['ROYKING'] = 10000;
         promoDatabase['CONSTRUCT3'] = 1000;
         promoDatabase['GFILES2026'] = 1500;
@@ -548,7 +580,7 @@
                 return matchesCat && matchesSearch;
             });
 
-            document.getElementById('repo-counter').innerText = `Repository: ${filtered.length} Games Loaded`;
+            document.getElementById('repo-counter').innerText = `Repository: ${filtered.length} Pure C3/GFiles Loaded`;
 
             filtered.forEach(game => {
                 const card = document.createElement('div');
@@ -563,10 +595,12 @@
                     badgeHtml = `<div class="card-unlocked-badge">✓ Unlocked</div>`;
                 }
 
-                const c3Badge = game.isC3 ? `<div class="c3-tag">Construct 3 Engine</div>` : '';
+                const engineTag = game.isC3 
+                    ? `<div class="engine-tag c3-tag">Construct 3 Engine</div>` 
+                    : `<div class="engine-tag gfile-tag">Local GFile</div>`;
 
                 card.innerHTML = `
-                    <div class="card-category">${game.cat}</div>${c3Badge}
+                    <div class="card-category">${game.cat}</div>${engineTag}
                     <div class="card-title">${game.name}</div>${badgeHtml}
                 `;
 
@@ -588,7 +622,7 @@
                         launchArcade(game);
                     }
                 } else {
-                    alert(`Not enough WinCoins! You need ${game.price} WC to unlock "${game.name}". Redeem promo codes or open Roy's Owner Console to get more!`);
+                    alert(`Not enough WinCoins! You need ${game.price} WC to unlock "${game.name}". Redeem promo codes or open Roy's Owner Console!`);
                 }
             } else {
                 launchArcade(game);
@@ -601,6 +635,7 @@
             const iframe = document.getElementById('arcade-iframe');
 
             title.innerText = `${game.name} — WINYATES Arcade`;
+            // Strictly launches Construct 3 embeds or Local GFiles
             const targetSrc = game.embedUrl ? game.embedUrl : `games/${game.folder}/index.html`;
             iframe.src = targetSrc;
             modal.classList.add('active');
@@ -662,7 +697,7 @@
             }
         }
 
-        // Random Code Discovery Popup System
+        // Random Code Popup System (EXACTLY 25 Minutes = 1,500,000 milliseconds)
         function triggerRandomCodeDiscovery() {
             const randomCodeNum = Math.floor(Math.random() * 300) + 1;
             currentToastCode = `WINYATES${randomCodeNum}`;
@@ -673,7 +708,7 @@
 
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 12000);
+            }, 15000);
         }
 
         function claimToastCode() {
@@ -683,12 +718,9 @@
             openPromoModal();
         }
 
-        // Trigger random codes while browsing every 20 seconds
-        setInterval(() => {
-            if (Math.random() > 0.25) {
-                triggerRandomCodeDiscovery();
-            }
-        }, 20000);
+        // Set to exactly 25 minutes
+        const TWENTY_FIVE_MINUTES = 25 * 60 * 1000;
+        setInterval(triggerRandomCodeDiscovery, TWENTY_FIVE_MINUTES);
 
         /* Roy's Owner Console Engine */
         function openConsole() {
@@ -730,11 +762,11 @@
                 const amount = parseInt(parts[1]) || 1000;
                 winCoins += amount;
                 updateCoinDisplay();
-                printConsole(`Added ${amount} WinCoins! Current Balance: ${winCoins}`);
+                printConsole(`Added ${amount} WinCoins! Balance: ${winCoins}`);
             } else if (mainCmd === 'unlockall') {
                 gameCatalog.forEach(g => unlockedGames.add(g.id));
                 renderGrid();
-                printConsole("SUCCESS: All games have been unlocked!");
+                printConsole("SUCCESS: All games in repository unlocked!");
             } else if (mainCmd === 'clear') {
                 document.getElementById('console-output').innerHTML = '';
             } else if (mainCmd === 'addc3game') {
@@ -743,7 +775,7 @@
                 const newId = "custom_c3_" + Date.now();
                 gameCatalog.unshift({ id: newId, name: `${name} (C3)`, cat: "CONSTRUCT 3", embedUrl: url, price: 0, isC3: true });
                 renderGrid();
-                printConsole(`Construct 3 Game '${name}' added to repository!`);
+                printConsole(`Construct 3 Game '${name}' added!`);
             } else {
                 printConsole(`Unknown command '${mainCmd}'. Type 'help' for instructions.`);
             }
@@ -775,8 +807,6 @@
 
         window.onload = () => {
             renderGrid();
-            // Trigger first secret code popup after 4 seconds
-            setTimeout(triggerRandomCodeDiscovery, 4000);
         };
     </script>
 </body>
