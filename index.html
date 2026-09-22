@@ -25,7 +25,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-family); user-select: none; }
         body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
-        /* Header Navigation */
+        /* Navigation Header */
         header {
             background-color: var(--panel-bg);
             border-bottom: 1px solid var(--panel-border);
@@ -137,7 +137,7 @@
 
         .repo-counter { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
 
-        /* Main Grid Area */
+        /* Main Grid */
         main { flex: 1; padding: 1.5rem 2rem; max-width: 1800px; margin: 0 auto; width: 100%; }
 
         .game-grid {
@@ -188,7 +188,7 @@
 
         .card-unlocked-badge { color: var(--accent-green); font-size: 0.72rem; font-weight: 800; }
 
-        /* Fullscreen Game Play Screen Overlay */
+        /* Fullscreen Game Modal Screen */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -241,7 +241,7 @@
         .arcade-frame-wrapper { flex: 1; background: #000; width: 100%; height: 100%; }
         .arcade-frame-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* Promo Modal & Secret Pop-up */
+        /* Promo Modal & Secret Pop-up Toast */
         .promo-card {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
@@ -264,7 +264,6 @@
             text-transform: uppercase;
         }
 
-        /* Random Code Notification Toast */
         .code-toast {
             position: fixed;
             bottom: 2rem;
@@ -288,7 +287,7 @@
 
         .toast-code { font-size: 1.2rem; font-weight: 900; color: #fef08a; letter-spacing: 0.05em; background: rgba(0,0,0,0.4); padding: 0.2rem 0.6rem; border-radius: 4px; margin-top: 4px; display: inline-block; }
 
-        /* Owner Console (Roy's Terminal - Fixed Engine) */
+        /* Roy's Owner Console Engine */
         .console-modal {
             width: 820px;
             max-width: 92vw;
@@ -344,7 +343,7 @@
 </head>
 <body>
 
-    <!-- Top Navigation Header -->
+    <!-- Header Navigation -->
     <header>
         <div class="brand-section">
             <div class="logo-box" id="logo-container">
@@ -368,7 +367,7 @@
         </div>
     </header>
 
-    <!-- Category Bar -->
+    <!-- Category Bar (No Horror) -->
     <div class="category-bar">
         <div class="cat-pills" id="cat-pills-container">
             <button class="cat-pill active" onclick="filterCategory('ALL', this)">ALL</button>
@@ -379,6 +378,7 @@
             <button class="cat-pill" onclick="filterCategory('PUZZLE', this)">PUZZLE</button>
             <button class="cat-pill" onclick="filterCategory('SPORTS', this)">SPORTS</button>
             <button class="cat-pill" onclick="filterCategory('RETRO', this)">RETRO</button>
+            <button class="cat-pill" onclick="filterCategory('STRATEGY', this)">STRATEGY</button>
         </div>
         <div class="repo-counter" id="repo-counter">Repository: Loading...</div>
     </div>
@@ -388,7 +388,7 @@
         <div class="game-grid" id="game-grid"></div>
     </main>
 
-    <!-- Fullscreen Arcade Screen -->
+    <!-- Fullscreen Arcade Modal -->
     <div class="modal-overlay" id="arcade-modal">
         <div class="arcade-container">
             <div class="arcade-header">
@@ -417,7 +417,7 @@
         </div>
     </div>
 
-    <!-- Random Popup Secret Code Notification -->
+    <!-- Random Code Discovery Notification Toast -->
     <div class="code-toast" id="code-toast">
         <div style="font-size:0.85rem; font-weight:bold; color:#fff;">🎁 SECRET PROMO CODE DISCOVERED!</div>
         <div class="toast-code" id="toast-code-val">WINYATES000</div>
@@ -433,7 +433,7 @@
                 <button class="btn-action" onclick="closeConsole()">X Close</button>
             </div>
             <div class="console-screen" id="console-output">
-                WINYATES OWNER CONSOLE ENGINE [Fixed Version 4.0]<br>
+                WINYATES OWNER CONSOLE ENGINE [Construct 3 & gfiles Active]<br>
                 Type 'help' for instructions.<br>
                 ---------------------------------------------------<br>
             </div>
@@ -452,49 +452,72 @@
     </div>
 
     <footer>
-        <div>WINYATES EDITION Arcade &bull; Owner: Roy &bull; Construct 3 & gfiles Integrated</div>
+        <div>WINYATES EDITION Arcade &bull; Owner: Roy &bull; Construct 3 & gfiles Engine</div>
         <button class="owner-btn" onclick="openConsole()">👑 Owner Console (~)</button>
     </footer>
 
     <script>
-        // Massive Catalog of Construct 3 embeds and classic gfiles
+        // Full Game Repository Catalog with Provided Construct 3 Embeds & Expanded Non-Horror Games
         const gameCatalog = [
-            // --- CONSTRUCT 3 EMBEDS ---
+            // --- USER-REQUESTED CONSTRUCT 3 EMBEDS ---
+            { id: "c3_hardest_plat", name: "The hardest platformer (easy at start)", cat: "CONSTRUCT 3", embedUrl: "https://games.construct.net/80850/latest", price: 0, isC3: true },
+            { id: "c3_bitcoin_mil", name: "Bitcoin Millionare", cat: "CONSTRUCT 3", embedUrl: "https://games.construct.net/69886/latest", price: 0, isC3: true },
+
+            // --- MORE CONSTRUCT 3 EMBEDS ---
             { id: "c3_district", name: "District Zero", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/district-zero-survive-the-quarter", price: 0, isC3: true },
             { id: "c3_crewmate", name: "Crewmate Rush", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/crewmate-rush-space-escape-runner", price: 0, isC3: true },
             { id: "c3_kingqueen", name: "King and Queen", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/king-and-queen", price: 0, isC3: true },
             { id: "c3_typerush", name: "Type Rush", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/type-rush-fast-paced-typing-speed-game", price: 0, isC3: true },
             { id: "c3_epicclicker", name: "Epic Clicker", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/epic-clicker", price: 0, isC3: true },
             { id: "c3_ninelives", name: "NineLives", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/ninelives-the-justice-to-the-thieves", price: 0, isC3: true },
-            { id: "c3_cybercity", name: "Cyber Runner C3", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/district-zero-survive-the-quarter", price: 150, isC3: true },
-            { id: "c3_dungeon", name: "Dungeon Quest C3", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/king-and-queen", price: 200, isC3: true },
+            { id: "c3_airwar", name: "Air Warfare C3", cat: "CONSTRUCT 3", embedUrl: "https://games.construct.net/3739/latest", price: 150, isC3: true },
 
-            // --- GFILES & CLASSICS ---
+            // --- ALL GFILES & NON-HORROR CLASSICS ---
             { id: "gf_ts1", name: "Time Shooter", cat: "ACTION", folder: "timeshooter", price: 0 },
             { id: "gf_ts2", name: "Time Shooter 2", cat: "ACTION", folder: "timeshooter2", price: 0 },
             { id: "gf_ts3", name: "Time Shooter 3", cat: "ACTION", folder: "timeshooter3", price: 250 },
             { id: "gf_minecraft", name: "Minecraft (Eaglercraft)", cat: "CLASSICS", folder: "eaglercraft", price: 400 },
             { id: "gf_1v1", name: "1v1.lol", cat: "ACTION", folder: "1v1lol", price: 0 },
             { id: "gf_2048", name: "2048", cat: "PUZZLE", folder: "2048", price: 0 },
+            { id: "gf_adarkroom", name: "A Dark Room", cat: "STRATEGY", folder: "adarkroom", price: 0 },
             { id: "gf_bitlife", name: "Bitlife", cat: "CLASSICS", folder: "bitlife", price: 0 },
             { id: "gf_slope", name: "Slope", cat: "3D", folder: "slope", price: 0 },
             { id: "gf_slope2", name: "Slope 2", cat: "3D", folder: "slope2", price: 0 },
             { id: "gf_subway", name: "Subway Surfers", cat: "CLASSICS", folder: "subwaysurfers", price: 0 },
             { id: "gf_stickhook", name: "Stickman Hook", cat: "ACTION", folder: "stickman-hook", price: 0 },
+            { id: "gf_stickboost", name: "Stickman Boost", cat: "ACTION", folder: "stickmanboost", price: 0 },
+            { id: "gf_stickclimb", name: "Stickman Climb", cat: "ACTION", folder: "stickmanclimb", price: 0 },
             { id: "gf_ducklife", name: "Duck Life", cat: "CLASSICS", folder: "ducklife", price: 0 },
+            { id: "gf_ducklife2", name: "Duck Life 2", cat: "CLASSICS", folder: "ducklife2", price: 0 },
+            { id: "gf_ducklife3", name: "Duck Life 3", cat: "CLASSICS", folder: "ducklife3", price: 0 },
+            { id: "gf_ducklife4", name: "Duck Life 4", cat: "CLASSICS", folder: "ducklife4", price: 0 },
             { id: "gf_drifthunters", name: "Drift Hunters", cat: "3D", folder: "drifthunters", price: 0 },
             { id: "gf_drivemad", name: "Drive Mad", cat: "SPORTS", folder: "drivemad", price: 0 },
             { id: "gf_doom", name: "Doom Classic", cat: "RETRO", folder: "doom", price: 0 },
             { id: "gf_tetris", name: "Tetris", cat: "RETRO", folder: "tetris", price: 0 },
+            { id: "gf_snake", name: "Snake", cat: "RETRO", folder: "snake", price: 0 },
+            { id: "gf_basketballstars", name: "Basketball Stars", cat: "SPORTS", folder: "basketballstars", price: 0 },
             { id: "gf_basketrandom", name: "Basket Random", cat: "SPORTS", folder: "basketrandom", price: 0 },
             { id: "gf_soccerrandom", name: "Soccer Random", cat: "SPORTS", folder: "soccerrandom", price: 0 },
+            { id: "gf_tinyfishing", name: "Tiny Fishing", cat: "CLASSICS", folder: "tinyfishing", price: 0 },
+            { id: "gf_tombofthemask", name: "Tomb of the Mask", cat: "ACTION", folder: "tombofthemask", price: 0 },
             { id: "gf_mrmine", name: "Mr. Mine", cat: "PUZZLE", embedUrl: "https://mrmine.com/game/", price: 0 },
+            { id: "gf_clickerheroes", name: "Clicker Heroes", cat: "STRATEGY", embedUrl: "https://clickerheroes.com/game/", price: 0 },
             { id: "gf_cookie", name: "Cookie Clicker", cat: "CLASSICS", folder: "cookieclicker", price: 0 },
+            { id: "gf_grindcraft", name: "Grindcraft", cat: "STRATEGY", folder: "grindcraft", price: 0 },
             { id: "gf_retrobowl", name: "Retro Bowl", cat: "SPORTS", folder: "retrobowl", price: 0 },
+            { id: "gf_geometrydash", name: "Geometry Dash", cat: "ACTION", folder: "geometrydash", price: 0 },
+            { id: "gf_motox3m", name: "Moto X3M", cat: "SPORTS", folder: "motox3m", price: 0 },
+            { id: "gf_paperio2", name: "Paper.io 2", cat: "ACTION", folder: "paperio2", price: 0 },
             { id: "gf_smashkarts", name: "Smash Karts", cat: "3D", folder: "smashkarts", price: 0 },
-            { id: "gf_fnaf1", name: "FNAF 1", cat: "ACTION", folder: "fnaf1", price: 0 },
             { id: "gf_run3", name: "Run 3", cat: "ACTION", folder: "run3", price: 0 },
-            { id: "gf_mario64", name: "Super Mario 64", cat: "3D", folder: "mario64", price: 300 }
+            { id: "gf_vex7", name: "Vex 7", cat: "ACTION", folder: "vex7", price: 0 },
+            { id: "gf_mario64", name: "Super Mario 64", cat: "3D", folder: "mario64", price: 300 },
+            { id: "gf_pacman", name: "Pac-Man Classic", cat: "RETRO", folder: "pacman", price: 0 },
+            { id: "gf_flappybird", name: "Flappy Bird", cat: "CLASSICS", folder: "flappybird", price: 0 },
+            { id: "gf_crossyroad", name: "Crossy Road", cat: "3D", folder: "crossyroad", price: 0 },
+            { id: "gf_cuttherope", name: "Cut the Rope", cat: "PUZZLE", folder: "cuttherope", price: 0 },
+            { id: "gf_jetpack", name: "Jetpack Joyride", cat: "ACTION", folder: "jetpackjoyride", price: 0 }
         ];
 
         let winCoins = 100;
@@ -508,7 +531,7 @@
         for (let i = 1; i <= 300; i++) {
             promoDatabase[`WINYATES${i}`] = Math.floor(Math.random() * 200) + 100; // Gives 100 to 300 WC
         }
-        // Special Master Codes
+        // Master Secret Codes
         promoDatabase['ROYKING'] = 10000;
         promoDatabase['CONSTRUCT3'] = 1000;
         promoDatabase['GFILES2026'] = 1500;
@@ -639,7 +662,7 @@
             }
         }
 
-        // Random Code Discovery Event System (Pops up random codes while user browses)
+        // Random Code Discovery Popup System
         function triggerRandomCodeDiscovery() {
             const randomCodeNum = Math.floor(Math.random() * 300) + 1;
             currentToastCode = `WINYATES${randomCodeNum}`;
@@ -650,7 +673,7 @@
 
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 12000); // Hide after 12 seconds
+            }, 12000);
         }
 
         function claimToastCode() {
@@ -660,14 +683,14 @@
             openPromoModal();
         }
 
-        // Start random promo code popups every 25 seconds
+        // Trigger random codes while browsing every 20 seconds
         setInterval(() => {
-            if (Math.random() > 0.3) {
+            if (Math.random() > 0.25) {
                 triggerRandomCodeDiscovery();
             }
-        }, 25000);
+        }, 20000);
 
-        /* Roy's Fixed Owner Console Engine */
+        /* Roy's Owner Console Engine */
         function openConsole() {
             document.getElementById('console-modal').classList.add('active');
             document.getElementById('console-input').focus();
@@ -716,7 +739,7 @@
                 document.getElementById('console-output').innerHTML = '';
             } else if (mainCmd === 'addc3game') {
                 const name = parts[1] || "Custom C3 Game";
-                const url = parts[2] || "https://idev.games/embed/district-zero-survive-the-quarter";
+                const url = parts[2] || "https://games.construct.net/80850/latest";
                 const newId = "custom_c3_" + Date.now();
                 gameCatalog.unshift({ id: newId, name: `${name} (C3)`, cat: "CONSTRUCT 3", embedUrl: url, price: 0, isC3: true });
                 renderGrid();
@@ -728,7 +751,7 @@
 
         function promptAddConstructGame() {
             const name = prompt("Enter Construct 3 Game Name:", "My Construct 3 Game");
-            const url = prompt("Enter Construct 3 Embed URL:", "https://idev.games/embed/district-zero-survive-the-quarter");
+            const url = prompt("Enter Construct 3 Embed URL:", "https://games.construct.net/80850/latest");
             if (name && url) {
                 runConsoleCmd(`addc3game ${name}${url}`);
             }
@@ -742,7 +765,7 @@
             }
         }
 
-        // Global Backtick (~) Shortcut for Roy's Console
+        // Global Backtick (~) Shortcut for Owner Console
         window.addEventListener('keydown', (e) => {
             if (e.key === '`' || e.key === '~') {
                 e.preventDefault();
@@ -752,8 +775,8 @@
 
         window.onload = () => {
             renderGrid();
-            // Trigger first popup secret code after 5 seconds
-            setTimeout(triggerRandomCodeDiscovery, 5000);
+            // Trigger first secret code popup after 4 seconds
+            setTimeout(triggerRandomCodeDiscovery, 4000);
         };
     </script>
 </body>
