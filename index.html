@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WINYATES EDITION - Unblocked Arcade</title>
+  <title>Winyates Edition</title>
 
-  <!-- Supabase JS Client -->
+  <!-- Supabase JS Client (Syncs if active) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- FontAwesome & Google Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,16 +15,15 @@
     :root {
       --bg-dark: #0a0b10;
       --bg-card: #121520;
-      --bg-hover: #1b2030;
+      --bg-hover: #1c2132;
       --accent-yellow: #fcd535;
       --accent-gold: #ffaa00;
       --accent-cyan: #00f2fe;
       --accent-purple: #9d4edd;
-      --accent-magenta: #f72585;
       --text-main: #f0f2f5;
       --text-muted: #8e99b0;
       --border-color: rgba(255, 255, 255, 0.08);
-      --glow-yellow: rgba(252, 213, 53, 0.25);
+      --glow-yellow: rgba(252, 213, 53, 0.3);
     }
 
     * {
@@ -42,13 +41,13 @@
       flex-direction: column;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(0, 242, 254, 0.08) 0%, transparent 40%);
+        radial-gradient(circle at 10% 10%, rgba(157, 78, 221, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(0, 242, 254, 0.08) 0%, transparent 40%);
     }
 
-    /* HEADER & NAVIGATION */
+    /* HEADER & NAVIGATION (CLASSIC OLD UI) */
     header {
-      background: rgba(10, 11, 16, 0.92);
+      background: rgba(10, 11, 16, 0.95);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border-color);
       position: sticky;
@@ -68,7 +67,7 @@
       cursor: pointer;
     }
 
-    /* Multicolored Swirl 'W' Logo */
+    /* Multicolored Tornado Swirl 'W' Logo */
     .swirl-logo {
       width: 44px;
       height: 44px;
@@ -76,23 +75,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      background: radial-gradient(circle, rgba(252,213,53,0.2) 0%, transparent 70%);
+      border-radius: 50%;
     }
 
     .swirl-logo .w-text {
       font-family: 'Orbitron', sans-serif;
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 900;
-      background: linear-gradient(135deg, #f72585, #7209b7, #3a0ca3, #4361ee, #4cc9f0, #fcd535);
+      background: linear-gradient(135deg, #f72585, #7209b7, #3a0ca3, #00f2fe, #fcd535);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.4));
+      filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.5));
       animation: pulseGlow 3s infinite alternate;
     }
 
     @keyframes pulseGlow {
-      0% { filter: drop-shadow(0 0 6px rgba(247, 37, 133, 0.5)); }
-      50% { filter: drop-shadow(0 0 12px rgba(67, 97, 238, 0.7)); }
-      100% { filter: drop-shadow(0 0 8px rgba(252, 213, 53, 0.6)); }
+      0% { filter: drop-shadow(0 0 6px rgba(247, 37, 133, 0.6)); }
+      50% { filter: drop-shadow(0 0 14px rgba(0, 242, 254, 0.8)); }
+      100% { filter: drop-shadow(0 0 8px rgba(252, 213, 53, 0.7)); }
     }
 
     .brand-title {
@@ -100,9 +101,7 @@
       font-size: 22px;
       font-weight: 900;
       letter-spacing: 1.5px;
-      background: linear-gradient(90deg, #ffffff, #a0aabf);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #fff;
     }
 
     .brand-title span {
@@ -159,8 +158,8 @@
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      min-width: 180px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      min-width: 200px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
       z-index: 101;
       overflow: hidden;
     }
@@ -174,6 +173,7 @@
       color: var(--text-main);
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
       font-size: 14px;
       text-decoration: none;
@@ -184,6 +184,14 @@
     .dropdown-item:hover {
       background: var(--bg-hover);
       color: var(--accent-yellow);
+    }
+
+    .ext-tag {
+      font-size: 10px;
+      background: rgba(255,255,255,0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--text-muted);
     }
 
     /* USER & STATS BADGES */
@@ -270,7 +278,6 @@
 
     .games-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, min-min(180px, 1fr));
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 18px;
     }
@@ -305,12 +312,6 @@
       position: relative;
     }
 
-    .game-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
     .game-info {
       padding: 12px;
       display: flex;
@@ -339,7 +340,7 @@
       position: absolute;
       top: 8px;
       right: 8px;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.85);
       border: 1px solid var(--accent-yellow);
       color: var(--accent-yellow);
       padding: 4px 8px;
@@ -351,7 +352,7 @@
       gap: 4px;
     }
 
-    /* EMBED / IFRAME FULLSCREEN OVERLAY */
+    /* IFRAME FULLSCREEN MODAL */
     .game-modal {
       display: none;
       position: fixed;
@@ -447,7 +448,7 @@
       box-shadow: 0 0 8px #2ec4b6;
     }
 
-    /* ADMIN & SOCIAL PANELS */
+    /* PANELS */
     .panel-view {
       display: none;
       background: var(--bg-card);
@@ -505,7 +506,7 @@
 
     <nav class="nav-pills">
       <button class="nav-btn active" id="nav-games" onclick="showSection('games')">
-        <i class="fa-solid => fa-gamepad"></i> Games
+        <i class="fa-solid fa-gamepad"></i> Games
       </button>
 
       <!-- SCHOOL APPS DROPDOWN -->
@@ -514,10 +515,20 @@
           <i class="fa-solid fa-graduation-cap"></i> School Apps <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
         </button>
         <div class="dropdown-menu" id="schoolAppsMenu">
-          <a class="dropdown-item" onclick="launchApp('EdShed', 'https://www.edshed.com')"><i class="fa-solid fa-spell-check"></i> EdShed</a>
-          <a class="dropdown-item" onclick="launchApp('TTRS', 'https://play.ttrockstars.com')"><i class="fa-solid fa-bolt"></i> TTRS</a>
-          <a class="dropdown-item" onclick="launchApp('myON', 'https://www.myon.co.uk')"><i class="fa-solid fa-book-open"></i> myON</a>
-          <a class="dropdown-item" onclick="launchApp('Dojo Islands', 'https://www.classdojo.com')"><i class="fa-solid fa-island-tropical"></i> Dojo Islands</a>
+          <a class="dropdown-item" onclick="launchApp('EdShed', 'https://www.edshed.com')">
+            <span><i class="fa-solid fa-spell-check"></i> EdShed</span>
+          </a>
+          <a class="dropdown-item" onclick="launchApp('TTRS', 'https://play.ttrockstars.com')">
+            <span><i class="fa-solid fa-bolt"></i> TTRS</span>
+          </a>
+          <a class="dropdown-item" onclick="launchApp('myON', 'https://www.myon.co.uk', true)">
+            <span><i class="fa-solid fa-book-open"></i> myON</span>
+            <span class="ext-tag"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+          </a>
+          <a class="dropdown-item" onclick="launchApp('Dojo Islands', 'https://www.classdojo.com', true)">
+            <span><i class="fa-solid fa-island-tree"></i> Dojo Islands</span>
+            <span class="ext-tag"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+          </a>
         </div>
       </div>
 
@@ -559,7 +570,7 @@
     <section id="section-chat" class="panel-view">
       <h2 style="margin-bottom: 16px; color: var(--accent-yellow);"><i class="fa-solid fa-comments"></i> Local Party Chat</h2>
       <div id="chatBox" style="height: 300px; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; overflow-y: auto; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
-        <div><strong style="color: var(--accent-yellow);">System:</strong> Welcome to WINYATES Party Room!</div>
+        <div><strong style="color: var(--accent-yellow);">System:</strong> Welcome to WINYATES Party Room! Messages are active.</div>
       </div>
       <div style="display: flex; gap: 8px;">
         <input type="text" id="chatInput" class="form-control" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendChatMessage()">
@@ -569,24 +580,24 @@
 
     <!-- ADMIN PANEL -->
     <section id="section-admin" class="panel-view">
-      <h2 style="margin-bottom: 16px; color: var(--accent-yellow);"><i class="fa-solid fa-user-shield"></i> Owner Dashboard</h2>
+      <h2 style="margin-bottom: 16px; color: var(--accent-yellow);"><i class="fa-solid fa-user-shield"></i> Owner Controls</h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
         <div>
-          <h3 style="font-size: 16px; margin-bottom: 12px;">Grant WinCoins</h3>
+          <h3 style="font-size: 16px; margin-bottom: 12px;">Add WinCoins to Self</h3>
           <div class="form-group">
-            <label>Amount</label>
+            <label>Amount (WC)</label>
             <input type="number" id="grantAmount" class="form-control" value="500">
           </div>
           <button class="btn-primary" onclick="grantCoins()">Add to Balance</button>
         </div>
 
         <div>
-          <h3 style="font-size: 16px; margin-bottom: 12px;">Generate Promo Code</h3>
+          <h3 style="font-size: 16px; margin-bottom: 12px;">Redeem / Create Promo Code</h3>
           <div class="form-group">
             <label>Code Name</label>
-            <input type="text" id="promoCodeName" class="form-control" placeholder="ROY2026">
+            <input type="text" id="promoCodeName" class="form-control" placeholder="WINYATES2026">
           </div>
-          <button class="btn-primary" onclick="generatePromo()">Create Code</button>
+          <button class="btn-primary" onclick="generatePromo()">Redeem / Add Code</button>
         </div>
       </div>
     </section>
@@ -608,22 +619,17 @@
   <footer>
     <div class="status-online">
       <div class="status-dot"></div>
-      <span>Winyates Local Network Connected (Supabase Active)</span>
+      <span>Winyates Local Network Connected</span>
     </div>
     <div>WINYATES EDITION v4.0 • 158 Local Archive Games</div>
   </footer>
 
   <script>
-    // Supabase Initialization Config
-    const SUPABASE_URL = "https://your-project-id.supabase.co";
-    const SUPABASE_ANON_KEY = "your-anon-public-key";
-    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-
-    // Local State
+    // State Persistence
     let userBalance = parseInt(localStorage.getItem('wincoins') || '100');
     let unlockedGames = JSON.parse(localStorage.getItem('unlockedGames') || '[]');
 
-    // MASTER CATALOG OF LOCAL GAMES (cdn.jsdelivr.net / raw.githack.com HTML5GameArchive gfiles)
+    // Master Catalog mapping directly to functional GitHub CDN paths
     const GFILES_BASE = "https://cdn.jsdelivr.net/gh/HTML5GameArchive/gfiles@master/";
 
     const gameList = [
@@ -773,7 +779,7 @@
       renderGames(document.getElementById('searchInput').value);
     }
 
-    // Launch Game / Lock Check
+    // Launch Game / Minecraft Lock Check
     function launchGame(game) {
       if (game.cost && !unlockedGames.includes(game.id)) {
         if (userBalance >= game.cost) {
@@ -788,7 +794,7 @@
             return;
           }
         } else {
-          alert(`You need ${game.cost} WinCoins to unlock ${game.name}! Balance: ${userBalance} WC.`);
+          alert(`You need ${game.cost} WinCoins to unlock ${game.name}! You currently have ${userBalance} WC.`);
           return;
         }
       }
@@ -805,13 +811,19 @@
       modal.classList.add('active');
     }
 
-    function launchApp(name, url) {
-      const modal = document.getElementById('gameModal');
-      const iframe = document.getElementById('gameIframe');
-      document.getElementById('modalTitle').innerText = name;
-      iframe.src = url;
-      modal.classList.add('active');
+    // School Apps Launcher (Fixed for MyON & ClassDojo iframe embedding blocks)
+    function launchApp(name, url, external = false) {
       document.getElementById('schoolAppsMenu').classList.remove('show');
+      
+      if (external) {
+        window.open(url, '_blank');
+      } else {
+        const modal = document.getElementById('gameModal');
+        const iframe = document.getElementById('gameIframe');
+        document.getElementById('modalTitle').innerText = name;
+        iframe.src = url;
+        modal.classList.add('active');
+      }
     }
 
     function closeGame() {
@@ -857,12 +869,21 @@
       userBalance += amount;
       localStorage.setItem('wincoins', userBalance);
       updateWCDisplay();
-      alert(`Granted ${amount} WinCoins! New Balance: ${userBalance}`);
+      alert(`Added ${amount} WinCoins! Balance updated to: ${userBalance} WC`);
     }
 
     function generatePromo() {
-      const code = document.getElementById('promoCodeName').value || 'WINYATES';
-      alert(`Promo Code '${code}' created successfully!`);
+      const code = document.getElementById('promoCodeName').value.trim().toUpperCase();
+      if (!code) return;
+      
+      if (code === 'WINYATES2026' || code === 'ROY') {
+        userBalance += 500;
+        localStorage.setItem('wincoins', userBalance);
+        updateWCDisplay();
+        alert(`Code Redeemed! Added 500 WC.`);
+      } else {
+        alert(`Promo Code '${code}' activated!`);
+      }
     }
 
     function sendChatMessage() {
@@ -872,7 +893,7 @@
 
       const chatBox = document.getElementById('chatBox');
       const msg = document.createElement('div');
-      msg.innerHTML = `<strong style="color: var(--accent-yellow);">👑 Roy:</strong> ${text}`;
+      msg.innerHTML = `<strong style="color: var(--accent-yellow);">👑 Roy (Owner):</strong> ${text}`;
       chatBox.appendChild(msg);
       chatBox.scrollTop = chatBox.scrollHeight;
       input.value = '';
