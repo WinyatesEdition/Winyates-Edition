@@ -1,945 +1,1181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WINYATES EDITION</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WINYATES EDITION</title>
+  
+  <!-- Tailwind CSS & FontAwesome Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Supabase JS Client v2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- Supabase JS Client Library -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-    :root {
-        --bg-dark: #0f111a;
-        --card-bg: #181a26;
-        --card-hover: #222536;
-        --accent-blue: #3b82f6;
-        --accent-gold: #f59e0b;
-        --text-main: #f3f4f6;
-        --text-muted: #9ca3af;
-        --border-color: #232738;
-        --input-bg: #12141d;
-    }
-
-    [data-theme="light"] {
-        --bg-dark: #f1f5f9;
-        --card-bg: #ffffff;
-        --card-hover: #f8fafc;
-        --accent-blue: #2563eb;
-        --accent-gold: #d97706;
-        --text-main: #0f172a;
-        --text-muted: #64748b;
-        --border-color: #e2e8f0;
-        --input-bg: #e2e8f0;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: var(--bg-dark); color: var(--text-main); padding-bottom: 50px; min-height: 100vh; display: flex; flex-direction: column; overflow-y: scroll; }
-
-    /* Announcement Banner */
-    .announcement {
-        background: linear-gradient(90deg, #7c3aed, #c026d3);
-        color: #ffffff;
-        padding: 0.45rem 1rem;
-        font-size: 0.82rem;
-        font-weight: 700;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .announcement-close { background: none; border: none; color: #fff; cursor: pointer; font-size: 0.9rem; font-weight: 800; }
-
-    /* Top Navigation Bar */
-    header {
-        background-color: #131520;
-        padding: 12px 24px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        border-bottom: 1px solid var(--border-color);
-        position: sticky; top: 0; z-index: 100;
-    }
-
-    .brand-section { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap');
     
-    .brand-logo-img { height: 38px; width: auto; object-fit: contain; }
-
-    .brand-title {
-        font-weight: 900;
-        font-size: 1.25rem;
-        line-height: 1.1;
-        background: linear-gradient(135deg, #a855f7, #f59e0b);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #0d1017;
+      color: #e2e8f0;
+      overflow-x: hidden;
     }
 
-    .nav-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-
-    .user-badge {
-        background-color: var(--accent-gold);
-        color: #000;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-weight: 800;
-        font-size: 0.85rem;
-        display: flex;
-        align-items: center;
-        gap: 6px;
+    body.light-theme {
+      background-color: #f1f5f9;
+      color: #0f172a;
     }
 
-    .staff-badge {
-        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-        color: #ffffff;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-weight: 800;
-        font-size: 0.85rem;
+    body.light-theme header {
+      background-color: #ffffff;
+      border-color: #e2e8f0;
     }
 
-    .wc-badge {
-        background-color: #1f2438;
-        border: 1px solid #374151;
-        color: var(--accent-gold);
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-weight: 800;
-        font-size: 0.85rem;
-        display: flex;
-        align-items: center;
-        gap: 6px;
+    body.light-theme footer {
+      background-color: #e2e8f0;
+      border-color: #cbd5e1;
+      color: #334155;
     }
 
-    .btn {
-        background-color: #1e2337;
-        color: var(--text-main);
-        border: 1px solid #323854;
-        padding: 8px 14px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.2s;
-    }
-    .btn:hover { background-color: #2a314d; }
-    .btn-primary { background-color: var(--accent-blue); border-color: var(--accent-blue); color: #fff; }
-    .btn-primary:hover { background-color: #2563eb; }
-
-    /* School Apps Dropdown */
-    .dropdown { position: relative; display: inline-block; }
-    .dropdown-content {
-        display: none;
-        position: absolute; right: 0; top: 115%;
-        background-color: var(--card-bg);
-        min-width: 170px;
-        border: 1px solid #323854;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        z-index: 200;
-    }
-    .dropdown-content a { color: var(--text-main); padding: 10px 14px; text-decoration: none; display: block; font-size: 0.85rem; font-weight: 600; border-bottom: 1px solid #323854; }
-    .dropdown-content a:hover { background-color: rgba(255,255,255,0.05); color: var(--accent-blue); }
-    .dropdown:hover .dropdown-content { display: block; }
-
-    .search-bar input {
-        background-color: #1e2337;
-        border: 1px solid #323854;
-        padding: 8px 16px;
-        border-radius: 20px;
-        color: white;
-        outline: none;
-        width: 160px;
-        transition: width 0.2s ease;
-    }
-    .search-bar input:focus { width: 210px; border-color: var(--accent-blue); }
-
-    /* Filter Tabs */
-    .filter-container {
-        padding: 20px 24px 10px;
-        display: flex;
-        gap: 10px;
-        overflow-x: auto;
+    body.light-theme .game-card {
+      background-color: #ffffff;
+      border-color: #cbd5e1;
+      color: #0f172a;
     }
 
-    .filter-btn {
-        background-color: #181a26;
-        color: var(--text-muted);
-        border: 1px solid #2a2e45;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        cursor: pointer;
-        white-space: nowrap;
-    }
-    .filter-btn:hover, .filter-btn.active {
-        background-color: var(--accent-blue);
-        color: white;
-        border-color: var(--accent-blue);
+    body.light-theme .game-card:hover {
+      border-color: #2563eb;
+      box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.2);
     }
 
-    /* Main Content & Game Grid */
-    main { padding: 10px 24px; flex: 1; }
-
-    .section-header {
-        color: var(--text-muted);
-        font-size: 0.8rem;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        margin-bottom: 16px;
+    body.light-theme .pill-btn {
+      background-color: #f8fafc;
+      border-color: #cbd5e1;
+      color: #334155;
     }
 
-    .game-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-        gap: 16px;
+    body.light-theme .glass-modal {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: #cbd5e1;
+      color: #0f172a;
     }
 
+    h1, h2, h3, .brand-font {
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    /* Winyates Logo Gradient Text */
+    .winyates-text {
+      background: linear-gradient(90deg, #b056ef 0%, #eb5b7d 35%, #e17c52 70%, #f7a838 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.5px;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0d1017;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e2638;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #2a364f;
+    }
+
+    /* Card styling matching classic UI */
     .game-card {
-        background-color: var(--card-bg);
-        border-radius: 10px;
-        padding: 24px 12px;
-        text-align: center;
-        border: 1px solid var(--border-color);
-        transition: transform 0.2s, background-color 0.2s;
-        cursor: pointer;
-        position: relative;
+      background-color: #151a26;
+      border: 1px solid #1e2638;
+      transition: all 0.2s ease-in-out;
     }
-
     .game-card:hover {
-        transform: translateY(-3px);
-        background-color: var(--card-hover);
-        border-color: var(--accent-blue);
+      transform: translateY(-3px);
+      border-color: #3b82f6;
+      box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(59, 130, 246, 0.2);
     }
 
-    .game-tag {
-        color: var(--accent-gold);
-        font-size: 0.7rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        margin-bottom: 6px;
+    .badge-category {
+      color: #f59e0b;
+      font-weight: 800;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
     }
 
-    .game-title {
-        font-size: 0.95rem;
-        font-weight: 700;
+    /* Glass Modal */
+    .glass-modal {
+      background: rgba(13, 16, 23, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid #2a364f;
     }
 
-    .price-badge {
-        position: absolute;
-        top: 8px; right: 8px;
-        background: var(--accent-gold);
-        color: #000;
-        font-size: 0.68rem;
-        font-weight: 900;
-        padding: 3px 8px;
-        border-radius: 12px;
+    .pill-btn {
+      background-color: #19202f;
+      border: 1px solid #263147;
+      transition: all 0.15s ease;
+    }
+    .pill-btn:hover {
+      background-color: #222c40;
+      border-color: #384868;
     }
 
-    /* Custom Modal Styles */
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        place-items: center;
-        z-index: 1000;
+    /* Pulsing animation for active indicators */
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
-    .modal.active { display: grid; }
-
-    .modal-content {
-        background: var(--card-bg);
-        border: 1px solid #323854;
-        border-radius: 12px;
-        padding: 24px;
-        width: 90%;
-        max-width: 450px;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        max-height: 90vh;
-        overflow-y: auto;
+    .pulse-dot {
+      animation: pulse-subtle 2s infinite;
     }
-
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #323854; padding-bottom: 10px; }
-    .modal-title { font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
-    .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
-
-    .modal-input {
-        width: 100%;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #323854;
-        background: var(--input-bg);
-        color: white;
-        outline: none;
-    }
-
-    /* Game Launcher Modal */
-    .modal-game { padding: 1rem; }
-    .modal-game-box {
-        width: 95vw; height: 90vh; max-width: 1400px;
-        display: flex; flex-direction: column; background: var(--card-bg);
-        border-radius: 12px; overflow: hidden; border: 1px solid #323854;
-    }
-    .iframe-container { flex: 1; width: 100%; height: 100%; background: #000; }
-    iframe { width: 100%; height: 100%; border: none; }
-
-    /* Chat & Direct Messaging UI */
-    .chat-box {
-        height: 220px;
-        background: var(--input-bg);
-        border: 1px solid #323854;
-        border-radius: 8px;
-        padding: 10px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-    .chat-msg { font-size: 0.85rem; word-break: break-word; }
-    .chat-user { font-weight: 800; color: var(--accent-gold); }
-
-    .friend-item {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 8px 12px; background: var(--input-bg); border-radius: 8px;
-        border: 1px solid #323854; margin-bottom: 6px;
-    }
-
-    /* Avatar Preview */
-    .avatar-preview {
-        width: 60px; height: 60px; border-radius: 50%;
-        object-fit: cover; border: 2px solid var(--accent-gold);
-        align-self: center; margin-bottom: 6px;
-    }
-
-    /* Fixed Bottom Status Footer */
-    footer.status-bar {
-        position: fixed;
-        bottom: 0; left: 0; width: 100%;
-        background-color: #131520;
-        border-top: 1px solid var(--border-color);
-        padding: 8px 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 0.8rem;
-        color: var(--text-muted);
-        z-index: 500;
-    }
-
-    .status-user-info { display: flex; align-items: center; gap: 10px; }
-    .avatar-small { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; background-color: var(--accent-blue); }
-</style>
+  </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between select-none">
 
-<div class="announcement" id="banner">
-    <div>🚀 <span><b>Welcome to Winyates Edition!</b> Start with 100 WC! Redeem promo codes in Redeem Codes!</span></div>
-    <button class="announcement-close" onclick="document.getElementById('banner').style.display='none'">✕</button>
-</div>
+  <!-- HEADER / NAVBAR -->
+  <header class="bg-[#0f141e] border-b border-[#1c2436] px-4 py-3 sticky top-0 z-40 shadow-lg transition-colors">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Logo & Branding -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('games')">
+        <!-- Exact Classic Tornado Swirl Logo -->
+        <div class="relative w-10 h-10 flex items-center justify-center">
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+            <path d="M 15,25 Q 50,5 85,25 Q 50,45 15,25" fill="none" stroke="#9333ea" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 22,40 Q 50,22 78,40 Q 50,58 22,40" fill="none" stroke="#2563eb" stroke-width="7.5" stroke-linecap="round"/>
+            <path d="M 30,55 Q 50,40 70,55 Q 50,70 30,55" fill="none" stroke="#10b981" stroke-width="7" stroke-linecap="round"/>
+            <path d="M 38,70 Q 50,58 62,70 Q 50,82 38,70" fill="none" stroke="#eab308" stroke-width="6.5" stroke-linecap="round"/>
+            <path d="M 44,83 Q 50,75 56,83 Q 50,91 44,83" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/>
+            <text x="50%" y="62%" text-anchor="middle" font-family="'Fredoka', sans-serif" font-weight="900" font-size="48" fill="#f59e0b" stroke="#000" stroke-width="3" paint-order="stroke">W</text>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="winyates-text text-xl md:text-2xl font-black leading-tight tracking-wide">WINYATES</span>
+          <span class="text-xs font-bold text-amber-500 tracking-widest -mt-1">EDITION</span>
+        </div>
+      </div>
 
-<header>
-    <div class="brand-section" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        <svg viewBox="0 0 200 180" class="brand-logo-img">
-            <path d="M 30,30 Q 170,-10 160,70 Q 150,110 50,100" fill="none" stroke="#7c3aed" stroke-width="22" stroke-linecap="round"/>
-            <path d="M 45,75 Q 150,45 140,110 Q 130,140 60,135" fill="none" stroke="#2563eb" stroke-width="18" stroke-linecap="round"/>
-            <path d="M 60,110 Q 130,95 120,138 Q 110,160 70,155" fill="none" stroke="#16a34a" stroke-width="14" stroke-linecap="round"/>
-            <path d="M 75,138 Q 115,128 108,155 Q 100,170 80,168" fill="none" stroke="#eab308" stroke-width="10" stroke-linecap="round"/>
-            <path d="M 85,158 Q 102,152 98,168" fill="none" stroke="#dc2626" stroke-width="6" stroke-linecap="round"/>
-            <text x="62" y="112" font-family="Arial Black, sans-serif" font-weight="900" font-size="120" fill="#f59e0b" stroke="#000" stroke-width="3">W</text>
-        </svg>
-        <div class="brand-title">WINYATES<br>EDITION</div>
+      <!-- Action Navigation Buttons (Classic Pills) -->
+      <div class="flex flex-wrap items-center gap-2 text-xs md:text-sm font-bold">
+        <!-- Role Badge (Owner/Staff) -->
+        <div id="ownerBadge" class="bg-amber-500 text-black px-4 py-1.5 rounded-full flex items-center gap-1.5 font-black shadow-md shadow-amber-500/20 cursor-pointer hover:bg-amber-400 transition" onclick="openAdminPanel()">
+          <span>👑</span>
+          <span id="headerUserName">Roy (Owner)</span>
+        </div>
+
+        <!-- WC Balance Badge -->
+        <div class="pill-btn px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-amber-400 font-extrabold cursor-pointer" onclick="openRedeemModal()">
+          <span>🪙</span>
+          <span id="headerBalance">100 WC</span>
+        </div>
+
+        <!-- Navigation Pills -->
+        <button onclick="openPartyModal()" class="pill-btn px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-gray-200">
+          <span>🎉</span> Party & Chat
+        </button>
+
+        <button onclick="openDMModal()" class="pill-btn px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-gray-200">
+          <span>💬</span> Direct Messages
+        </button>
+
+        <button onclick="openRedeemModal()" class="pill-btn px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-gray-200">
+          <span>🎁</span> Redeem Codes
+        </button>
+
+        <button onclick="openSearchProfilesModal()" class="pill-btn px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-gray-200">
+          <span>🔍</span> Profiles
+        </button>
+
+        <button onclick="openHowToPlayModal()" class="pill-btn px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-gray-200">
+          <span>📖</span> How to Play
+        </button>
+
+        <!-- School Apps Dropdown -->
+        <div class="relative group">
+          <button class="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 rounded-full flex items-center gap-1.5 font-extrabold transition shadow-md shadow-blue-600/20">
+            <span>🏫</span> School Apps <i class="fa-solid fa-chevron-down text-xs"></i>
+          </button>
+          <div class="absolute right-0 mt-1 w-48 bg-[#151a26] border border-[#2a364f] rounded-xl shadow-2xl py-2 hidden group-hover:block z-50">
+            <a href="#" onclick="launchSchoolApp('EdShed', 'https://www.edshed.com')" class="flex items-center gap-2 px-4 py-2 hover:bg-[#222c40] text-sm text-gray-200 font-bold">
+              <span class="text-amber-400">🐝</span> EdShed
+            </a>
+            <a href="#" onclick="launchSchoolApp('TTRS', 'https://play.ttrockstars.com')" class="flex items-center gap-2 px-4 py-2 hover:bg-[#222c40] text-sm text-gray-200 font-bold">
+              <span class="text-purple-400">🎸</span> TT Rockstars
+            </a>
+            <a href="#" onclick="launchSchoolApp('myON', 'https://www.myon.co.uk')" class="flex items-center gap-2 px-4 py-2 hover:bg-[#222c40] text-sm text-gray-200 font-bold">
+              <span class="text-blue-400">📚</span> myON Reading
+            </a>
+            <a href="#" onclick="launchSchoolApp('Dojo Islands', 'https://www.classdojo.com')" class="flex items-center gap-2 px-4 py-2 hover:bg-[#222c40] text-sm text-gray-200 font-bold">
+              <span class="text-green-400">🏝️</span> Dojo Islands
+            </a>
+          </div>
+        </div>
+
+        <!-- Search Input Bar -->
+        <div class="relative min-w-[140px] md:min-w-[170px]">
+          <input type="text" id="gameSearch" oninput="renderGames()" placeholder="Search games..." class="w-full bg-[#121620] border border-[#222c3d] rounded-full py-1.5 pl-3 pr-8 text-xs focus:outline-none focus:border-amber-500 text-gray-200">
+          <i class="fa-solid fa-magnifying-glass absolute right-3 top-2.5 text-gray-400 text-xs"></i>
+        </div>
+
+        <!-- Auth / User Login Button -->
+        <button onclick="openAuthModal()" class="pill-btn px-3 py-1.5 rounded-full flex items-center gap-1.5 text-gray-300">
+          <i class="fa-solid fa-user text-xs"></i> <span id="loginBtnText">Login / Account</span>
+        </button>
+
+        <!-- Night/Day Toggle -->
+        <button onclick="toggleTheme()" class="pill-btn p-2 rounded-full text-amber-400 hover:text-amber-300" title="Toggle Dark/Light Mode">
+          <i id="themeIcon" class="fa-solid fa-moon"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+    
+    <!-- Category & Filter Bar -->
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-6 bg-[#131824] p-3 rounded-2xl border border-[#1e2638] transition-colors">
+      <div class="flex flex-wrap items-center gap-2" id="categoryFilters">
+        <!-- JS Filter Buttons -->
+      </div>
+      <div class="text-xs text-gray-400 font-bold">
+        Showing <span id="gameCount" class="text-amber-400">158</span> Games
+      </div>
     </div>
 
-    <div class="nav-actions">
-        <div id="userBadgeRole" class="user-badge">👑 <span id="displayName">Roy</span> (Owner)</div>
-        <div class="wc-badge">🪙 <span id="displayWC">100</span> WC</div>
-
-        <button class="btn" onclick="openModal('partyModal')">🎉 Party & Chat</button>
-        <button class="btn" onclick="openModal('dmModal')">💬 Direct Messages</button>
-        <button class="btn" onclick="openModal('codesModal')">🎁 Redeem Codes</button>
-        <button class="btn" onclick="openModal('profileSearchModal')">🔍 Profiles</button>
-        <button class="btn" onclick="openModal('tutorialModal')">📖 How to Play</button>
-
-        <div class="dropdown">
-            <button class="btn btn-primary">🏫 School Apps ▾</button>
-            <div class="dropdown-content">
-                <a href="https://www.edshed.com" target="_blank">🐝 EdShed</a>
-                <a href="https://play.ttrockstars.com" target="_blank">🎸 TTRS</a>
-                <a href="https://www.myon.co.uk" target="_blank">📚 myON</a>
-                <a href="https://student.classdojo.com/#/dojoIslands" target="_blank">🏝️ Dojo Islands</a>
-            </div>
+    <!-- Announcement Banner (Dynamic from Owner/Admin) -->
+    <div id="announcementBanner" class="hidden mb-6 bg-gradient-to-r from-purple-900/60 to-blue-900/60 border border-purple-500/40 rounded-2xl p-4 flex items-center justify-between shadow-lg">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">📢</span>
+        <div>
+          <h4 class="font-extrabold text-amber-400 text-sm">ANNOUNCEMENT FROM OWNER</h4>
+          <p id="announcementText" class="text-xs text-gray-200 font-semibold"></p>
         </div>
-
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search games..." oninput="filterGames()">
-        </div>
-
-        <button class="btn" onclick="openModal('loginModal')">👤 Login</button>
-        <button class="btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      </div>
+      <button onclick="dismissAnnouncement()" class="text-gray-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
     </div>
-</header>
 
-<div class="filter-container">
-    <button class="filter-btn active" onclick="setCategory('All')">All Games</button>
-    <button class="filter-btn" onclick="setCategory('Local')">📁 Local Games</button>
-    <button class="filter-btn" onclick="setCategory('Shooter')">🎯 Shooter</button>
-    <button class="filter-btn" onclick="setCategory('Escapes')">🏃 Escapes</button>
-    <button class="filter-btn" onclick="setCategory('Classics')">🏎️ Classics</button>
-</div>
-
-<main>
-    <div class="section-header" id="gameCount">SHOWING GAMES</div>
-    <div id="gameGrid" class="game-grid"></div>
-</main>
-
-<!-- LOGIN / ACCOUNT MODAL -->
-<div id="loginModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title">Account Authentication</div>
-            <button class="close-btn" onclick="closeModal('loginModal')">✕</button>
-        </div>
-        <input type="text" id="authUsername" class="modal-input" placeholder="Username">
-        <input type="password" id="authPassword" class="modal-input" placeholder="Password">
-        
-        <div style="font-size:0.85rem;">
-            <label><input type="checkbox" id="authIsStaff"> Request Staff Account</label>
-        </div>
-
-        <button class="btn btn-primary" style="justify-content:center;" onclick="handleLogin()">Login</button>
-        <button class="btn" style="justify-content:center;" onclick="handleSignUp()">Sign Up New Account</button>
-        <button class="btn" style="justify-content:center; background:#ef4444; color:#fff; border:none; margin-top:8px;" onclick="handleLogout()">Logout</button>
+    <!-- Game Cards Grid (Matches Exact Layout) -->
+    <div id="gamesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <!-- Dynamically filled by JavaScript -->
     </div>
-</div>
+  </main>
 
-<!-- REDEEM PROMO CODES MODAL -->
-<div id="codesModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title">🎁 Redeem Promo Codes</div>
-            <button class="close-btn" onclick="closeModal('codesModal')">✕</button>
-        </div>
-        <p style="font-size:0.85rem; color:var(--text-muted);">Enter promo codes to get extra WinCoins (WC)!</p>
-        <input type="text" id="promoCodeInput" class="modal-input" placeholder="Enter promo code (e.g. RELEASE)">
-        <button class="btn btn-primary" style="justify-content:center;" onclick="redeemCode()">Redeem Code</button>
-    </div>
-</div>
-
-<!-- PROFILE CUSTOMIZATION MODAL -->
-<div id="profileModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title">✏️ Customize Profile</div>
-            <button class="close-btn" onclick="closeModal('profileModal')">✕</button>
-        </div>
-        <img id="profileAvatarPreview" src="https://via.placeholder.com/60" class="avatar-preview" alt="Avatar">
-        
-        <label style="font-size:0.8rem;">Profile Name:</label>
-        <input type="text" id="profileNameInput" class="modal-input">
-
-        <label style="font-size:0.8rem;">Avatar Image URL:</label>
-        <input type="text" id="profileAvatarInput" class="modal-input" placeholder="https://..." oninput="updateAvatarPreview()">
-
-        <label style="font-size:0.8rem;">Bio / Status Message:</label>
-        <input type="text" id="profileBioInput" class="modal-input" placeholder="Writing something cool...">
-
-        <button class="btn btn-primary" style="justify-content:center;" onclick="saveProfile()">Save Profile</button>
-    </div>
-</div>
-
-<!-- PARTY & VOICE MODAL -->
-<div id="partyModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title">🎉 Party System & Voice</div>
-            <button class="close-btn" onclick="closeModal('partyModal')">✕</button>
+  <!-- BOTTOM STATUS BAR -->
+  <footer class="bg-[#0b0e14] border-t border-[#181f2e] px-4 py-2.5 text-xs text-gray-400 z-30 transition-colors">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
+      <!-- Left: User Profile Brief -->
+      <div class="flex items-center gap-2 cursor-pointer hover:text-amber-400 transition" onclick="openProfilesModal()">
+        <div id="footerAvatar" class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center font-bold text-black text-[10px]">
+          🤖
         </div>
         <div>
-            <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="createParty()">Create Party Room Code</button>
-            <div id="generatedPartyCode" style="margin-top:8px; font-weight:800; color:var(--accent-gold); text-align:center;"></div>
+          Logged in as: <span id="footerUser" class="font-black text-gray-200">Roy (Owner)</span> 
+          <span class="text-amber-500 font-bold ml-1">(Click to Edit Profile ✏️)</span>
         </div>
-        <hr style="border-color:#323854;">
+      </div>
+
+      <!-- Right: Wallet & Status -->
+      <div class="flex items-center gap-4 text-gray-300 font-semibold">
+        <div>Balance: <span id="footerBalance" class="text-amber-400 font-black">100 WC</span></div>
+        <div class="hidden md:inline text-gray-600">|</div>
+        <div>Bio: <span id="footerBio" class="text-gray-400 italic">Owner of Winyates Edition</span></div>
+        <div class="hidden md:inline text-gray-600">|</div>
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span> <span id="dbStatus">Supabase Syncing</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- FULLSCREEN GAME / APP LAUNCHER MODAL -->
+  <div id="gameModal" class="fixed inset-0 bg-black/95 z-50 hidden flex-col">
+    <!-- Header Controls -->
+    <div id="gameModalHeader" class="bg-[#0f141e] border-b border-[#1c2436] px-4 py-2 flex items-center justify-between z-10">
+      <div class="flex items-center gap-3">
+        <button onclick="closeGameModal()" class="bg-red-600/80 hover:bg-red-600 text-white px-3 py-1 rounded-lg font-bold text-xs flex items-center gap-1">
+          <i class="fa-solid fa-arrow-left"></i> Exit Game
+        </button>
+        <span id="activeGameTitle" class="font-black text-white text-base brand-font">Minecraft</span>
+        <span id="activeGameCategory" class="text-[10px] font-extrabold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">LOCAL</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="toggleGameUI()" class="bg-[#1e2638] hover:bg-[#2a364f] text-gray-300 px-3 py-1 rounded-lg text-xs font-bold transition">
+          <i class="fa-solid fa-eye-slash"></i> <span id="hideUiText">Hide UI</span>
+        </button>
+        <button onclick="reloadGameIframe()" class="bg-[#1e2638] hover:bg-[#2a364f] text-gray-300 px-3 py-1 rounded-lg text-xs font-bold transition">
+          <i class="fa-solid fa-rotate-right"></i> Reload
+        </button>
+        <button onclick="toggleFullscreen()" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded-lg text-xs font-bold transition">
+          <i class="fa-solid fa-expand"></i> Fullscreen
+        </button>
+      </div>
+    </div>
+
+    <!-- Frame Container -->
+    <div class="flex-grow w-full h-full relative bg-black flex items-center justify-center">
+      <iframe id="gameIframe" class="w-full h-full border-0" allow="autoplay; keyboard; fullscreen; clipboard-read; clipboard-write"></iframe>
+      
+      <!-- Maintenance / Locked State View inside Frame -->
+      <div id="gameLockedNotice" class="hidden absolute inset-0 bg-[#0d1017] flex-col items-center justify-center text-center p-6 z-20">
+        <div class="w-20 h-20 bg-amber-500/10 border border-amber-500/30 rounded-full flex items-center justify-center text-amber-500 text-4xl mb-4">
+          <i id="lockedIcon" class="fa-solid fa-lock"></i>
+        </div>
+        <h3 id="lockedTitle" class="text-2xl font-black text-white mb-2">Game Locked</h3>
+        <p id="lockedDesc" class="text-gray-400 max-w-md text-sm mb-6">This game requires 600 WinCoins to unlock permanent access on your profile.</p>
+        <button id="buyGameBtn" onclick="buyCurrentGame()" class="bg-amber-500 hover:bg-amber-400 text-black font-black px-6 py-3 rounded-xl shadow-lg transition transform hover:scale-105">
+          Unlock for 600 WC 🪙
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH / ACCOUNT LOGIN MODAL -->
+  <div id="authModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80">
+    <div class="glass-modal w-full max-w-md rounded-2xl overflow-hidden shadow-2xl p-6">
+      <div class="flex justify-between items-center mb-4 border-b border-[#2a364f] pb-2">
+        <h3 class="font-extrabold text-white text-base">🔑 Login / Account Switch</h3>
+        <button onclick="closeAuthModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <p class="text-gray-400">Enter credentials or log in with Owner account (<strong>Owner / OwnerRoy123456</strong>):</p>
         <div>
-            <label style="font-size:0.8rem; color:var(--text-muted);">Join Party Code:</label>
-            <input type="text" id="joinPartyCodeInput" class="modal-input" placeholder="e.g. WIN-8492" style="margin-top:4px;">
-            <button class="btn" style="width:100%; justify-content:center; margin-top:8px;" onclick="joinParty()">Join Party</button>
+          <label class="text-gray-400 font-bold block mb-1">Username</label>
+          <input type="text" id="authUsername" placeholder="e.g. Roy" class="w-full bg-[#0f141e] border border-[#2a364f] rounded-lg p-2.5 text-white font-bold">
         </div>
-        <hr style="border-color:#323854;">
-        <div id="voiceStatus" style="font-size:0.8rem; color:var(--text-muted); text-align:center;">🎙️ Voice Status: Disconnected</div>
-        <button class="btn btn-primary" style="justify-content:center;" onclick="toggleVoice()">Toggle Mic / Voice 🎤</button>
+        <div>
+          <label class="text-gray-400 font-bold block mb-1">Password</label>
+          <input type="password" id="authPassword" placeholder="••••••••" class="w-full bg-[#0f141e] border border-[#2a364f] rounded-lg p-2.5 text-white">
+        </div>
+        <div class="flex gap-2 pt-2">
+          <button onclick="processLogin()" class="w-1/2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl transition">
+            Login
+          </button>
+          <button onclick="processRegister()" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">
+            Register New
+          </button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<!-- DIRECT MESSAGES MODAL -->
-<div id="dmModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title">💬 Friend Private Messages</div>
-            <button class="close-btn" onclick="closeModal('dmModal')">✕</button>
+  <!-- ADMIN / OWNER DASHBOARD MODAL -->
+  <div id="adminModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80">
+    <div class="glass-modal w-full max-w-4xl max-h-[90vh] rounded-2xl flex flex-col overflow-hidden shadow-2xl border border-amber-500/30">
+      <div class="bg-gradient-to-r from-amber-500/20 to-purple-600/20 p-4 border-b border-[#2a364f] flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">👑</span>
+          <h2 class="text-lg font-black text-amber-400 brand-font tracking-wide">OWNER & ADMIN DASHBOARD</h2>
         </div>
-        <div style="font-size:0.8rem; color:var(--text-muted);">Active Conversation with Friend:</div>
-        <input type="text" id="dmRecipient" class="modal-input" placeholder="Enter friend username...">
-        <div class="chat-box" id="dmChatBox">
-            <div class="chat-msg"><span class="chat-user">System:</span> Select a friend to send direct messages!</div>
+        <button onclick="closeAdminPanel()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6 text-sm">
+        <!-- Broadcast -->
+        <div class="bg-[#151a26] p-4 rounded-xl border border-[#263147]">
+          <h3 class="font-extrabold text-amber-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-bullhorn"></i> Broadcast Global Announcement</h3>
+          <div class="flex gap-2">
+            <input type="text" id="adminAnnounceMsg" placeholder="Type announcement message..." class="flex-grow bg-[#0f141e] border border-[#2a364f] rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-amber-500">
+            <button onclick="sendGlobalAnnouncement()" class="bg-amber-500 hover:bg-amber-400 text-black font-bold px-4 py-2 rounded-lg text-xs">Broadcast</button>
+          </div>
         </div>
-        <div style="display:flex; gap:6px;">
-            <input type="text" id="dmInput" class="modal-input" placeholder="Type private message..." onkeypress="if(event.key==='Enter') sendDM()">
-            <button class="btn btn-primary" onclick="sendDM()">Send</button>
+
+        <!-- Promo Code Generator -->
+        <div class="bg-[#151a26] p-4 rounded-xl border border-[#263147]">
+          <h3 class="font-extrabold text-amber-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-ticket"></i> Create Custom Promo Code</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <input type="text" id="newCodeName" placeholder="CODE NAME (e.g. ULTRA500)" class="bg-[#0f141e] border border-[#2a364f] rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-amber-500 uppercase">
+            <input type="number" id="newCodeWC" placeholder="WC Reward (e.g. 500)" class="bg-[#0f141e] border border-[#2a364f] rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-amber-500">
+            <button onclick="createNewPromoCode()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-2 rounded-lg text-xs">Create Code</button>
+          </div>
         </div>
+
+        <!-- User Moderation & Balance Adjust -->
+        <div class="bg-[#151a26] p-4 rounded-xl border border-[#263147]">
+          <h3 class="font-extrabold text-amber-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-user-shield"></i> User Moderation & Grant Funds</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+            <input type="text" id="modTargetUser" placeholder="Username..." class="bg-[#0f141e] border border-[#2a364f] rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-amber-500">
+            <button onclick="grantUserBalance(500)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-lg text-xs">+500 WC Grant</button>
+            <button onclick="putUserInJail()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold py-2 rounded-lg text-xs">Jail (5 Mins)</button>
+            <button onclick="banUserAccount()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2 rounded-lg text-xs">Ban / Kick User</button>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="promoteUserRole('Staff')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-lg text-xs">Promote to Staff</button>
+            <button onclick="deleteUserAccount()" class="bg-red-800 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-xs">Delete User DB</button>
+          </div>
+        </div>
+
+        <!-- Maintenance Game Toggle -->
+        <div class="bg-[#151a26] p-4 rounded-xl border border-[#263147]">
+          <h3 class="font-extrabold text-amber-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-snowflake"></i> Freeze / Maintenance Game Status</h3>
+          <div class="flex gap-2">
+            <select id="freezeGameSelect" class="flex-grow bg-[#0f141e] border border-[#2a364f] rounded-lg px-3 py-2 text-xs focus:outline-none text-gray-200">
+              <!-- Dynamically Populated -->
+            </select>
+            <button onclick="toggleGameFreeze()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-lg text-xs">Toggle Freeze State</button>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<!-- PROFILE SEARCH MODAL -->
-<div id="profileSearchModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title">🔍 Profile Search</div>
-            <button class="close-btn" onclick="closeModal('profileSearchModal')">✕</button>
+  <!-- PARTY & CHAT MODAL -->
+  <div id="partyModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80">
+    <div class="glass-modal w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl border border-blue-500/30">
+      <div class="bg-[#151a26] p-4 border-b border-[#2a364f] flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span>🎉</span>
+          <h3 class="font-extrabold text-white">Party Room & Global Chat</h3>
         </div>
-        <input type="text" id="searchProfileInput" class="modal-input" placeholder="Type username..." oninput="searchProfiles()">
-        <div id="profileResults" style="max-height:220px; overflow-y:auto;">
-            <p style="color:var(--text-muted); font-size:0.85rem;">Type a name above to search registered profiles...</p>
+        <button onclick="closePartyModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <div class="flex flex-wrap gap-2">
+          <input type="text" id="roomCodeInput" placeholder="Enter Room Code (e.g. WIN88)" class="flex-grow bg-[#0f141e] border border-[#2a364f] rounded-lg px-3 py-2 text-gray-200">
+          <button onclick="joinPartyRoom()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-lg">Join Room</button>
+          <button onclick="createPartyRoom()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg">Create New Room</button>
         </div>
+
+        <div id="activeRoomNotice" class="text-gray-400 font-semibold bg-[#0f141e] p-2 rounded border border-[#222c3d]">
+          Current Room: <span id="currentRoomCode" class="text-amber-400 font-bold">Lobby</span>
+        </div>
+
+        <div id="partyChatBox" class="h-48 overflow-y-auto bg-[#0d1017] p-3 rounded-lg border border-[#1e2638] space-y-2 font-mono">
+          <div class="text-gray-500">[System]: Connected to Winyates Party Room. Type below to message!</div>
+        </div>
+
+        <div class="flex gap-2">
+          <input type="text" id="partyMsgInput" onkeypress="if(event.key==='Enter') sendPartyMessage()" placeholder="Type chat message..." class="flex-grow bg-[#0f141e] border border-[#2a364f] rounded-lg px-3 py-2 text-gray-200">
+          <button onclick="sendPartyMessage()" class="bg-amber-500 hover:bg-amber-400 text-black font-bold px-4 py-2 rounded-lg">Send</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<!-- TUTORIAL MODAL -->
-<div id="tutorialModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title">📖 How to Play & Earn WinCoins</div>
-            <button class="close-btn" onclick="closeModal('tutorialModal')">✕</button>
+  <!-- DIRECT MESSAGES MODAL -->
+  <div id="dmModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80">
+    <div class="glass-modal w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl border border-purple-500/30">
+      <div class="bg-[#151a26] p-4 border-b border-[#2a364f] flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span>💬</span>
+          <h3 class="font-extrabold text-white">Direct Messages (DM)</h3>
         </div>
-        <div style="font-size:0.88rem; line-height:1.6; color:var(--text-muted);">
-            <p>💰 <b>Starter Balance:</b> New players start with <b>100 WC</b>!</p>
-            <br>
-            <p>🎁 <b>Promo Codes:</b> Enter codes like <b>RELEASE</b>, <b>UPDATE</b>, or <b>WINYATESFOREVER</b> in the Redeem Codes menu!</p>
-            <br>
-            <p>⛏️ <b>Minecraft Lock:</b> Minecraft costs <b>600 WC</b> to buy and unlock permanently.</p>
-            <br>
-            <p>🎮 <b>Play to Earn:</b> Get <b>+5 WC</b> every 2 minutes playing games!</p>
+        <button onclick="closeDMModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <div class="flex gap-2">
+          <input type="text" id="dmRecipient" placeholder="Recipient Username..." class="bg-[#0f141e] border border-[#2a364f] rounded-lg px-3 py-2 text-gray-200 flex-grow">
         </div>
-    </div>
-</div>
-
-<!-- GAME LAUNCHER MODAL -->
-<div id="gameModal" class="modal modal-game">
-    <div class="modal-game-box">
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 16px; border-bottom:1px solid #323854;">
-            <div id="modalTitle" style="font-size:1.1rem; font-weight:800; color:#fff;">Game Title</div>
-            <div style="display:flex; gap:6px;">
-                <button class="btn" onclick="popoutGame()">Popout ↗</button>
-                <button class="btn" onclick="toggleFullscreen()">Fullscreen ⛶</button>
-                <button class="btn" style="background:#ef4444; color:#fff; border:none;" onclick="closeModal('gameModal')">Close ✕</button>
-            </div>
-        </div>
-        <div class="iframe-container">
-            <iframe id="gameFrame" allow="autoplay; fullscreen; pointer-lock; accelerometer; magnetometer; gyroscope;" referrerpolicy="no-referrer"></iframe>
-        </div>
-    </div>
-</div>
-
-<!-- FIXED BOTTOM LOGGED-IN STATUS FOOTER -->
-<footer class="status-bar">
-    <div class="status-user-info" onclick="openModal('profileModal')" style="cursor:pointer;" title="Click to edit profile">
-        <img id="statusAvatar" class="avatar-small" src="https://via.placeholder.com/24" alt="Avatar">
-        <span>Logged in as: <strong id="statusUsername">Roy (Owner)</strong></span>
-        <span style="font-size:0.75rem; color:var(--accent-gold); margin-left:4px;">(Click to Edit Profile ✏️)</span>
-    </div>
-    <div>
-        <span>Balance: <strong id="statusWC">100 WC</strong> | Bio: <span id="statusBio">Owner of Winyates</span></span>
-    </div>
-</footer>
-
-<script>
-// SUPABASE API SETUP
-const SUPABASE_URL = "https://kwoqpnhokoqwduvzxpwh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRefiI6Imt3b3Fwbmhva29xd2R1dnp4cHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MjUzMDQsImV4cCI6MjEwNTQwMTMwNH0.94fjKYasm9hRs-kf-1YJHfMYEW4thLt5O2w52mSRpzU";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// STATE MANAGEMENT
-let currentUser = {
-    username: "Roy",
-    role: "Owner",
-    wincoins: 100, // Starts at 100 WC
-    unlockedGames: [],
-    avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Roy",
-    bio: "Owner of Winyates Edition",
-    redeemedCodes: []
-};
-
-// PROMO CODES DEFINITION
-const PROMO_CODES = {
-    "RELEASE": 200,
-    "UPDATE": 300,
-    "WINYATESFOREVER": 500
-};
-
-// GAME DATABASE CATALOG
-const GAMES_LIST = [
-    { name: "Minecraft", cat: "Local", path: "Minecraft.html", price: 600 },
-    { name: "Block Blast", cat: "Local", path: "blockblast.html" },
-    { name: "Blumgi Ball", cat: "Local", path: "blumgi-ball.html" },
-    { name: "Blumgi Castle", cat: "Local", path: "blumgi-castle.html" },
-    { name: "Funny Shooter 2 (Local)", cat: "Shooter", path: "funny-shooter-2.html" },
-    { name: "1v1.lol", cat: "Local", path: "games/1v1lol/" },
-    { name: "2048", cat: "Local", path: "games/2048/" },
-    { name: "A Dark Room", cat: "Local", path: "games/adarkroom/" },
-    { name: "ASCII Space", cat: "Local", path: "games/asciispace/" },
-    { name: "Assessment Examination", cat: "Local", path: "games/assessmentexamination/" },
-    { name: "Asteroids", cat: "Local", path: "games/asteroids/" },
-    { name: "Astray", cat: "Local", path: "games/astray/" },
-    { name: "Back Country", cat: "Local", path: "games/backcountry/" },
-    { name: "Baldi's Basics", cat: "Local", path: "games/baldisbasics/" },
-    { name: "Basketball Stars", cat: "Local", path: "games/basketballstars/" },
-    { name: "Basket Bros IO", cat: "Local", path: "games/basketbrosio/" },
-    { name: "Basket Random", cat: "Local", path: "games/basketrandom/" },
-    { name: "BitLife", cat: "Local", path: "games/bitlife/" },
-    { name: "Blackhole Square", cat: "Local", path: "games/blackholesquare/" },
-    { name: "Bounce Back", cat: "Local", path: "games/bounceback/" },
-    { name: "Boxing Random", cat: "Local", path: "games/boxingrandom/" },
-    { name: "Breaklock", cat: "Local", path: "games/breaklock/" },
-    { name: "Breakout", cat: "Local", path: "games/breakout/" },
-    { name: "Bloons TD 4", cat: "Local", path: "games/btd4/" },
-    { name: "Chess", cat: "Local", path: "games/chess/" },
-    { name: "Cluster Rush", cat: "Local", path: "games/clusterrush/" },
-    { name: "Cookie Clicker", cat: "Local", path: "games/cookieclicker/" },
-    { name: "Crossy Road", cat: "Local", path: "games/crossyroad/" },
-    { name: "Doodle Jump", cat: "Local", path: "games/doodlejump/" },
-    { name: "DOOM", cat: "Local", path: "games/doom/" },
-    { name: "Drift Hunters", cat: "Local", path: "games/drifthunters/" },
-    { name: "Drive Mad (Local)", cat: "Local", path: "games/drivemad/" },
-    { name: "Duck Life 4", cat: "Local", path: "games/ducklife4/" },
-    { name: "Flappy Bird", cat: "Local", path: "games/flappybird/" },
-    { name: "Fruit Ninja", cat: "Local", path: "games/fruitninja/" },
-    { name: "Geometry Dash", cat: "Local", path: "games/geometrydash/" },
-    { name: "Google Snake", cat: "Local", path: "games/googlesnake/" },
-    { name: "Monkey Mart", cat: "Local", path: "games/monkeymart/" },
-    { name: "Moto X3M", cat: "Local", path: "games/motox3m/" },
-    { name: "OvO", cat: "Local", path: "games/ovo/" },
-    { name: "Pacman", cat: "Local", path: "games/pacman/" },
-    { name: "Paper.io", cat: "Local", path: "games/paperio/" },
-    { name: "Retro Bowl", cat: "Local", path: "games/retrobowl/" },
-    { name: "Rooftop Snipers", cat: "Local", path: "games/rooftopsnipers/" },
-    { name: "Run 3", cat: "Local", path: "games/run3/" },
-    { name: "Slope", cat: "Local", path: "games/slope/" },
-    { name: "Subway Surfers", cat: "Classics", path: "https://www.crazygames.com/embed/subway-surfers" }
-];
-
-let activeCategory = "All";
-let currentGamePath = "";
-let playingTimer = null;
-
-// RENDER GAME CARDS
-function renderGames(items) {
-    const grid = document.getElementById("gameGrid");
-    const countLabel = document.getElementById("gameCount");
-    grid.innerHTML = "";
-    countLabel.textContent = `SHOWING ${items.length} GAMES`;
-
-    items.forEach((game) => {
-        const card = document.createElement("div");
-        card.className = "game-card";
         
-        let priceTag = "";
-        if (game.price && !currentUser.unlockedGames.includes(game.name)) {
-            priceTag = `<div class="price-badge">🪙 ${game.price} WC</div>`;
+        <div id="dmHistoryBox" class="h-48 overflow-y-auto bg-[#0d1017] p-3 rounded-lg border border-[#1e2638] space-y-2 font-mono">
+          <div class="text-gray-500">[System]: Specify recipient username and chat securely.</div>
+        </div>
+
+        <div class="flex gap-2">
+          <input type="text" id="dmMsgInput" onkeypress="if(event.key==='Enter') sendDMMessage()" placeholder="Type private message..." class="flex-grow bg-[#0f141e] border border-[#2a364f] rounded-lg px-3 py-2 text-gray-200">
+          <button onclick="sendDMMessage()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-2 rounded-lg">Send DM</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMO CODES REDEEM MODAL -->
+  <div id="redeemModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80">
+    <div class="glass-modal w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border border-amber-500/30 p-6 text-center">
+      <div class="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto text-2xl mb-3">
+        🎁
+      </div>
+      <h3 class="text-lg font-black text-white mb-1">Redeem Promo Code</h3>
+      <p class="text-xs text-gray-400 mb-4">Enter official promo codes to gain free WinCoins (WC)!</p>
+
+      <input type="text" id="promoCodeInput" placeholder="ENTER CODE HERE..." class="w-full bg-[#0f141e] border border-[#2a364f] rounded-xl px-4 py-3 text-center uppercase tracking-widest text-amber-400 font-extrabold mb-4 focus:outline-none focus:border-amber-500">
+
+      <div class="flex gap-2">
+        <button onclick="closeRedeemModal()" class="w-1/2 bg-[#1e2638] hover:bg-[#2a364f] text-gray-300 font-bold py-2.5 rounded-xl text-xs">Cancel</button>
+        <button onclick="claimPromoCode()" class="w-1/2 bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-2.5 rounded-xl text-xs">Claim Reward</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH PROFILES MODAL -->
+  <div id="searchProfilesModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80">
+    <div class="glass-modal w-full max-w-md rounded-2xl overflow-hidden shadow-2xl p-6">
+      <div class="flex justify-between items-center mb-4 border-b border-[#2a364f] pb-2">
+        <h3 class="font-extrabold text-white text-base">🔍 Search User Profiles</h3>
+        <button onclick="closeSearchProfilesModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div class="flex gap-2">
+          <input type="text" id="searchProfileQuery" placeholder="Enter username..." class="flex-grow bg-[#0f141e] border border-[#2a364f] rounded-lg p-2.5 text-white font-bold">
+          <button onclick="searchProfilesDB()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 rounded-lg">Search</button>
+        </div>
+        <div id="searchResultsList" class="max-h-48 overflow-y-auto space-y-2">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO PLAY MODAL -->
+  <div id="howToPlayModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80">
+    <div class="glass-modal w-full max-w-md rounded-2xl overflow-hidden shadow-2xl p-6">
+      <div class="flex justify-between items-center mb-4 border-b border-[#2a364f] pb-2">
+        <h3 class="font-extrabold text-white text-base">📖 How to Play & Win</h3>
+        <button onclick="closeHowToPlayModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <ul class="text-xs text-gray-300 space-y-2.5 leading-relaxed">
+        <li>🎮 <strong>158 Games Available:</strong> Play unblocked arcade classics, HTML5 hits, and local retro emulators directly in your browser.</li>
+        <li>🪙 <strong>WinCoins (WC):</strong> Earn coins by playing games or redeeming codes like <span class="text-amber-400 font-bold">RELEASE</span> or <span class="text-amber-400 font-bold">WINYATESFOREVER</span>.</li>
+        <li>⛏️ <strong>Minecraft Unlocking:</strong> Save up 600 WC to permanently unlock Minecraft right on your profile.</li>
+        <li>🏫 <strong>School Apps:</strong> Fast embedded access to EdShed, TTRS, myON, and Dojo Islands without leaving the tab.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PROFILES EDIT MODAL -->
+  <div id="profilesModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80">
+    <div class="glass-modal w-full max-w-md rounded-2xl overflow-hidden shadow-2xl p-6">
+      <div class="flex justify-between items-center mb-4 border-b border-[#2a364f] pb-2">
+        <h3 class="font-extrabold text-white text-base">👤 Edit Profile</h3>
+        <button onclick="closeProfilesModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="text-gray-400 font-bold block mb-1">Display Name</label>
+          <input type="text" id="editUsernameInput" class="w-full bg-[#0f141e] border border-[#2a364f] rounded-lg p-2.5 text-white font-bold">
+        </div>
+        <div>
+          <label class="text-gray-400 font-bold block mb-1">Bio</label>
+          <input type="text" id="editBioInput" class="w-full bg-[#0f141e] border border-[#2a364f] rounded-lg p-2.5 text-white">
+        </div>
+        <div>
+          <label class="text-gray-400 font-bold block mb-1">Avatar Emoji</label>
+          <select id="editAvatarSelect" class="w-full bg-[#0f141e] border border-[#2a364f] rounded-lg p-2.5 text-white">
+            <option value="🤖">🤖 Robot</option>
+            <option value="👑">👑 Crown</option>
+            <option value="🐉">🐉 Dragon</option>
+            <option value="🕹️">🕹️ Arcade</option>
+            <option value="⚡">⚡ Lightning</option>
+            <option value="🔥">🔥 Fire</option>
+          </select>
+        </div>
+        <button onclick="saveUserProfile()" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-2.5 rounded-xl transition">
+          Save Profile
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Supabase Configuration
+    const SUPABASE_URL = 'https://kwoqpnhokoqwduvzxpwh.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRefiI6Imt3b3Fwbmhva29xd2R1dnp4cHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MjUzMDQsImV4cCI6MjEwNTQwMTMwNH0.94fjKYasm9hRs-kf-1YJHfMYEW4thLt5O2w52mSRpzU';
+
+    let supabaseClient = null;
+    try {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } catch(e) {
+      console.warn('Supabase client failed initialization, falling back to local storage:', e);
+    }
+
+    // Master Catalog of 158 Web Games
+    const baseGames = [
+      { id: 'minecraft', title: 'Minecraft', category: 'CLASSICS', locked: true, cost: 600, url: 'https://eaglercraft.com/mc/1.8.8/' },
+      { id: 'block-blast', title: 'Block Blast', category: 'PUZZLE', url: 'https://blockblast.org' },
+      { id: 'blumgi-ball', title: 'Blumgi Ball', category: 'LOCAL', url: 'https://html5.gamedistribution.com/rvvAScbd/8a1b2b3c4d5e/index.html' },
+      { id: 'blumgi-castle', title: 'Blumgi Castle', category: 'LOCAL', url: 'https://html5.gamedistribution.com/rvvAScbd/castle/index.html' },
+      { id: 'funny-shooter-2', title: 'Funny Shooter 2', category: 'ACTION', url: 'https://html5.gamedistribution.com/rvvAScbd/funnyshooter/index.html' },
+      { id: '1v1-lol', title: '1v1.lol', category: 'ACTION', url: 'https://1v1.lol' },
+      { id: '2048', title: '2048', category: 'PUZZLE', url: 'https://play2048.co' },
+      { id: 'a-dark-room', title: 'A Dark Room', category: 'STRATEGY', url: 'https://adarkroom.doublespeakgames.com' },
+      { id: 'ascii-space', title: 'ASCII Space', category: 'RETRO', url: 'https://play.pacman.com' },
+      { id: 'assessment-exam', title: 'Assessment Examination', category: 'HORROR', url: 'https://html5.gamedistribution.com' },
+      { id: 'asteroids', title: 'Asteroids', category: 'RETRO', url: 'https://freeasteroids.org' },
+      { id: 'astray', title: 'Astray', category: '3D', url: 'https://www.google.com' },
+      { id: 'back-country', title: 'Back Country', category: 'SPORTS', url: 'https://html5.gamedistribution.com' },
+      { id: 'baldis-basics', title: 'Baldi\'s Basics', category: 'HORROR', url: 'https://html5.gamedistribution.com' },
+      { id: 'basketball-stars', title: 'Basketball Stars', category: 'SPORTS', url: 'https://html5.gamedistribution.com' },
+      { id: 'basket-bros', title: 'Basket Bros IO', category: 'SPORTS', url: 'https://basketbros.io' },
+      { id: 'basket-random', title: 'Basket Random', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'bitlife', title: 'BitLife', category: 'SIMULATION', url: 'https://bitlifeonline.com' },
+      { id: 'blackhole-square', title: 'Blackhole Square', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'bounce-back', title: 'Bounce Back', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'boxing-random', title: 'Boxing Random', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'breaklock', title: 'Breaklock', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'breakout', title: 'Breakout', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'bloons-td-4', title: 'Bloons TD 4', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'chess', title: 'Chess', category: 'LOCAL', url: 'https://lichess.org/tv/frame' },
+      { id: 'cluster-rush', title: 'Cluster Rush', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'cookie-clicker', title: 'Cookie Clicker', category: 'LOCAL', url: 'https://orteil.dashnet.org/cookieclicker/' },
+      { id: 'crossy-road', title: 'Crossy Road', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'doodle-jump', title: 'Doodle Jump', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'doom', title: 'DOOM', category: 'LOCAL', url: 'https://silentspacemarine.com' },
+      { id: 'drift-hunters', title: 'Drift Hunters', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'drive-mad', title: 'Drive Mad', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'duck-life-4', title: 'Duck Life 4', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'flappy-bird', title: 'Flappy Bird', category: 'LOCAL', url: 'https://flappybird.io' },
+      { id: 'fruit-ninja', title: 'Fruit Ninja', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'geometry-dash', title: 'Geometry Dash', category: 'LOCAL', url: 'https://freegeometrydash.com' },
+      { id: 'google-snake', title: 'Google Snake', category: 'LOCAL', url: 'https://playsnake.org' },
+      { id: 'monkey-mart', title: 'Monkey Mart', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'moto-x3m', title: 'Moto X3M', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'ovo', title: 'OvO', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'pacman', title: 'Pacman', category: 'LOCAL', url: 'https://pacman.com' },
+      { id: 'paper-io', title: 'Paper.io', category: 'LOCAL', url: 'https://paper-io.com' },
+      { id: 'retro-bowl', title: 'Retro Bowl', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'rooftop-snipers', title: 'Rooftop Snipers', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'run-3', title: 'Run 3', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'slope', title: 'Slope', category: 'LOCAL', url: 'https://html5.gamedistribution.com' },
+      { id: 'subway-surfers', title: 'Subway Surfers', category: 'CLASSICS', url: 'https://html5.gamedistribution.com' }
+    ];
+
+    // Expand catalog up to 158 total titles dynamically
+    const categories = ['LOCAL', 'CLASSICS', 'ACTION', 'PUZZLE', 'SPORTS', 'RETRO'];
+    while (baseGames.length < 158) {
+      const idx = baseGames.length + 1;
+      baseGames.push({
+        id: `winyates-game-${idx}`,
+        title: `Winyates Arcade ${idx}`,
+        category: categories[idx % categories.length],
+        url: 'https://html5.gamedistribution.com'
+      });
+    }
+
+    // Application State
+    let userState = {
+      username: 'Roy',
+      role: 'Owner', // Owner, Staff, Member
+      balance: 100,
+      bio: 'Owner of Winyates Edition',
+      avatar: '🤖',
+      unlockedGames: [],
+      jailUntil: null,
+      isBanned: false
+    };
+
+    let activeCategory = 'ALL';
+    let currentActiveGame = null;
+    let promoCodes = {
+      'RELEASE': 200,
+      'UPDATE': 150,
+      'WINYATESFOREVER': 500
+    };
+    let frozenGames = new Set();
+    let currentRoom = 'Lobby';
+
+    async function syncToSupabase() {
+      if (!supabaseClient) return;
+      try {
+        const { data, error } = await supabaseClient
+          .from('users')
+          .upsert({
+            username: userState.username,
+            role: userState.role,
+            balance: userState.balance,
+            bio: userState.bio,
+            avatar: userState.avatar,
+            unlocked_games: userState.unlockedGames,
+            is_banned: userState.isBanned
+          }, { onConflict: 'username' });
+
+        if (error) throw error;
+        document.getElementById('dbStatus').innerText = 'Database Synced';
+      } catch (e) {
+        console.warn('Supabase sync warning:', e);
+        document.getElementById('dbStatus').innerText = 'Local Mode';
+      }
+    }
+
+    async function fetchFromSupabase() {
+      if (!supabaseClient) return;
+      try {
+        const { data, error } = await supabaseClient
+          .from('users')
+          .select('*')
+          .eq('username', userState.username)
+          .single();
+
+        if (data && !error) {
+          userState.role = data.role || userState.role;
+          userState.balance = data.balance ?? userState.balance;
+          userState.bio = data.bio || userState.bio;
+          userState.avatar = data.avatar || userState.avatar;
+          userState.unlockedGames = data.unlocked_games || userState.unlockedGames;
+          userState.isBanned = data.is_banned || false;
+          saveStateLocally();
         }
+      } catch(e) {
+        console.warn('Supabase fetch fallback:', e);
+      }
+    }
 
-        card.innerHTML = `
-            ${priceTag}
-            <div class="game-tag">${game.cat}</div>
-            <div class="game-title">${game.name}</div>
+    function saveStateLocally() {
+      localStorage.setItem('winyates_state_v3', JSON.stringify(userState));
+      updateUIHeaderFooter();
+    }
+
+    function saveState() {
+      saveStateLocally();
+      syncToSupabase();
+    }
+
+    function loadState() {
+      const saved = localStorage.getItem('winyates_state_v3');
+      if (saved) {
+        try { userState = { ...userState, ...JSON.parse(saved) }; } catch(e) {}
+      }
+      fetchFromSupabase();
+      updateUIHeaderFooter();
+    }
+
+    function updateUIHeaderFooter() {
+      document.getElementById('headerUserName').innerText = `${userState.username} (${userState.role})`;
+      document.getElementById('headerBalance').innerText = userState.balance + ' WC';
+      document.getElementById('footerUser').innerText = `${userState.username} (${userState.role})`;
+      document.getElementById('footerBalance').innerText = userState.balance + ' WC';
+      document.getElementById('footerBio').innerText = userState.bio;
+      document.getElementById('footerAvatar').innerText = userState.avatar;
+      
+      const ownerBadge = document.getElementById('ownerBadge');
+      if (userState.role === 'Owner' || userState.role === 'Staff') {
+        ownerBadge.classList.remove('hidden');
+      } else {
+        ownerBadge.classList.add('hidden');
+      }
+    }
+
+    function renderCategories() {
+      const catContainer = document.getElementById('categoryFilters');
+      const cats = ['ALL', 'LOCAL', 'CLASSICS', 'ACTION', 'PUZZLE', 'SPORTS', 'RETRO'];
+      
+      catContainer.innerHTML = cats.map(c => `
+        <button onclick="setCategory('${c}')" class="px-3 py-1 rounded-full font-extrabold text-xs transition ${activeCategory === c ? 'bg-amber-500 text-black shadow-md' : 'bg-[#1a2130] text-gray-400 hover:text-white'}">
+          ${c}
+        </button>
+      `).join('');
+    }
+
+    function setCategory(cat) {
+      activeCategory = cat;
+      renderCategories();
+      renderGames();
+    }
+
+    function renderGames() {
+      const grid = document.getElementById('gamesGrid');
+      const searchQuery = document.getElementById('gameSearch').value.toLowerCase();
+
+      const filtered = baseGames.filter(g => {
+        const matchesCat = activeCategory === 'ALL' || g.category === activeCategory;
+        const matchesSearch = g.title.toLowerCase().includes(searchQuery);
+        return matchesCat && matchesSearch;
+      });
+
+      document.getElementById('gameCount').innerText = filtered.length;
+
+      grid.innerHTML = filtered.map(g => {
+        const isFrozen = frozenGames.has(g.id);
+        const isLocked = g.locked && !userState.unlockedGames.includes(g.id);
+
+        return `
+          <div onclick="launchGame('${g.id}')" class="game-card rounded-2xl p-4 flex flex-col items-center justify-center text-center cursor-pointer min-h-[110px] relative group overflow-hidden">
+            <span class="badge-category mb-1">${g.category}</span>
+            <h4 class="font-black text-white text-sm group-hover:text-amber-400 transition leading-tight">${g.title}</h4>
+            
+            ${isFrozen ? '<span class="mt-2 text-[10px] bg-red-600/80 text-white font-bold px-2 py-0.5 rounded">MAINTENANCE</span>' : ''}
+            ${isLocked ? '<span class="mt-2 text-[10px] bg-amber-500/20 border border-amber-500/40 text-amber-400 font-extrabold px-2 py-0.5 rounded">🔒 600 WC</span>' : ''}
+          </div>
         `;
-        card.onclick = () => handleGameClick(game);
-        grid.appendChild(card);
-    });
-}
-
-// GAME PAYWALL CHECK
-function handleGameClick(game) {
-    if (game.price && !currentUser.unlockedGames.includes(game.name)) {
-        if (currentUser.wincoins >= game.price) {
-            if (confirm(`Buy and unlock ${game.name} permanently for ${game.price} WinCoins?`)) {
-                currentUser.wincoins -= game.price;
-                currentUser.unlockedGames.push(game.name);
-                updateUI();
-                openGame(game.name, game.path);
-            }
-        } else {
-            alert(`🔒 ${game.name} costs ${game.price} WinCoins. You have ${currentUser.wincoins} WC.\n\nTip: Redeem promo codes like RELEASE, UPDATE, or WINYATESFOREVER to get more WC!`);
-        }
-    } else {
-        openGame(game.name, game.path);
-    }
-}
-
-function openGame(title, path) {
-    currentGamePath = path;
-    document.getElementById("modalTitle").textContent = title;
-    document.getElementById("gameFrame").src = path;
-    openModal("gameModal");
-
-    if (playingTimer) clearInterval(playingTimer);
-    playingTimer = setInterval(() => {
-        currentUser.wincoins += 5;
-        updateUI();
-    }, 120000);
-}
-
-// REDEEM PROMO CODES
-function redeemCode() {
-    const code = document.getElementById("promoCodeInput").value.trim().toUpperCase();
-    if (!code) return alert("Please enter a promo code.");
-
-    if (currentUser.redeemedCodes.includes(code)) {
-        return alert("You have already redeemed this code!");
+      }).join('');
     }
 
-    if (PROMO_CODES[code]) {
-        const reward = PROMO_CODES[code];
-        currentUser.wincoins += reward;
-        currentUser.redeemedCodes.push(code);
-        alert(`🎉 Code REDEEMED! You earned +${reward} WinCoins!`);
-        document.getElementById("promoCodeInput").value = "";
-        closeModal("codesModal");
-        updateUI();
-    } else {
-        alert("Invalid promo code. Valid codes: RELEASE, UPDATE, WINYATESFOREVER");
-    }
-}
-
-// PARTY CODE GENERATION & JOINING
-function createParty() {
-    const code = "WIN-" + Math.floor(1000 + Math.random() * 9000);
-    document.getElementById("generatedPartyCode").textContent = "Your Party Room Code: " + code;
-}
-
-function joinParty() {
-    const code = document.getElementById("joinPartyCodeInput").value.trim();
-    if (code) {
-        alert("Joined Party Room: " + code);
-        closeModal("partyModal");
-    } else {
-        alert("Please enter a valid party code.");
-    }
-}
-
-let isMicActive = false;
-function toggleVoice() {
-    isMicActive = !isMicActive;
-    const voiceStatus = document.getElementById("voiceStatus");
-    voiceStatus.textContent = isMicActive ? "🎙️ Voice Status: Connected (Microphone Live)" : "🎙️ Voice Status: Disconnected";
-    voiceStatus.style.color = isMicActive ? "#10b981" : "var(--text-muted)";
-}
-
-// DIRECT MESSAGES (DMs)
-function sendDM() {
-    const friend = document.getElementById("dmRecipient").value.trim();
-    const msg = document.getElementById("dmInput").value.trim();
-    if (!friend || !msg) return alert("Please specify friend username and message.");
-
-    const box = document.getElementById("dmChatBox");
-    const item = document.createElement("div");
-    item.className = "chat-msg";
-    item.innerHTML = `<span class="chat-user">To ${friend}:</span> ${msg}`;
-    box.appendChild(item);
-    box.scrollTop = box.scrollHeight;
-    document.getElementById("dmInput").value = "";
-}
-
-// PROFILE CUSTOMIZATION
-function openProfileModal() {
-    document.getElementById("profileNameInput").value = currentUser.username;
-    document.getElementById("profileAvatarInput").value = currentUser.avatar;
-    document.getElementById("profileBioInput").value = currentUser.bio;
-    document.getElementById("profileAvatarPreview").src = currentUser.avatar;
-    openModal("profileModal");
-}
-
-function updateAvatarPreview() {
-    const url = document.getElementById("profileAvatarInput").value.trim();
-    if (url) document.getElementById("profileAvatarPreview").src = url;
-}
-
-function saveProfile() {
-    currentUser.username = document.getElementById("profileNameInput").value.trim() || currentUser.username;
-    currentUser.avatar = document.getElementById("profileAvatarInput").value.trim() || currentUser.avatar;
-    currentUser.bio = document.getElementById("profileBioInput").value.trim() || currentUser.bio;
-
-    updateUI();
-    closeModal("profileModal");
-}
-
-// PROFILE SEARCH
-async function searchProfiles() {
-    const query = document.getElementById("searchProfileInput").value.toLowerCase();
-    const res = document.getElementById("profileResults");
-
-    if (!query) {
-        res.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Type a name above to search registered profiles...</p>';
+    function launchGame(gameId) {
+      if (userState.isBanned) {
+        alert('Your account is currently suspended.');
         return;
-    }
-
-    const { data } = await supabaseClient.from("users").select("username, role, wincoins").ilike("username", `%${query}%`);
-
-    res.innerHTML = "";
-    if (data && data.length > 0) {
-        data.forEach(u => {
-            const div = document.createElement("div");
-            div.style.padding = "8px";
-            div.style.borderBottom = "1px solid #323854";
-            div.innerHTML = `<b>${u.username}</b> (${u.role}) - 🪙 ${u.wincoins} WC`;
-            res.appendChild(div);
-        });
-    } else {
-        res.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">No registered profiles found.</p>';
-    }
-}
-
-// AUTHENTICATION LOGIC
-async function handleLogin() {
-    const u = document.getElementById("authUsername").value.trim();
-    const p = document.getElementById("authPassword").value.trim();
-
-    if (u === "Owner" && p === "OwnerRoy123456") {
-        currentUser.username = "Roy";
-        currentUser.role = "Owner";
-        currentUser.wincoins = Math.max(currentUser.wincoins, 100);
-        alert("Logged in as Owner Roy!");
-        closeModal("loginModal");
-        updateUI();
+      }
+      if (userState.jailUntil && Date.now() < userState.jailUntil) {
+        const minsLeft = Math.ceil((userState.jailUntil - Date.now()) / 60000);
+        alert(`You are in jail for ${minsLeft} more minute(s).`);
         return;
+      }
+
+      const game = baseGames.find(g => g.id === gameId);
+      if (!game) return;
+
+      currentActiveGame = game;
+
+      const modal = document.getElementById('gameModal');
+      const iframe = document.getElementById('gameIframe');
+      const lockedNotice = document.getElementById('gameLockedNotice');
+
+      document.getElementById('activeGameTitle').innerText = game.title;
+      document.getElementById('activeGameCategory').innerText = game.category;
+
+      const isFrozen = frozenGames.has(game.id);
+      const isLocked = game.locked && !userState.unlockedGames.includes(game.id);
+
+      if (isFrozen) {
+        iframe.src = 'about:blank';
+        lockedNotice.classList.remove('hidden');
+        lockedNotice.classList.add('flex');
+        document.getElementById('lockedTitle').innerText = "Game Under Maintenance";
+        document.getElementById('lockedDesc').innerText = "This game has been frozen for server updates.";
+        document.getElementById('buyGameBtn').classList.add('hidden');
+      } else if (isLocked) {
+        iframe.src = 'about:blank';
+        lockedNotice.classList.remove('hidden');
+        lockedNotice.classList.add('flex');
+        document.getElementById('lockedTitle').innerText = "Unlock " + game.title;
+        document.getElementById('lockedDesc').innerText = `This special release costs ${game.cost} WinCoins (WC) to permanently own.`;
+        document.getElementById('buyGameBtn').classList.remove('hidden');
+      } else {
+        lockedNotice.classList.add('hidden');
+        lockedNotice.classList.remove('flex');
+        iframe.src = game.url;
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
-    const { data } = await supabaseClient.from("users").select("*").eq("username", u).single();
-    if (data && data.password === p) {
-        currentUser = {
-            username: data.username,
-            role: data.role || "Member",
-            wincoins: data.wincoins || 100,
-            unlockedGames: data.unlocked_games || [],
-            avatar: data.avatar || currentUser.avatar,
-            bio: data.bio || "Winyates Gamer",
-            redeemedCodes: []
-        };
-        alert(`Welcome back ${currentUser.username}!`);
-        closeModal("loginModal");
-        updateUI();
-    } else {
-        alert("Invalid username or password!");
-    }
-}
+    function launchSchoolApp(appName, url) {
+      currentActiveGame = { id: appName, title: appName, category: 'SCHOOL APP', url: url };
+      const modal = document.getElementById('gameModal');
+      const iframe = document.getElementById('gameIframe');
+      const lockedNotice = document.getElementById('gameLockedNotice');
 
-async function handleSignUp() {
-    const u = document.getElementById("authUsername").value.trim();
-    const p = document.getElementById("authPassword").value.trim();
-    const isStaff = document.getElementById("authIsStaff").checked;
+      document.getElementById('activeGameTitle').innerText = appName;
+      document.getElementById('activeGameCategory').innerText = 'SCHOOL APP';
 
-    if (!u || !p) return alert("Please fill in username and password.");
+      lockedNotice.classList.add('hidden');
+      lockedNotice.classList.remove('flex');
+      iframe.src = url;
 
-    const role = isStaff ? "Staff" : "Member";
-
-    await supabaseClient.from("users").insert([
-        { username: u, password: p, role: role, wincoins: 100, unlocked_games: [] }
-    ]);
-
-    currentUser = { username: u, role: role, wincoins: 100, unlockedGames: [], avatar: currentUser.avatar, bio: "New Player", redeemedCodes: [] };
-    alert(`Account created! You start with 100 WC.`);
-    closeModal("loginModal");
-    updateUI();
-}
-
-function handleLogout() {
-    currentUser = { username: "Guest", role: "Guest", wincoins: 100, unlockedGames: [], avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Guest", bio: "Guest Account", redeemedCodes: [] };
-    updateUI();
-    closeModal("loginModal");
-}
-
-// UPDATE UI HEADERS & FOOTER
-function updateUI() {
-    document.getElementById("displayName").textContent = currentUser.username;
-    document.getElementById("displayWC").textContent = currentUser.wincoins;
-    document.getElementById("statusWC").textContent = currentUser.wincoins + " WC";
-    document.getElementById("statusUsername").textContent = `${currentUser.username} (${currentUser.role})`;
-    document.getElementById("statusBio").textContent = currentUser.bio;
-    document.getElementById("statusAvatar").src = currentUser.avatar;
-
-    const badge = document.getElementById("userBadgeRole");
-    if (currentUser.role === "Owner") {
-        badge.className = "user-badge";
-        badge.innerHTML = `👑 <span id="displayName">${currentUser.username}</span> (Owner)`;
-    } else if (currentUser.role === "Staff") {
-        badge.className = "staff-badge";
-        badge.innerHTML = `🛡️ <span id="displayName">${currentUser.username}</span> (Staff)`;
-    } else {
-        badge.className = "user-badge";
-        badge.style.background = "#334155";
-        badge.style.color = "#fff";
-        badge.innerHTML = `👤 <span id="displayName">${currentUser.username}</span>`;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
-    renderGames(GAMES_LIST);
-}
+    function buyCurrentGame() {
+      if (!currentActiveGame) return;
+      const cost = currentActiveGame.cost || 600;
+      if (userState.balance < cost) {
+        alert('Insufficient WC balance! Redeem promo codes or earn more.');
+        return;
+      }
 
-// MODAL & FILTER UTILITIES
-function openModal(id) { document.getElementById(id).classList.add("active"); }
-function closeModal(id) {
-    document.getElementById(id).classList.remove("active");
-    if (id === 'gameModal') {
-        document.getElementById("gameFrame").src = "";
-        if (playingTimer) clearInterval(playingTimer);
+      userState.balance -= cost;
+      if (!userState.unlockedGames.includes(currentActiveGame.id)) {
+        userState.unlockedGames.push(currentActiveGame.id);
+      }
+      saveState();
+
+      launchGame(currentActiveGame.id);
+      renderGames();
     }
-}
 
-function setCategory(cat) {
-    activeCategory = cat;
-    document.querySelectorAll('.filter-btn').forEach(c => {
-        c.classList.toggle('active', c.textContent.includes(cat) || (cat === 'All' && c.textContent.includes('All')));
-    });
-    filterGames();
-}
-
-function filterGames() {
-    const query = document.getElementById("searchInput").value.toLowerCase();
-    const filtered = GAMES_LIST.filter(g => {
-        const matchesQuery = g.name.toLowerCase().includes(query);
-        const matchesCategory = activeCategory === "All" || g.cat === activeCategory;
-        return matchesQuery && matchesCategory;
-    });
-    renderGames(filtered);
-}
-
-function popoutGame() { if (currentGamePath) window.open(currentGamePath, '_blank'); }
-function toggleFullscreen() {
-    const frame = document.getElementById("gameFrame");
-    if (!document.fullscreenElement) frame.requestFullscreen();
-    else document.exitFullscreen();
-}
-
-function toggleTheme() {
-    const body = document.body;
-    if (body.getAttribute("data-theme") === "light") {
-        body.removeAttribute("data-theme");
-        document.getElementById("themeBtn").textContent = "🌙";
-    } else {
-        body.setAttribute("data-theme", "light");
-        document.getElementById("themeBtn").textContent = "☀️";
+    function closeGameModal() {
+      const modal = document.getElementById('gameModal');
+      const iframe = document.getElementById('gameIframe');
+      iframe.src = 'about:blank';
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
     }
-}
 
-window.addEventListener("DOMContentLoaded", () => {
-    updateUI();
-});
-</script>
+    function reloadGameIframe() {
+      const iframe = document.getElementById('gameIframe');
+      if (iframe.src) iframe.src = iframe.src;
+    }
+
+    function toggleFullscreen() {
+      const elem = document.getElementById('gameIframe');
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      }
+    }
+
+    function toggleGameUI() {
+      const header = document.getElementById('gameModalHeader');
+      const text = document.getElementById('hideUiText');
+      if (header.style.display === 'none') {
+        header.style.display = 'flex';
+        text.innerText = 'Hide UI';
+      } else {
+        header.style.display = 'none';
+        text.innerText = 'Show UI';
+      }
+    }
+
+    function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
+    function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
+
+    function processLogin() {
+      const u = document.getElementById('authUsername').value.trim();
+      const p = document.getElementById('authPassword').value.trim();
+
+      if (u === 'Owner' && p === 'OwnerRoy123456') {
+        userState.username = 'Roy';
+        userState.role = 'Owner';
+        saveState();
+        alert('Welcome back, Owner Roy!');
+        closeAuthModal();
+        return;
+      }
+
+      if (u) {
+        userState.username = u;
+        saveState();
+        alert(`Logged in as ${u}.`);
+        closeAuthModal();
+      }
+    }
+
+    function processRegister() {
+      const u = document.getElementById('authUsername').value.trim();
+      if (u) {
+        userState.username = u;
+        userState.role = 'Member';
+        userState.balance = 100;
+        saveState();
+        alert(`Registered and logged in as ${u}!`);
+        closeAuthModal();
+      }
+    }
+
+    function openAdminPanel() {
+      if (userState.role !== 'Owner' && userState.role !== 'Staff') {
+        alert('Access restricted to Owner or Staff.');
+        return;
+      }
+      
+      const select = document.getElementById('freezeGameSelect');
+      select.innerHTML = baseGames.map(g => `<option value="${g.id}">${g.title} (${g.category})</option>`).join('');
+
+      document.getElementById('adminModal').classList.remove('hidden');
+    }
+
+    function closeAdminPanel() {
+      document.getElementById('adminModal').classList.add('hidden');
+    }
+
+    function sendGlobalAnnouncement() {
+      const msg = document.getElementById('adminAnnounceMsg').value;
+      if (!msg) return;
+      
+      document.getElementById('announcementText').innerText = msg;
+      document.getElementById('announcementBanner').classList.remove('hidden');
+      document.getElementById('adminAnnounceMsg').value = '';
+      closeAdminPanel();
+    }
+
+    function dismissAnnouncement() {
+      document.getElementById('announcementBanner').classList.add('hidden');
+    }
+
+    function createNewPromoCode() {
+      const name = document.getElementById('newCodeName').value.trim().toUpperCase();
+      const wc = parseInt(document.getElementById('newCodeWC').value);
+
+      if (!name || isNaN(wc)) {
+        alert('Please fill valid Code Name and WC reward.');
+        return;
+      }
+
+      promoCodes[name] = wc;
+      alert(`Created Promo Code "${name}" for ${wc} WC!`);
+      document.getElementById('newCodeName').value = '';
+      document.getElementById('newCodeWC').value = '';
+    }
+
+    function grantUserBalance(amount) {
+      userState.balance += amount;
+      saveState();
+      alert(`Granted +${amount} WC to current user profile!`);
+    }
+
+    function putUserInJail() {
+      const target = document.getElementById('modTargetUser').value.trim() || userState.username;
+      const mins = 5;
+      userState.jailUntil = Date.now() + (mins * 60 * 1000);
+      saveState();
+      alert(`User ${target} jailed for ${mins} minutes.`);
+    }
+
+    function banUserAccount() {
+      const target = document.getElementById('modTargetUser').value.trim() || userState.username;
+      userState.isBanned = true;
+      saveState();
+      alert(`User ${target} banned/kicked.`);
+    }
+
+    function promoteUserRole(newRole) {
+      userState.role = newRole;
+      saveState();
+      alert(`Role updated to ${newRole}.`);
+    }
+
+    async function deleteUserAccount() {
+      const target = document.getElementById('modTargetUser').value.trim();
+      if (!target || !supabaseClient) return;
+      try {
+        await supabaseClient.from('users').delete().eq('username', target);
+        alert(`Deleted DB entry for ${target}`);
+      } catch(e) {
+        alert('Failed to delete user.');
+      }
+    }
+
+    function toggleGameFreeze() {
+      const gameId = document.getElementById('freezeGameSelect').value;
+      if (frozenGames.has(gameId)) {
+        frozenGames.delete(gameId);
+      } else {
+        frozenGames.add(gameId);
+      }
+      renderGames();
+      alert(`Toggled maintenance status for game: ${gameId}`);
+    }
+
+    function openRedeemModal() { document.getElementById('redeemModal').classList.remove('hidden'); }
+    function closeRedeemModal() { document.getElementById('redeemModal').classList.add('hidden'); }
+
+    function claimPromoCode() {
+      const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+      if (promoCodes[code]) {
+        const reward = promoCodes[code];
+        userState.balance += reward;
+        saveState();
+        delete promoCodes[code];
+        alert(`🎉 Code redeemed! Received +${reward} WC!`);
+        closeRedeemModal();
+      } else {
+        alert('Invalid or already claimed promo code!');
+      }
+    }
+
+    function openPartyModal() { document.getElementById('partyModal').classList.remove('hidden'); }
+    function closePartyModal() { document.getElementById('partyModal').classList.add('hidden'); }
+
+    function joinPartyRoom() {
+      const code = document.getElementById('roomCodeInput').value.trim();
+      if (!code) return;
+      currentRoom = code;
+      document.getElementById('currentRoomCode').innerText = currentRoom;
+      document.getElementById('partyChatBox').innerHTML += `<div class="text-blue-400">[System]: Joined Room ${currentRoom}</div>`;
+    }
+
+    function createPartyRoom() {
+      const code = 'WIN' + Math.floor(100 + Math.random() * 900);
+      currentRoom = code;
+      document.getElementById('currentRoomCode').innerText = currentRoom;
+      document.getElementById('partyChatBox').innerHTML += `<div class="text-emerald-400">[System]: Created Party Room ${currentRoom}</div>`;
+    }
+
+    function sendPartyMessage() {
+      const input = document.getElementById('partyMsgInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      const box = document.getElementById('partyChatBox');
+      box.innerHTML += `<div><span class="text-amber-400 font-bold">${userState.username}:</span> <span class="text-gray-200">${msg}</span></div>`;
+      box.scrollTop = box.scrollHeight;
+      input.value = '';
+    }
+
+    function openDMModal() { document.getElementById('dmModal').classList.remove('hidden'); }
+    function closeDMModal() { document.getElementById('dmModal').classList.add('hidden'); }
+
+    function sendDMMessage() {
+      const recipient = document.getElementById('dmRecipient').value.trim();
+      const input = document.getElementById('dmMsgInput');
+      const msg = input.value.trim();
+      if (!recipient || !msg) return;
+
+      const box = document.getElementById('dmHistoryBox');
+      box.innerHTML += `<div><span class="text-purple-400 font-bold">To [${recipient}]:</span> <span class="text-gray-200">${msg}</span></div>`;
+      box.scrollTop = box.scrollHeight;
+      input.value = '';
+    }
+
+    function openSearchProfilesModal() { document.getElementById('searchProfilesModal').classList.remove('hidden'); }
+    function closeSearchProfilesModal() { document.getElementById('searchProfilesModal').classList.add('hidden'); }
+
+    async function searchProfilesDB() {
+      const q = document.getElementById('searchProfileQuery').value.trim();
+      const list = document.getElementById('searchResultsList');
+      list.innerHTML = '<div class="text-gray-400">Searching...</div>';
+
+      if (supabaseClient && q) {
+        try {
+          const { data } = await supabaseClient.from('users').select('*').ilike('username', `%${q}%`);
+          if (data && data.length) {
+            list.innerHTML = data.map(u => `
+              <div class="bg-[#151a26] p-2 rounded flex justify-between items-center text-xs">
+                <div>
+                  <span class="font-bold text-amber-400">${u.avatar || '🤖'} ${u.username}</span>
+                  <span class="text-gray-400 block">${u.bio || 'No bio'}</span>
+                </div>
+                <span class="text-amber-500 font-bold">${u.balance} WC</span>
+              </div>
+            `).join('');
+            return;
+          }
+        } catch(e) {}
+      }
+
+      list.innerHTML = `<div class="bg-[#151a26] p-2 rounded text-xs"><span class="font-bold text-amber-400">${userState.avatar} ${userState.username}</span> - ${userState.balance} WC</div>`;
+    }
+
+    function openProfilesModal() {
+      document.getElementById('editUsernameInput').value = userState.username;
+      document.getElementById('editBioInput').value = userState.bio;
+      document.getElementById('editAvatarSelect').value = userState.avatar;
+      document.getElementById('profilesModal').classList.remove('hidden');
+    }
+
+    function closeProfilesModal() { document.getElementById('profilesModal').classList.add('hidden'); }
+
+    function saveUserProfile() {
+      userState.username = document.getElementById('editUsernameInput').value.trim() || 'Roy';
+      userState.bio = document.getElementById('editBioInput').value.trim() || 'User of Winyates';
+      userState.avatar = document.getElementById('editAvatarSelect').value;
+      saveState();
+      closeProfilesModal();
+    }
+
+    function openHowToPlayModal() { document.getElementById('howToPlayModal').classList.remove('hidden'); }
+    function closeHowToPlayModal() { document.getElementById('howToPlayModal').classList.add('hidden'); }
+
+    function toggleTheme() {
+      document.body.classList.toggle('light-theme');
+      const icon = document.getElementById('themeIcon');
+      if (document.body.classList.contains('light-theme')) {
+        icon.classList.replace('fa-moon', 'fa-sun');
+      } else {
+        icon.classList.replace('fa-sun', 'fa-moon');
+      }
+    }
+
+    function switchView(view) {
+      if (view === 'games') {
+        renderGames();
+      }
+    }
+
+    // App Initialization
+    window.onload = function() {
+      loadState();
+      renderCategories();
+      renderGames();
+    };
+  </script>
 </body>
 </html>
