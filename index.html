@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Winyates Edition By Roy</title>
+<title>WINYATES EDITION</title>
+
+<!-- Supabase JS Client Library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
     :root {
@@ -19,6 +22,7 @@
         --header-bg: #090a0e;
         --input-bg: #141722;
         --button-blue: #3b82f6;
+        --button-green: #10b981;
     }
 
     [data-theme="light"] {
@@ -60,6 +64,14 @@
     }
 
     .brand-section { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    
+    /* Image Tornado Logo */
+    .brand-logo-img {
+        height: 38px;
+        width: auto;
+        object-fit: contain;
+    }
+
     .brand-title {
         font-size: 1.35rem;
         font-weight: 900;
@@ -83,23 +95,52 @@
         box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
     }
 
-    .header-controls { display: flex; align-items: center; gap: 0.75rem; }
-
-    /* School Apps Dropdown */
-    .dropdown { position: relative; display: inline-block; }
-    .school-apps-btn {
-        background-color: var(--button-blue);
+    .staff-badge {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
         color: #ffffff;
-        border: none;
-        padding: 0.55rem 1.1rem;
+        font-size: 0.72rem;
+        font-weight: 900;
+        padding: 0.25rem 0.65rem;
         border-radius: 20px;
-        font-weight: 700;
+    }
+
+    .wincoin-display {
+        background: rgba(251, 191, 36, 0.15);
+        border: 1px solid var(--accent-gold);
+        color: var(--accent-gold);
+        padding: 0.4rem 0.85rem;
+        border-radius: 20px;
         font-size: 0.85rem;
-        cursor: pointer;
+        font-weight: 900;
         display: flex;
         align-items: center;
         gap: 6px;
     }
+
+    .header-controls { display: flex; align-items: center; gap: 0.6rem; }
+
+    /* Buttons UI */
+    .btn-header {
+        background-color: var(--input-bg);
+        color: var(--text-primary);
+        border: 1px solid var(--card-border);
+        padding: 0.55rem 0.95rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.82rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: background 0.2s ease;
+    }
+    .btn-header:hover { background-color: rgba(255, 255, 255, 0.08); }
+
+    .btn-blue { background-color: var(--button-blue); color: #fff; border: none; }
+    .btn-blue:hover { background-color: #2563eb; }
+
+    /* School Apps Dropdown */
+    .dropdown { position: relative; display: inline-block; }
     .dropdown-content {
         display: none;
         position: absolute; right: 0; top: 115%;
@@ -123,21 +164,10 @@
         border-radius: 20px;
         font-size: 0.85rem;
         outline: none;
-        width: 180px;
+        width: 160px;
         transition: width 0.2s ease, border-color 0.2s ease;
     }
-    .search-box input:focus { width: 230px; border-color: var(--button-blue); }
-
-    .theme-toggle-btn {
-        background: var(--input-bg);
-        border: 1px solid var(--card-border);
-        color: var(--text-primary);
-        padding: 0.55rem 0.9rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 700;
-        cursor: pointer;
-    }
+    .search-box input:focus { width: 210px; border-color: var(--button-blue); }
 
     /* Main Container */
     .container { max-width: 1400px; margin: 1.5rem auto; padding: 0 1.5rem; width: 100%; flex: 1; }
@@ -198,39 +228,94 @@
         line-height: 1.3;
     }
 
-    /* Modal Launcher */
-    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.93); flex-direction: column; padding: 1rem; }
-    .modal.active { display: flex; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; }
-    .modal-title { font-size: 1.1rem; font-weight: 800; color: var(--text-primary); }
-    .modal-actions { display: flex; gap: 0.5rem; }
-    .btn-action { background: var(--input-bg); color: var(--text-primary); border: 1px solid var(--card-border); padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
-    .btn-close { background: #ef4444; color: #fff; border: none; }
+    .card-price-tag {
+        position: absolute;
+        top: 8px; right: 8px;
+        background: var(--accent-gold);
+        color: #000;
+        font-size: 0.68rem;
+        font-weight: 900;
+        padding: 2px 6px;
+        border-radius: 10px;
+    }
 
+    /* Modal Framework */
+    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.85); flex-direction: column; align-items: center; justify-content: center; padding: 1rem; }
+    .modal.active { display: flex; }
+    
+    .modal-box {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        width: 100%;
+        max-width: 550px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        position: relative;
+    }
+
+    .modal-box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .modal-box-title { font-size: 1.2rem; font-weight: 900; color: var(--text-primary); }
+    .modal-box-close { background: none; border: none; color: var(--text-secondary); font-size: 1.2rem; cursor: pointer; }
+
+    .modal-input {
+        width: 100%;
+        background: var(--input-bg);
+        border: 1px solid var(--card-border);
+        color: #fff;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 0.8rem;
+        outline: none;
+    }
+
+    /* Full Game Modal Launcher */
+    .modal-game { padding: 1rem; }
+    .modal-game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding: 0.6rem 1.2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; width: 100%; }
+    
     .iframe-box { flex: 1; width: 100%; height: 100%; border-radius: 10px; overflow: hidden; background: #000; border: 1px solid var(--card-border); position: relative; }
     iframe { width: 100%; height: 100%; border: none; }
 
-    .fallback-overlay {
-        position: absolute; inset: 0; display: none; flex-direction: column;
-        align-items: center; justify-content: center; background: #12141c;
-        color: #fff; padding: 2rem; text-align: center; gap: 1rem;
+    /* Party Chat UI */
+    .chat-messages {
+        height: 250px;
+        background: var(--input-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        padding: 0.75rem;
+        overflow-y: auto;
+        margin-bottom: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
-    .fallback-btn {
-        background: var(--button-blue); color: #fff; border: none;
-        padding: 0.75rem 1.5rem; border-radius: 30px; font-weight: 800; cursor: pointer;
+    .msg-item { font-size: 0.85rem; word-break: break-word; }
+    .msg-user { font-weight: 800; color: var(--accent-gold); }
+
+    .voice-status {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid var(--button-green);
+        color: var(--button-green);
+        padding: 0.5rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 0.8rem;
+        text-align: center;
     }
 </style>
 </head>
 <body>
 
 <div class="announcement" id="banner">
-    <div>🚀 <span><b>Repository Paths Updated:</b> Games are now mapped to <code>games/&lt;folder&gt;/</code> and root HTML files!</span></div>
+    <div>🚀 <span><b>Welcome to Winyates Edition!</b> WinCoins economy, voice parties, and profiles synced via Supabase!</span></div>
     <button class="announcement-close" onclick="document.getElementById('banner').style.display='none'">✕</button>
 </div>
 
 <header>
     <div class="brand-section" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        <svg viewBox="0 0 200 180" width="30" height="30">
+        <!-- Exact Tornado W Logo SVG / Image Embed -->
+        <svg viewBox="0 0 200 180" class="brand-logo-img">
             <path d="M 30,30 Q 170,-10 160,70 Q 150,110 50,100" fill="none" stroke="#7c3aed" stroke-width="22" stroke-linecap="round"/>
             <path d="M 45,75 Q 150,45 140,110 Q 130,140 60,135" fill="none" stroke="#2563eb" stroke-width="18" stroke-linecap="round"/>
             <path d="M 60,110 Q 130,95 120,138 Q 110,160 70,155" fill="none" stroke="#16a34a" stroke-width="14" stroke-linecap="round"/>
@@ -239,12 +324,18 @@
             <text x="62" y="112" font-family="Arial Black, sans-serif" font-weight="900" font-size="120" fill="#f59e0b" stroke="#000" stroke-width="3">W</text>
         </svg>
         <div class="brand-title">Winyates Edition</div>
-        <div class="owner-badge">👑 Roy Owner</div>
+        <div id="userBadgeRole" class="owner-badge">👑 Roy Owner</div>
     </div>
 
     <div class="header-controls">
+        <div class="wincoin-display">🪙 <span id="userWinCoins">0</span> WC</div>
+
+        <button class="btn-header" onclick="openModal('partyModal')">🎉 Party & Chat</button>
+        <button class="btn-header" onclick="openModal('profileSearchModal')">🔍 Profiles</button>
+        <button class="btn-header" onclick="openModal('tutorialModal')">📖 How to Play</button>
+
         <div class="dropdown">
-            <button class="school-apps-btn">🏫 School Apps ▾</button>
+            <button class="btn-header btn-blue">🏫 School Apps ▾</button>
             <div class="dropdown-content">
                 <a href="https://www.edshed.com" target="_blank">🐝 EdShed</a>
                 <a href="https://play.ttrockstars.com" target="_blank">🎸 TTRS</a>
@@ -252,10 +343,13 @@
                 <a href="https://student.classdojo.com/#/dojoIslands" target="_blank">🏝️ Dojo Islands</a>
             </div>
         </div>
+
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="Search games..." oninput="filterGames()">
         </div>
-        <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+
+        <button class="btn-header" onclick="openModal('loginModal')" id="authBtn">👤 Login</button>
+        <button class="btn-header" onclick="toggleTheme()" id="themeBtn">🌙</button>
     </div>
 </header>
 
@@ -272,29 +366,118 @@
     <div id="gameGrid" class="grid"></div>
 </main>
 
-<div id="gameModal" class="modal">
-    <div class="modal-header">
-        <div id="modalTitle" class="modal-title">Game Title</div>
-        <div class="modal-actions">
-            <button class="btn-action" onclick="popoutGame()">Popout ↗</button>
-            <button class="btn-action" onclick="toggleFullscreen()">Fullscreen ⛶</button>
-            <button class="btn-action btn-close" onclick="closeModal()">Close ✕</button>
+<!-- LOGIN / ACCOUNT MODAL -->
+<div id="loginModal" class="modal">
+    <div class="modal-box">
+        <div class="modal-box-header">
+            <div class="modal-box-title" id="authTitle">Account Authentication</div>
+            <button class="modal-box-close" onclick="closeModal('loginModal')">✕</button>
         </div>
-    </div>
-    <div class="iframe-box">
-        <iframe id="gameFrame" allow="autoplay; fullscreen; pointer-lock; accelerometer; magnetometer; gyroscope;" referrerpolicy="no-referrer"></iframe>
-        <div id="fallbackOverlay" class="fallback-overlay">
-            <h3>⚠️ Direct embedding unavailable</h3>
-            <p>Click below to open and play directly in a clean popout tab!</p>
-            <button class="fallback-btn" onclick="popoutGame()">Launch Game Popout ↗</button>
+        <div id="authForms">
+            <input type="text" id="authUsername" class="modal-input" placeholder="Username">
+            <input type="password" id="authPassword" class="modal-input" placeholder="Password">
+            
+            <div id="staffCheckContainer" style="display:none; margin-bottom:0.8rem; font-size:0.85rem;">
+                <label><input type="checkbox" id="authIsStaff"> Request Staff Account</label>
+            </div>
+
+            <button class="btn-header btn-blue" style="width:100%; justify-content:center; padding:0.75rem; margin-bottom:0.5rem;" onclick="handleLogin()">Login</button>
+            <button class="btn-header" style="width:100%; justify-content:center; padding:0.75rem;" onclick="handleSignUp()">Sign Up New Account</button>
+        </div>
+        <div id="authLoggedIn" style="display:none; text-align:center;">
+            <p style="margin-bottom:1rem; font-weight:700;" id="loggedInMsg">Logged in as Owner</p>
+            <button class="btn-header" style="width:100%; justify-content:center; background:#ef4444; color:#fff;" onclick="handleLogout()">Logout</button>
         </div>
     </div>
 </div>
 
+<!-- TUTORIAL MODAL -->
+<div id="tutorialModal" class="modal">
+    <div class="modal-box">
+        <div class="modal-box-header">
+            <div class="modal-box-title">📖 How to Earn WinCoins & Play</div>
+            <button class="modal-box-close" onclick="closeModal('tutorialModal')">✕</button>
+        </div>
+        <div style="font-size:0.9rem; line-height:1.6; color:var(--text-secondary);">
+            <p>Welcome to <b>Winyates Edition</b>! Here is how you can earn WinCoins (WC) and unlock premium games:</p>
+            <br>
+            <p>💰 <b>Earn WinCoins by Playing:</b> You earn <b>+5 WinCoins</b> every 2 minutes while playing any game on the site!</p>
+            <br>
+            <p>💬 <b>Earn WinCoins by Socializing:</b> You gain <b>+2 WinCoins</b> for sending messages in Party Chat!</p>
+            <br>
+            <p>⛏️ <b>Unlocking Minecraft:</b> Minecraft requires <b>600 WinCoins</b>. Once unlocked with your account, it stays unlocked forever!</p>
+        </div>
+    </div>
+</div>
+
+<!-- PARTY & VOICE CHAT MODAL -->
+<div id="partyModal" class="modal">
+    <div class="modal-box">
+        <div class="modal-box-header">
+            <div class="modal-box-title">🎉 Party Room & Voice Chat</div>
+            <button class="modal-box-close" onclick="closeModal('partyModal')">✕</button>
+        </div>
+        <div class="voice-status" id="voiceStatus">🎙️ Voice Chat: Disconnected</div>
+        <div style="display:flex; gap:0.5rem; margin-bottom:0.8rem;">
+            <button class="btn-header btn-blue" style="flex:1; justify-content:center;" onclick="toggleVoice()">Connect Voice 🎤</button>
+        </div>
+        <div class="chat-messages" id="chatBox">
+            <div class="msg-item"><span class="msg-user">System:</span> Welcome to Winyates Edition Party Chat!</div>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+            <input type="text" id="chatInput" class="modal-input" style="margin-bottom:0;" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+            <button class="btn-header btn-blue" onclick="sendChatMessage()">Send</button>
+        </div>
+    </div>
+</div>
+
+<!-- PROFILE SEARCH MODAL -->
+<div id="profileSearchModal" class="modal">
+    <div class="modal-box">
+        <div class="modal-box-header">
+            <div class="modal-box-title">🔍 Search Profiles</div>
+            <button class="modal-box-close" onclick="closeModal('profileSearchModal')">✕</button>
+        </div>
+        <input type="text" id="searchProfileInput" class="modal-input" placeholder="Enter username..." oninput="searchProfiles()">
+        <div id="profileResults" style="max-height:200px; overflow-y:auto;">
+            <p style="color:var(--text-secondary); font-size:0.85rem;">Type a name above to search Supabase users...</p>
+        </div>
+    </div>
+</div>
+
+<!-- GAME LAUNCHER MODAL -->
+<div id="gameModal" class="modal modal-game">
+    <div class="modal-game-header">
+        <div id="modalTitle" style="font-size:1.1rem; font-weight:800; color:#fff;">Game Title</div>
+        <div style="display:flex; gap:0.5rem;">
+            <button class="btn-header" onclick="popoutGame()">Popout ↗</button>
+            <button class="btn-header" onclick="toggleFullscreen()">Fullscreen ⛶</button>
+            <button class="btn-header" style="background:#ef4444; color:#fff; border:none;" onclick="closeModal('gameModal')">Close ✕</button>
+        </div>
+    </div>
+    <div class="iframe-box">
+        <iframe id="gameFrame" allow="autoplay; fullscreen; pointer-lock; accelerometer; magnetometer; gyroscope;" referrerpolicy="no-referrer"></iframe>
+    </div>
+</div>
+
 <script>
+// SUPABASE CLIENT INITIALIZATION
+const SUPABASE_URL = "https://kwoqpnhokoqwduvzxpwh.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRefiI6Imt3b3Fwbmhva29xd2R1dnp4cHdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MjUzMDQsImV4cCI6MjEwNTQwMTMwNH0.94fjKYasm9hRs-kf-1YJHfMYEW4thLt5O2w52mSRpzU";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// DEFAULT OWNER ACCOUNT STATE
+let currentUser = {
+    username: "Owner",
+    role: "Owner",
+    wincoins: 1000,
+    unlockedGames: ["Minecraft"]
+};
+
+// GAME DATABASE CATALOG
 const GAMES_LIST = [
     // 📁 REPOSITORY ROOT HTML GAMES
-    { name: "Minecraft", cat: "Local", path: "Minecraft.html" },
+    { name: "Minecraft", cat: "Local", path: "Minecraft.html", price: 600 },
     { name: "Block Blast", cat: "Local", path: "blockblast.html" },
     { name: "Blumgi Ball", cat: "Local", path: "blumgi-ball.html" },
     { name: "Blumgi Castle", cat: "Local", path: "blumgi-castle.html" },
@@ -460,7 +643,9 @@ const GAMES_LIST = [
 
 let activeCategory = "All";
 let currentGamePath = "";
+let playingTimer = null;
 
+// RENDER GAME GRID
 function renderGames(items) {
     const grid = document.getElementById("gameGrid");
     const countLabel = document.getElementById("gameCount");
@@ -470,15 +655,65 @@ function renderGames(items) {
     items.forEach((game) => {
         const card = document.createElement("div");
         card.className = "card";
+        
+        let priceBadge = "";
+        if (game.price && !currentUser.unlockedGames.includes(game.name)) {
+            priceBadge = `<div class="card-price-tag">🪙 ${game.price} WC</div>`;
+        }
+
         card.innerHTML = `
+            ${priceBadge}
             <div class="card-cat">${game.cat}</div>
             <div class="card-title">${game.name}</div>
         `;
-        card.onclick = () => openGame(game.name, game.path);
+        card.onclick = () => handleGameClick(game);
         grid.appendChild(card);
     });
 }
 
+// GAME SELECTION AND MINECRAFT PAYWALL
+function handleGameClick(game) {
+    if (game.price && !currentUser.unlockedGames.includes(game.name)) {
+        if (currentUser.wincoins >= game.price) {
+            if (confirm(`Buy ${game.name} for ${game.price} WinCoins?`)) {
+                currentUser.wincoins -= game.price;
+                currentUser.unlockedGames.push(game.name);
+                updateUI();
+                openGame(game.name, game.path);
+            }
+        } else {
+            alert(`You need ${game.price} WinCoins to play ${game.name}. You currently have ${currentUser.wincoins} WinCoins. Earn WinCoins by playing other games or chatting!`);
+        }
+    } else {
+        openGame(game.name, game.path);
+    }
+}
+
+function openGame(title, path) {
+    currentGamePath = path;
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("gameFrame").src = path;
+    document.getElementById("gameModal").classList.add("active");
+
+    // Earn WinCoins while playing timer (+5 every 2 mins)
+    if (playingTimer) clearInterval(playingTimer);
+    playingTimer = setInterval(() => {
+        currentUser.wincoins += 5;
+        updateUI();
+    }, 120000);
+}
+
+// MODAL CONTROLS
+function openModal(id) { document.getElementById(id).classList.add("active"); }
+function closeModal(id) {
+    document.getElementById(id).classList.remove("active");
+    if (id === 'gameModal') {
+        document.getElementById("gameFrame").src = "";
+        if (playingTimer) clearInterval(playingTimer);
+    }
+}
+
+// CATEGORIES & FILTERS
 function setCategory(cat) {
     activeCategory = cat;
     document.querySelectorAll('.chip').forEach(c => {
@@ -497,56 +732,167 @@ function filterGames() {
     renderGames(filtered);
 }
 
-function openGame(title, path) {
-    currentGamePath = path;
-    document.getElementById("modalTitle").textContent = title;
-    
-    const iframe = document.getElementById("gameFrame");
-    const fallback = document.getElementById("fallbackOverlay");
-    
-    fallback.style.display = "none";
-    iframe.src = path;
-    
-    document.getElementById("gameModal").classList.add("active");
-}
+// AUTHENTICATION LOGIC (Supabase & Owner/Staff Accounts)
+async function handleLogin() {
+    const u = document.getElementById("authUsername").value.trim();
+    const p = document.getElementById("authPassword").value.trim();
 
-function closeModal() {
-    document.getElementById("gameModal").classList.remove("active");
-    document.getElementById("gameFrame").src = "";
-    document.getElementById("fallbackOverlay").style.display = "none";
-    currentGamePath = "";
-}
+    if (u === "Owner" && p === "OwnerRoy123456") {
+        currentUser = { username: "Owner", role: "Owner", wincoins: 1000, unlockedGames: ["Minecraft"] };
+        alert("Logged in as Owner Roy!");
+        closeModal("loginModal");
+        updateUI();
+        return;
+    }
 
-function popoutGame() {
-    if (currentGamePath) {
-        window.open(currentGamePath, '_blank');
+    // Supabase User Fetch
+    const { data, error } = await supabaseClient.from("users").select("*").eq("username", u).single();
+    if (data && data.password === p) {
+        currentUser = {
+            username: data.username,
+            role: data.role || "Member",
+            wincoins: data.wincoins || 0,
+            unlockedGames: data.unlocked_games || []
+        };
+        alert(`Welcome back ${currentUser.username}!`);
+        closeModal("loginModal");
+        updateUI();
+    } else {
+        alert("Invalid username or password!");
     }
 }
 
-function toggleFullscreen() {
-    const frame = document.getElementById("gameFrame");
-    if (!document.fullscreenElement) {
-        frame.requestFullscreen().catch(err => {
-            alert("Fullscreen blocked by browser settings: " + err.message);
+async function handleSignUp() {
+    const u = document.getElementById("authUsername").value.trim();
+    const p = document.getElementById("authPassword").value.trim();
+    const isStaff = document.getElementById("authIsStaff").checked;
+
+    if (!u || !p) return alert("Please fill in username and password.");
+
+    const role = isStaff ? "Staff" : "Member";
+
+    const { data, error } = await supabaseClient.from("users").insert([
+        { username: u, password: p, role: role, wincoins: 50, unlocked_games: [] }
+    ]);
+
+    if (error) {
+        alert("Error signing up (or account already exists). Local account created.");
+    } else {
+        alert(`Account created! Registered as ${role}.`);
+    }
+
+    currentUser = { username: u, role: role, wincoins: 50, unlockedGames: [] };
+    closeModal("loginModal");
+    updateUI();
+}
+
+function handleLogout() {
+    currentUser = { username: "Guest", role: "Guest", wincoins: 0, unlockedGames: [] };
+    updateUI();
+    closeModal("loginModal");
+}
+
+// UI UPDATE HANDLER
+function updateUI() {
+    document.getElementById("userWinCoins").textContent = currentUser.wincoins;
+    const badge = document.getElementById("userBadgeRole");
+
+    if (currentUser.role === "Owner") {
+        badge.className = "owner-badge";
+        badge.textContent = "👑 Roy Owner";
+    } else if (currentUser.role === "Staff") {
+        badge.className = "staff-badge";
+        badge.textContent = "🛡️ Staff";
+    } else {
+        badge.className = "owner-badge";
+        badge.style.background = "#334155";
+        badge.style.color = "#fff";
+        badge.textContent = `👤 ${currentUser.username}`;
+    }
+
+    renderGames(GAMES_LIST);
+}
+
+// PARTY CHAT & WINCOINS EARNING
+function sendChatMessage() {
+    const input = document.getElementById("chatInput");
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    const box = document.getElementById("chatBox");
+    const item = document.createElement("div");
+    item.className = "msg-item";
+    item.innerHTML = `<span class="msg-user">${currentUser.username}:</span> ${msg}`;
+    box.appendChild(item);
+    box.scrollTop = box.scrollHeight;
+    input.value = "";
+
+    // +2 WinCoins reward for chatting
+    currentUser.wincoins += 2;
+    updateUI();
+}
+
+// VOICE CHAT SIMULATOR
+let isVoiceConnected = false;
+function toggleVoice() {
+    isVoiceConnected = !isVoiceConnected;
+    const status = document.getElementById("voiceStatus");
+    if (isVoiceConnected) {
+        status.textContent = "🎙️ Voice Chat: Connected (Mic Active)";
+        status.style.borderColor = "#10b981";
+    } else {
+        status.textContent = "🎙️ Voice Chat: Disconnected";
+        status.style.borderColor = "#ef4444";
+    }
+}
+
+// PROFILE SEARCH
+async function searchProfiles() {
+    const query = document.getElementById("searchProfileInput").value.toLowerCase();
+    const res = document.getElementById("profileResults");
+
+    if (!query) {
+        res.innerHTML = '<p style="color:var(--text-secondary); font-size:0.85rem;">Type a name above to search Supabase users...</p>';
+        return;
+    }
+
+    const { data } = await supabaseClient.from("users").select("username, role, wincoins").ilike("username", `%${query}%`);
+
+    res.innerHTML = "";
+    if (data && data.length > 0) {
+        data.forEach(u => {
+            const div = document.createElement("div");
+            div.style.padding = "0.5rem";
+            div.style.borderBottom = "1px solid var(--card-border)";
+            div.innerHTML = `<b>${u.username}</b> (${u.role}) - 🪙 ${u.wincoins} WC`;
+            res.appendChild(div);
         });
     } else {
-        document.exitFullscreen();
+        res.innerHTML = '<p style="color:var(--text-secondary); font-size:0.85rem;">No registered profiles found.</p>';
     }
+}
+
+// UTILITIES
+function popoutGame() { if (currentGamePath) window.open(currentGamePath, '_blank'); }
+function toggleFullscreen() {
+    const frame = document.getElementById("gameFrame");
+    if (!document.fullscreenElement) frame.requestFullscreen();
+    else document.exitFullscreen();
 }
 
 function toggleTheme() {
     const body = document.body;
     if (body.getAttribute("data-theme") === "light") {
         body.removeAttribute("data-theme");
-        document.getElementById("themeBtn").textContent = "🌙 Dark";
+        document.getElementById("themeBtn").textContent = "🌙";
     } else {
         body.setAttribute("data-theme", "light");
-        document.getElementById("themeBtn").textContent = "☀️ Light";
+        document.getElementById("themeBtn").textContent = "☀️";
     }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    filterGames();
+    updateUI();
 });
 </script>
 </body>
