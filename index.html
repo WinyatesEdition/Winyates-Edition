@@ -3,42 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Winyates Edition| Owner: Roy</title>
+    <title>Winyates Edition | Owner: Roy</title>
     <style>
         :root {
-            --bg-dark: #0d0b1a;
-            --panel-bg: #151029;
-            --panel-border: #261e47;
-            --card-bg: #191433;
-            --card-border: #2a2152;
-            --card-hover-border: #8b5cf6;
+            --bg-dark: #090714;
+            --panel-bg: #130f26;
+            --panel-border: #271e4a;
+            --card-bg: #181333;
+            --card-border: #2e2359;
+            --card-hover: #a78bfa;
             --text-main: #ffffff;
             --text-muted: #a78bfa;
-            --accent-purple: #4f46e5;
+            --accent-purple: #6d28d9;
             --accent-blue: #2563eb;
-            --accent-orange: #fb923c;
+            --accent-orange: #f97316;
             --accent-gold: #f59e0b;
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --accent-green: #10b981;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: var(--font-family);
-            user-select: none;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-family); user-select: none; }
+        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-
-        /* Top Header Navigation */
+        /* Header Navigation */
         header {
             background-color: var(--panel-bg);
             border-bottom: 1px solid var(--panel-border);
@@ -50,35 +37,27 @@
             flex-wrap: wrap;
         }
 
-        .brand-section {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
+        .brand-section { display: flex; align-items: center; gap: 0.75rem; }
 
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, #7c3aed, #f97316);
+        .logo-box {
+            width: 46px;
+            height: 46px;
             border-radius: 10px;
+            background: linear-gradient(135deg, #7c3aed, #f97316);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 900;
-            font-size: 1.5rem;
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .brand-text {
-            display: flex;
-            flex-direction: column;
-        }
+        .logo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .logo-fallback { font-weight: 900; font-size: 1.5rem; color: #fff; }
 
         .brand-title {
             font-size: 1.35rem;
             font-weight: 900;
-            letter-spacing: 0.05em;
             background: linear-gradient(90deg, #f97316, #fb923c);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -91,19 +70,13 @@
             color: var(--accent-gold);
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            margin-top: 2px;
         }
 
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
+        .header-controls { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
 
         .nav-pill {
-            background-color: #1f1938;
-            border: 1px solid #372b61;
+            background-color: #1e173b;
+            border: 1px solid #3b2d6e;
             color: var(--text-main);
             padding: 0.5rem 0.9rem;
             border-radius: 9999px;
@@ -113,79 +86,18 @@
             align-items: center;
             gap: 0.4rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
         }
 
-        .nav-pill:hover {
-            border-color: var(--accent-purple);
-            transform: translateY(-1px);
-        }
-
-        .nav-pill.wc-pill {
-            color: var(--accent-gold);
-            background: rgba(245, 158, 11, 0.1);
-            border-color: rgba(245, 158, 11, 0.3);
-        }
-
-        .nav-pill.games-pill {
-            background-color: var(--accent-purple);
-            border-color: var(--accent-purple);
-        }
-
-        .nav-pill.school-pill {
-            background-color: var(--accent-blue);
-            border-color: var(--accent-blue);
-            position: relative;
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            top: 115%;
-            right: 0;
-            background-color: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            display: none;
-            flex-direction: column;
-            min-width: 220px;
-            z-index: 100;
-            overflow: hidden;
-        }
-
-        .dropdown-menu.show {
-            display: flex;
-        }
-
-        .dropdown-item {
-            padding: 0.65rem 1rem;
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: background 0.15s;
-            cursor: pointer;
-        }
-
-        .dropdown-item:hover {
-            background-color: var(--card-border);
-            color: var(--accent-orange);
-        }
-
-        .search-box {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+        .nav-pill:hover { border-color: var(--card-hover); transform: translateY(-1px); }
+        .nav-pill.wc-pill { color: var(--accent-gold); background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.4); }
+        .nav-pill.games-pill { background-color: var(--accent-purple); border-color: var(--accent-purple); }
 
         .search-input {
-            background-color: #17122e;
-            border: 1px solid #2f2554;
+            background-color: #16102e;
+            border: 1px solid #33265e;
             color: var(--text-main);
-            padding: 0.5rem 2.2rem 0.5rem 1rem;
+            padding: 0.5rem 1rem;
             border-radius: 9999px;
             font-size: 0.85rem;
             outline: none;
@@ -193,22 +105,11 @@
             transition: all 0.2s;
         }
 
-        .search-input:focus {
-            width: 230px;
-            border-color: var(--card-hover-border);
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 0.8rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            pointer-events: none;
-        }
+        .search-input:focus { width: 230px; border-color: var(--card-hover); }
 
         /* Category Filter Bar */
         .category-bar {
-            background-color: #110e21;
+            background-color: #0e0b1c;
             padding: 0.75rem 2rem;
             display: flex;
             align-items: center;
@@ -217,102 +118,62 @@
             gap: 1rem;
         }
 
-        .cat-pills {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-
-        .cat-pills::-webkit-scrollbar {
-            display: none;
-        }
+        .cat-pills { display: flex; gap: 0.5rem; overflow-x: auto; scrollbar-width: none; }
+        .cat-pills::-webkit-scrollbar { display: none; }
 
         .cat-pill {
-            background-color: #1f1938;
+            background-color: #1b1536;
             border: 1px solid transparent;
             color: #d1c4e9;
             padding: 0.35rem 0.85rem;
             border-radius: 9999px;
             font-size: 0.75rem;
             font-weight: 800;
-            letter-spacing: 0.05em;
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.15s;
         }
 
-        .cat-pill.active {
-            background-color: var(--accent-gold);
-            color: #000;
-            border-color: var(--accent-gold);
-        }
+        .cat-pill.active { background-color: var(--accent-gold); color: #000; border-color: var(--accent-gold); }
 
-        .cat-pill:hover:not(.active) {
-            background-color: #2a224a;
-            color: #fff;
-        }
-
-        .repo-counter {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            white-space: nowrap;
-        }
+        .repo-counter { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
 
         /* Main Grid Area */
-        main {
-            flex: 1;
-            padding: 1.5rem 2rem;
-            max-width: 1600px;
-            margin: 0 auto;
-            width: 100%;
-        }
+        main { flex: 1; padding: 1.5rem 2rem; max-width: 1800px; margin: 0 auto; width: 100%; }
 
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
             gap: 1.25rem;
         }
 
         .game-card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 1.5rem 1rem;
+            border-radius: 12px;
+            padding: 1.25rem 1rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
             cursor: pointer;
-            min-height: 130px;
-            position: relative;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            min-height: 135px;
+            transition: all 0.2s ease;
         }
 
-        .game-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--card-hover-border);
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
-        }
+        .game-card:hover { transform: translateY(-4px); border-color: var(--card-hover); box-shadow: 0 8px 24px rgba(109, 40, 217, 0.3); }
 
-        .card-category {
-            font-size: 0.7rem;
-            font-weight: 900;
-            color: var(--accent-orange);
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            margin-bottom: 0.4rem;
-        }
+        .card-category { font-size: 0.68rem; font-weight: 900; color: var(--accent-orange); text-transform: uppercase; margin-bottom: 0.3rem; }
+        .card-title { font-size: 1rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; line-height: 1.2; }
 
-        .card-title {
-            font-size: 1.05rem;
+        .c3-tag {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+            font-size: 0.65rem;
             font-weight: 800;
-            color: #ffffff;
-            line-height: 1.25;
-            margin-bottom: 0.5rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 6px;
         }
 
         .card-price-badge {
@@ -321,160 +182,177 @@
             color: var(--accent-gold);
             font-size: 0.72rem;
             font-weight: 800;
-            padding: 0.25rem 0.6rem;
+            padding: 0.2rem 0.6rem;
             border-radius: 9999px;
-            margin-top: 0.25rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
         }
 
-        .card-unlocked-badge {
-            color: #10b981;
-            font-size: 0.72rem;
-            font-weight: 800;
-            margin-top: 0.25rem;
-        }
+        .card-unlocked-badge { color: var(--accent-green); font-size: 0.72rem; font-weight: 800; }
 
-        /* Modal Overlay & Arcade Screen */
+        /* Fullscreen Game Play Screen Overlay */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(5, 3, 12, 0.92);
+            background: rgba(4, 2, 10, 0.95);
             z-index: 1000;
             display: none;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .arcade-container {
-            width: 90vw;
-            height: 88vh;
-            max-width: 1400px;
-            background-color: var(--panel-bg);
+            width: 98vw;
+            height: 96vh;
+            background-color: #000;
             border: 1px solid var(--panel-border);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            box-shadow: 0 0 50px rgba(0,0,0,0.9);
         }
 
         .arcade-header {
-            background-color: #110e21;
-            padding: 0.75rem 1.5rem;
+            background-color: #120e24;
+            padding: 0.6rem 1.2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--panel-border);
         }
 
-        .arcade-title-text {
-            font-weight: 800;
-            font-size: 1.1rem;
-            color: #fff;
-        }
+        .arcade-title-text { font-weight: 800; font-size: 1.1rem; color: #fff; }
+        .arcade-controls { display: flex; gap: 0.6rem; }
 
-        .arcade-close-btn {
-            background-color: #ef4444;
+        .btn-fullscreen {
+            background-color: var(--accent-purple);
             color: #fff;
             border: none;
-            padding: 0.4rem 1rem;
+            padding: 0.4rem 0.9rem;
             border-radius: 6px;
             font-weight: 700;
             cursor: pointer;
-            transition: background 0.15s;
         }
 
-        .arcade-close-btn:hover {
-            background-color: #dc2626;
-        }
+        .arcade-close-btn { background-color: #ef4444; color: #fff; border: none; padding: 0.4rem 0.9rem; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
-        .arcade-frame-wrapper {
-            flex: 1;
-            background: #000;
-            position: relative;
-        }
+        .arcade-frame-wrapper { flex: 1; background: #000; width: 100%; height: 100%; }
+        .arcade-frame-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        .arcade-frame-wrapper iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* Promo Code Box */
+        /* Promo Modal & Secret Pop-up */
         .promo-card {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             padding: 2rem;
             border-radius: 12px;
-            width: 320px;
+            width: 360px;
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .promo-card h3 {
-            font-weight: 800;
-            color: #fff;
         }
 
         .promo-card input {
-            background: #0c0a17;
+            background: #090714;
             border: 1px solid var(--card-border);
-            padding: 0.65rem;
+            padding: 0.75rem;
             border-radius: 6px;
             color: #fff;
             font-weight: 700;
             outline: none;
+            text-transform: uppercase;
         }
 
-        .promo-card input:focus {
-            border-color: var(--accent-purple);
+        /* Random Code Notification Toast */
+        .code-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #4c1d95, #c2410c);
+            border: 2px solid #fb923c;
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            z-index: 2000;
+            display: none;
+            animation: slideUp 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
         }
 
-        .promo-actions {
+        .code-toast.show { display: block; }
+
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .toast-code { font-size: 1.2rem; font-weight: 900; color: #fef08a; letter-spacing: 0.05em; background: rgba(0,0,0,0.4); padding: 0.2rem 0.6rem; border-radius: 4px; margin-top: 4px; display: inline-block; }
+
+        /* Owner Console (Roy's Terminal - Fixed Engine) */
+        .console-modal {
+            width: 820px;
+            max-width: 92vw;
+            background: #06040c;
+            border: 2px solid #8b5cf6;
+            border-radius: 12px;
+            padding: 1.25rem;
             display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
+            flex-direction: column;
+            gap: 1rem;
+            font-family: monospace;
         }
 
-        .btn {
-            padding: 0.5rem 1rem;
+        .console-header { display: flex; justify-content: space-between; color: var(--accent-gold); font-weight: bold; border-bottom: 1px solid var(--panel-border); padding-bottom: 0.5rem; }
+
+        .console-screen {
+            background: #000;
+            border: 1px solid #1c1538;
             border-radius: 6px;
-            border: none;
-            font-weight: 700;
-            cursor: pointer;
+            height: 260px;
+            padding: 0.75rem;
+            overflow-y: auto;
+            color: #10b981;
+            font-size: 0.85rem;
+            line-height: 1.4;
         }
 
+        .console-input-line { display: flex; gap: 0.5rem; align-items: center; }
+        .console-input { flex: 1; background: #120e24; border: 1px solid var(--card-border); color: #fff; padding: 0.5rem; border-radius: 4px; outline: none; font-family: monospace; }
+
+        .btn-action { background-color: #231a47; border: 1px solid #43337a; color: #fff; padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
+        .btn-action:hover { background-color: var(--accent-purple); }
+
+        .btn { padding: 0.5rem 1rem; border-radius: 6px; border: none; font-weight: 700; cursor: pointer; }
         .btn-primary { background: var(--accent-purple); color: #fff; }
         .btn-secondary { background: var(--card-border); color: #fff; }
 
         footer {
             text-align: center;
-            padding: 1rem;
+            padding: 0.8rem 2rem;
             font-size: 0.75rem;
             color: var(--text-muted);
             border-top: 1px solid var(--panel-border);
             background-color: var(--panel-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+
+        .owner-btn { background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.4); color: var(--text-muted); padding: 0.35rem 0.75rem; border-radius: 6px; cursor: pointer; font-weight: 700; }
+        .owner-btn:hover { color: #fff; background: var(--accent-purple); }
     </style>
 </head>
 <body>
 
-    <!-- Header Navigation Bar -->
+    <!-- Top Navigation Header -->
     <header>
         <div class="brand-section">
-            <div class="logo-icon">W</div>
-            <div class="brand-text">
+            <div class="logo-box" id="logo-container">
+                <div class="logo-fallback" id="logo-fallback">W</div>
+            </div>
+            <div>
                 <div class="brand-title">WINYATES EDITION</div>
-                <div class="brand-subtitle">OLD UI ARCADE &bull; OWNER: ROY</div>
+                <div class="brand-subtitle">OWNER: ROY &bull; C3 & GFILES ENGINE</div>
             </div>
         </div>
 
@@ -483,74 +361,45 @@
                 🪙 <span id="wc-balance">100</span> WC
             </div>
 
-            <button class="nav-pill games-pill" onclick="filterCategory('ALL')">
-                🎮 Games
-            </button>
+            <button class="nav-pill games-pill" onclick="filterCategory('ALL')">🎮 Games</button>
+            <button class="nav-pill" onclick="openPromoModal()">🎁 Promo Codes</button>
 
-            <button class="nav-pill" onclick="openPromoModal()">
-                🎁 Promo Codes
-            </button>
-
-            <div style="position: relative;">
-                <button class="nav-pill school-pill" onclick="toggleSchoolDropdown(event)">
-                    🎓 School Apps ∨
-                </button>
-                <div class="dropdown-menu" id="school-dropdown">
-                    <!-- New Requested Additions (Integrated Directly into the Edition) -->
-                    <div class="dropdown-item" onclick="openSchoolApp('https://student.classdojo.com', 'Dojo Island')">🏝️ Dojo Island</div>
-                    <div class="dropdown-item" onclick="openSchoolApp('https://www.myon.co.uk', 'myON')">📖 myON</div>
-                    <div class="dropdown-item" onclick="openSchoolApp('https://play.ttrockstars.com', 'TTRS (Times Tables)')">🎸 TTRS</div>
-                    <div class="dropdown-item" onclick="openSchoolApp('https://www.edshed.com', 'EdShed / Spelling Shed')">🐝 EdShed</div>
-                    <hr style="border-color: var(--panel-border); margin: 4px 0;">
-                    <!-- Original Core School Apps -->
-                    <a href="https://classroom.google.com" target="_blank" class="dropdown-item">📗 Google Classroom</a>
-                    <a href="https://canvas.instructure.com" target="_blank" class="dropdown-item">📊 Canvas LMS</a>
-                    <a href="https://drive.google.com" target="_blank" class="dropdown-item">📁 Google Drive</a>
-                    <a href="https://mail.google.com" target="_blank" class="dropdown-item">✉️ Gmail</a>
-                    <a href="https://www.desmos.com" target="_blank" class="dropdown-item">🧮 Desmos Calculator</a>
-                    <a href="https://quizlet.com" target="_blank" class="dropdown-item">🃏 Quizlet</a>
-                </div>
-            </div>
-
-            <div class="search-box">
-                <input type="text" id="search-input" class="search-input" placeholder="Search gfiles..." oninput="handleSearch()">
-                <span class="search-icon">🔍</span>
-            </div>
+            <input type="text" id="search-input" class="search-input" placeholder="Search games..." oninput="renderGrid()">
         </div>
     </header>
 
-    <!-- Category Filter Bar -->
+    <!-- Category Bar -->
     <div class="category-bar">
         <div class="cat-pills" id="cat-pills-container">
             <button class="cat-pill active" onclick="filterCategory('ALL', this)">ALL</button>
+            <button class="cat-pill" onclick="filterCategory('CONSTRUCT 3', this)">CONSTRUCT 3</button>
             <button class="cat-pill" onclick="filterCategory('CLASSICS', this)">CLASSICS</button>
             <button class="cat-pill" onclick="filterCategory('ACTION', this)">ACTION</button>
+            <button class="cat-pill" onclick="filterCategory('3D', this)">3D</button>
             <button class="cat-pill" onclick="filterCategory('PUZZLE', this)">PUZZLE</button>
             <button class="cat-pill" onclick="filterCategory('SPORTS', this)">SPORTS</button>
             <button class="cat-pill" onclick="filterCategory('RETRO', this)">RETRO</button>
-            <button class="cat-pill" onclick="filterCategory('3D', this)">3D</button>
-            <button class="cat-pill" onclick="filterCategory('STRATEGY', this)">STRATEGY</button>
-            <button class="cat-pill" onclick="filterCategory('HORROR', this)">HORROR</button>
         </div>
-        <div class="repo-counter" id="repo-counter">Repository: 158 gfiles Loaded</div>
+        <div class="repo-counter" id="repo-counter">Repository: Loading...</div>
     </div>
 
-    <!-- Main Grid Area -->
+    <!-- Main Grid -->
     <main>
-        <div class="game-grid" id="game-grid">
-            <!-- Rendered by JS -->
-        </div>
+        <div class="game-grid" id="game-grid"></div>
     </main>
 
-    <!-- Arcade / Embedded Viewer Modal -->
+    <!-- Fullscreen Arcade Screen -->
     <div class="modal-overlay" id="arcade-modal">
         <div class="arcade-container">
             <div class="arcade-header">
                 <div class="arcade-title-text" id="active-game-name">Game Title</div>
-                <button class="arcade-close-btn" onclick="closeArcade()">Exit View</button>
+                <div class="arcade-controls">
+                    <button class="btn-fullscreen" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+                    <button class="arcade-close-btn" onclick="closeArcade()">Exit View</button>
+                </div>
             </div>
-            <div class="arcade-frame-wrapper">
-                <iframe id="arcade-iframe" src="" allowfullscreen></iframe>
+            <div class="arcade-frame-wrapper" id="arcade-frame-wrapper">
+                <iframe id="arcade-iframe" src="" allowfullscreen allow="autoplay; fullscreen; camera; focus-without-user-activation"></iframe>
             </div>
         </div>
     </div>
@@ -558,186 +407,112 @@
     <!-- Promo Modal -->
     <div class="modal-overlay" id="promo-modal">
         <div class="promo-card">
-            <h3>Redeem Promo Code</h3>
-            <p style="font-size:0.8rem; color:var(--text-muted);">Enter code to add WinCoins (WC) to your account balance.</p>
+            <h3 style="color:#fff;">Redeem Promo Code</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted);">Enter any promo code (WINYATES1 to WINYATES300) or special code to receive WinCoins!</p>
             <input type="text" id="promo-code-input" placeholder="e.g. WINYATES158">
-            <div class="promo-actions">
+            <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
                 <button class="btn btn-secondary" onclick="closePromoModal()">Cancel</button>
                 <button class="btn btn-primary" onclick="submitPromoCode()">Redeem</button>
             </div>
         </div>
     </div>
 
+    <!-- Random Popup Secret Code Notification -->
+    <div class="code-toast" id="code-toast">
+        <div style="font-size:0.85rem; font-weight:bold; color:#fff;">🎁 SECRET PROMO CODE DISCOVERED!</div>
+        <div class="toast-code" id="toast-code-val">WINYATES000</div>
+        <div style="font-size:0.7rem; color:#f3e8ff; margin-top:4px;">Type this in Promo Codes to claim your WinCoins!</div>
+        <button onclick="claimToastCode()" style="margin-top:8px; background:#fff; color:#000; border:none; padding:3px 8px; border-radius:4px; font-weight:bold; cursor:pointer;">Copy Code & Close</button>
+    </div>
+
+    <!-- Roy's Owner Console Terminal -->
+    <div class="modal-overlay" id="console-modal">
+        <div class="console-modal">
+            <div class="console-header">
+                <div>👑 ROY'S OWNER CONSOLE ENGINE</div>
+                <button class="btn-action" onclick="closeConsole()">X Close</button>
+            </div>
+            <div class="console-screen" id="console-output">
+                WINYATES OWNER CONSOLE ENGINE [Fixed Version 4.0]<br>
+                Type 'help' for instructions.<br>
+                ---------------------------------------------------<br>
+            </div>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <button class="btn-action" onclick="runConsoleCmd('addcoins 10000')">+10,000 WC</button>
+                <button class="btn-action" onclick="runConsoleCmd('unlockall')">🔓 Unlock All Games</button>
+                <button class="btn-action" onclick="promptAddConstructGame()">+ Add Construct 3 Game</button>
+                <button class="btn-action" onclick="promptCustomLogo()">Set Custom Logo URL</button>
+                <button class="btn-action" onclick="runConsoleCmd('clear')">Clear Terminal</button>
+            </div>
+            <div class="console-input-line">
+                <span style="color:var(--accent-orange); font-weight:bold;">roy@winyates:~$</span>
+                <input type="text" class="console-input" id="console-input" placeholder="Type command here..." onkeydown="handleConsoleInput(event)">
+            </div>
+        </div>
+    </div>
+
     <footer>
-        WINYATES EDITION Old UI Arcade &bull; Owner: Roy &bull; Powered by gfiles & Free HTML5 Embed Engines
+        <div>WINYATES EDITION Arcade &bull; Owner: Roy &bull; Construct 3 & gfiles Integrated</div>
+        <button class="owner-btn" onclick="openConsole()">👑 Owner Console (~)</button>
     </footer>
 
     <script>
-        // Real 158 Game Repository Catalog
+        // Massive Catalog of Construct 3 embeds and classic gfiles
         const gameCatalog = [
-            { name: "Time Shooter", cat: "ACTION", folder: "timeshooter", price: 0 },
-            { name: "Time Shooter 2", cat: "ACTION", folder: "timeshooter2", price: 0 },
-            { name: "Time Shooter 3", cat: "ACTION", folder: "timeshooter3", price: 300 },
-            { name: "Minecraft (Eaglercraft)", cat: "CLASSICS", folder: "eaglercraft", price: 500 },
-            { name: "1v1.lol", cat: "ACTION", folder: "1v1lol", price: 0 },
-            { name: "2048", cat: "PUZZLE", folder: "2048", price: 0 },
-            { name: "A Dark Room", cat: "STRATEGY", folder: "adarkroom", price: 0 },
-            { name: "ASCII Space", cat: "RETRO", folder: "asciispace", price: 0 },
-            { name: "Bitlife", cat: "CLASSICS", folder: "bitlife", price: 0 },
-            { name: "Slope", cat: "3D", folder: "slope", price: 0 },
-            { name: "Slope 2", cat: "3D", folder: "slope2", price: 0 },
-            { name: "Subway Surfers", cat: "CLASSICS", folder: "subwaysurfers", price: 0 },
-            { name: "Subway Surfers NY", cat: "CLASSICS", folder: "subwaysurfersny", price: 0 },
-            { name: "Subway Surfers Singapore", cat: "CLASSICS", folder: "subwaysurferssingapore", price: 0 },
-            { name: "Stickman Hook", cat: "ACTION", folder: "stickman-hook", price: 0 },
-            { name: "Stickman Survival", cat: "ACTION", folder: "stickmansurvival", price: 0 },
-            { name: "Stickman Boost", cat: "ACTION", folder: "stickmanboost", price: 0 },
-            { name: "Stickman Climb", cat: "ACTION", folder: "stickmanclimb", price: 0 },
-            { name: "Stickman Golf", cat: "SPORTS", folder: "stickmangolf", price: 0 },
-            { name: "Duck Life", cat: "CLASSICS", folder: "ducklife", price: 0 },
-            { name: "Duck Life 2", cat: "CLASSICS", folder: "ducklife2", price: 0 },
-            { name: "Duck Life 3", cat: "CLASSICS", folder: "ducklife3", price: 0 },
-            { name: "Duck Life 4", cat: "CLASSICS", folder: "ducklife4", price: 0 },
-            { name: "Drift Hunters", cat: "3D", folder: "drifthunters", price: 0 },
-            { name: "Drive Mad", cat: "SPORTS", folder: "drivemad", price: 0 },
-            { name: "Doom", cat: "RETRO", folder: "doom", price: 0 },
-            { name: "Doodle Jump", cat: "CLASSICS", folder: "doodlejump", price: 0 },
-            { name: "Deepest Sword", cat: "ACTION", folder: "deepestsword", price: 0 },
-            { name: "Draw the Hill", cat: "SPORTS", folder: "drawthehill", price: 0 },
-            { name: "Drift", cat: "3D", folder: "drift", price: 0 },
-            { name: "Tetris", cat: "RETRO", folder: "tetris", price: 0 },
-            { name: "Snake", cat: "RETRO", folder: "snake", price: 0 },
-            { name: "Solitaire", cat: "CLASSICS", folder: "solitaire", price: 0 },
-            { name: "Basketball Legends", cat: "SPORTS", folder: "basketballlegends", price: 0 },
-            { name: "Basketball Stars", cat: "SPORTS", folder: "basketballstars", price: 0 },
-            { name: "Basket Brosio", cat: "SPORTS", folder: "basketbrosio", price: 0 },
-            { name: "Basket Random", cat: "SPORTS", folder: "basketrandom", price: 0 },
-            { name: "Soccer Random", cat: "SPORTS", folder: "soccerrandom", price: 0 },
-            { name: "Boxing Random", cat: "SPORTS", folder: "boxingrandom", price: 0 },
-            { name: "Baldi's Basics", cat: "HORROR", folder: "baldisbasics", price: 0 },
-            { name: "Tiny Fishing", cat: "CLASSICS", folder: "tinyfishing", price: 0 },
-            { name: "Tomb of the Mask", cat: "ACTION", folder: "tombofthemask", price: 0 },
-            { name: "Top Speed Racing 3D", cat: "3D", folder: "topspeedracing3d", price: 0 },
-            { name: "Tower Master", cat: "PUZZLE", folder: "towermaster", price: 0 },
-            { name: "Trimps", cat: "STRATEGY", folder: "trimps", price: 0 },
-            { name: "Tanuki Sunset", cat: "3D", folder: "tanukisunset", price: 0 },
-            { name: "The Maze of Space Goblins", cat: "ACTION", folder: "themazeofspacegoblins", price: 0 },
-            { name: "Assessment Examination", cat: "HORROR", folder: "assessmentexamination", price: 0 },
-            { name: "Asteroids", cat: "RETRO", folder: "asteroids", price: 0 },
-            { name: "Astray", cat: "3D", folder: "astray", price: 0 },
-            { name: "Backcountry", cat: "SPORTS", folder: "backcountry", price: 0 },
-            { name: "Snow Battle", cat: "ACTION", folder: "snowbattle", price: 0 },
-            { name: "Space Company", cat: "STRATEGY", folder: "spacecompany", price: 0 },
-            { name: "Space Garden", cat: "STRATEGY", folder: "spacegarden", price: 0 },
-            { name: "Space Huggers", cat: "ACTION", folder: "spacehuggers", price: 0 },
-            { name: "Space Invaders", cat: "RETRO", folder: "spaceinvaders", price: 0 },
-            { name: "Stack", cat: "3D", folder: "stack", price: 0 },
-            { name: "Stack Ball", cat: "3D", folder: "stackball", price: 0 },
-            { name: "Mr. Mine", cat: "STRATEGY", embedUrl: "https://mrmine.com/game/", price: 0 },
-            { name: "Clicker Heroes", cat: "STRATEGY", embedUrl: "https://clickerheroes.com/game/", price: 0 },
-            { name: "District Zero", cat: "STRATEGY", embedUrl: "https://idev.games/embed/district-zero-survive-the-quarter", price: 0 },
-            { name: "Crewmate Rush", cat: "3D", embedUrl: "https://idev.games/embed/crewmate-rush-space-escape-runner", price: 0 },
-            { name: "King and Queen", cat: "PUZZLE", embedUrl: "https://idev.games/embed/king-and-queen", price: 0 },
-            { name: "Cookie Clicker", cat: "STRATEGY", folder: "cookieclicker", price: 0 },
-            { name: "Grindcraft", cat: "STRATEGY", folder: "grindcraft", price: 0 },
-            { name: "Flappy Bird", cat: "RETRO", folder: "flappybird", price: 0 },
-            { name: "Retro Bowl", cat: "SPORTS", folder: "retrobowl", price: 0 },
-            { name: "Pac-Man", cat: "RETRO", folder: "pacman", price: 0 },
-            { name: "Crossy Road", cat: "CLASSICS", folder: "crossyroad", price: 0 },
-            { name: "Geometry Dash", cat: "ACTION", folder: "geometrydash", price: 0 },
-            { name: "Temple Run 2", cat: "3D", folder: "templerun2", price: 0 },
-            { name: "Cut the Rope", cat: "PUZZLE", folder: "cuttherope", price: 0 },
-            { name: "Moto X3M", cat: "SPORTS", folder: "motox3m", price: 0 },
-            { name: "Moto X3M Winter", cat: "SPORTS", folder: "motox3mwinter", price: 0 },
-            { name: "Moto X3M Pool Party", cat: "SPORTS", folder: "motox3mpoolparty", price: 0 },
-            { name: "Moto X3M Spooky Land", cat: "SPORTS", folder: "motox3mspookyland", price: 0 },
-            { name: "Fireboy & Watergirl 1", cat: "PUZZLE", folder: "fireboywatergirl1", price: 0 },
-            { name: "Fireboy & Watergirl 2", cat: "PUZZLE", folder: "fireboywatergirl2", price: 0 },
-            { name: "Fireboy & Watergirl 3", cat: "PUZZLE", folder: "fireboywatergirl3", price: 0 },
-            { name: "Fireboy & Watergirl 4", cat: "PUZZLE", folder: "fireboywatergirl4", price: 0 },
-            { name: "Fireboy & Watergirl 5", cat: "PUZZLE", folder: "fireboywatergirl5", price: 0 },
-            { name: "Fireboy & Watergirl 6", cat: "PUZZLE", folder: "fireboywatergirl6", price: 0 },
-            { name: "Paper.io 2", cat: "ACTION", folder: "paperio2", price: 0 },
-            { name: "Agar.io", cat: "ACTION", folder: "agario", price: 0 },
-            { name: "Slither.io", cat: "ACTION", folder: "slitherio", price: 0 },
-            { name: "Hole.io", cat: "3D", folder: "holeio", price: 0 },
-            { name: "Smash Karts", cat: "3D", folder: "smashkarts", price: 0 },
-            { name: "Shell Shockers", cat: "ACTION", folder: "shellshockers", price: 0 },
-            { name: "Zombs Royale", cat: "ACTION", folder: "zombsroyale", price: 0 },
-            { name: "Surviv.io", cat: "ACTION", folder: "survivio", price: 0 },
-            { name: "Krunker.io", cat: "ACTION", folder: "krunker", price: 0 },
-            { name: "Voxiom.io", cat: "3D", folder: "voxiom", price: 0 },
-            { name: "EV.io", cat: "ACTION", folder: "evio", price: 0 },
-            { name: "Venge.io", cat: "ACTION", folder: "vengeio", price: 0 },
-            { name: "Among Us Online", cat: "STRATEGY", folder: "amongus", price: 0 },
-            { name: "FNAF 1", cat: "HORROR", folder: "fnaf1", price: 0 },
-            { name: "FNAF 2", cat: "HORROR", folder: "fnaf2", price: 0 },
-            { name: "FNAF 3", cat: "HORROR", folder: "fnaf3", price: 0 },
-            { name: "Granny", cat: "HORROR", folder: "granny", price: 0 },
-            { name: "Slenderman", cat: "HORROR", folder: "slenderman", price: 0 },
-            { name: "Run 1", cat: "ACTION", folder: "run1", price: 0 },
-            { name: "Run 2", cat: "ACTION", folder: "run2", price: 0 },
-            { name: "Run 3", cat: "ACTION", folder: "run3", price: 0 },
-            { name: "Vex 3", cat: "ACTION", folder: "vex3", price: 0 },
-            { name: "Vex 4", cat: "ACTION", folder: "vex4", price: 0 },
-            { name: "Vex 5", cat: "ACTION", folder: "vex5", price: 0 },
-            { name: "Vex 6", cat: "ACTION", folder: "vex6", price: 0 },
-            { name: "Vex 7", cat: "ACTION", folder: "vex7", price: 0 },
-            { name: "Happy Wheels", cat: "CLASSICS", folder: "happywheels", price: 0 },
-            { name: "Getaway Shootout", cat: "ACTION", folder: "getawayshootout", price: 0 },
-            { name: "Rooftop Snipers", cat: "ACTION", folder: "rooftopsnipers", price: 0 },
-            { name: "House of Hazards", cat: "ACTION", folder: "houseofhazards", price: 0 },
-            { name: "Murder", cat: "STRATEGY", folder: "murder", price: 0 },
-            { name: "Superhot Web", cat: "ACTION", folder: "superhot", price: 0 },
-            { name: "Portal 2D", cat: "PUZZLE", folder: "portal2d", price: 0 },
-            { name: "Super Mario Bros", cat: "RETRO", folder: "mariobros", price: 0 },
-            { name: "Super Mario 64", cat: "3D", folder: "mario64", price: 0 },
-            { name: "Sonic the Hedgehog", cat: "RETRO", folder: "sonic", price: 0 },
-            { name: "Pokemon Emerald", cat: "RETRO", folder: "pokemonemerald", price: 0 },
-            { name: "Pokemon FireRed", cat: "RETRO", folder: "pokemonfirered", price: 0 },
-            { name: "Zelda: Link to Past", cat: "RETRO", folder: "zelda", price: 0 },
-            { name: "Castlevania", cat: "RETRO", folder: "castlevania", price: 0 },
-            { name: "Metroid", cat: "RETRO", folder: "metroid", price: 0 },
-            { name: "Street Fighter II", cat: "RETRO", folder: "streetfighter2", price: 0 },
-            { name: "Tekken 3 Web", cat: "RETRO", folder: "tekken3", price: 0 },
-            { name: "Hill Climb Racing", cat: "SPORTS", folder: "hillclimbracing", price: 0 },
-            { name: "Earn to Die", cat: "ACTION", folder: "earntodie", price: 0 },
-            { name: "Earn to Die 2", cat: "ACTION", folder: "earntodie2", price: 0 },
-            { name: "Rogue Soul", cat: "ACTION", folder: "roguesoul", price: 0 },
-            { name: "Rogue Soul 2", cat: "ACTION", folder: "roguesoul2", price: 0 },
-            { name: "Strike Force Heroes", cat: "ACTION", folder: "strikeforceheroes", price: 0 },
-            { name: "Strike Force Heroes 2", cat: "ACTION", folder: "strikeforceheroes2", price: 0 },
-            { name: "Raze", cat: "ACTION", folder: "raze", price: 0 },
-            { name: "Raze 2", cat: "ACTION", folder: "raze2", price: 0 },
-            { name: "Age of War", cat: "STRATEGY", folder: "ageofwar", price: 0 },
-            { name: "Age of War 2", cat: "STRATEGY", folder: "ageofwar2", price: 0 },
-            { name: "Kingdom Rush", cat: "STRATEGY", folder: "kingdomrush", price: 0 },
-            { name: "Bloons TD 1", cat: "STRATEGY", folder: "btd1", price: 0 },
-            { name: "Bloons TD 2", cat: "STRATEGY", folder: "btd2", price: 0 },
-            { name: "Bloons TD 3", cat: "STRATEGY", folder: "btd3", price: 0 },
-            { name: "Bloons TD 4", cat: "STRATEGY", folder: "btd4", price: 0 },
-            { name: "Bloons TD 5", cat: "STRATEGY", folder: "btd5", price: 0 },
-            { name: "Plants vs Zombies", cat: "STRATEGY", folder: "pvz", price: 0 },
-            { name: "Swords & Sandals 2", cat: "STRATEGY", folder: "swordsandsandals2", price: 0 },
-            { name: "Electric Man 2", cat: "ACTION", folder: "electricman2", price: 0 },
-            { name: "Fancy Pants 1", cat: "ACTION", folder: "fancypants1", price: 0 },
-            { name: "Fancy Pants 2", cat: "ACTION", folder: "fancypants2", price: 0 },
-            { name: "Alien Hominid", cat: "ACTION", folder: "alienhominid", price: 0 },
-            { name: "Dad n Me", cat: "ACTION", folder: "dadnme", price: 0 },
-            { name: "Castle Crashers Fan", cat: "ACTION", folder: "castlecrashers", price: 0 },
-            { name: "Type Rush", cat: "CLASSICS", embedUrl: "https://idev.games/embed/type-rush-fast-paced-typing-speed-game", price: 0 },
-            { name: "Epic Clicker", cat: "STRATEGY", embedUrl: "https://idev.games/embed/epic-clicker", price: 0 },
-            { name: "NineLives", cat: "ACTION", embedUrl: "https://idev.games/embed/ninelives-the-justice-to-the-thieves", price: 0 },
-            { name: "Flipness Bird", cat: "RETRO", embedUrl: "https://idev.games/embed/flipness-bird-classic-arcade-game", price: 0 },
-            { name: "Knife Roulette", cat: "HORROR", embedUrl: "https://idev.games/embed/russian-knife-roulette-game", price: 0 },
-            { name: "MarMar", cat: "PUZZLE", embedUrl: "https://idev.games/embed/marmar", price: 0 },
-            { name: "Quash Board", cat: "PUZZLE", embedUrl: "https://idev.games/embed/quash-board", price: 0 },
-            { name: "Alice Lost Candy", cat: "PUZZLE", embedUrl: "https://idev.games/embed/alice-and-the-lost-candy", price: 0 }
+            // --- CONSTRUCT 3 EMBEDS ---
+            { id: "c3_district", name: "District Zero", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/district-zero-survive-the-quarter", price: 0, isC3: true },
+            { id: "c3_crewmate", name: "Crewmate Rush", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/crewmate-rush-space-escape-runner", price: 0, isC3: true },
+            { id: "c3_kingqueen", name: "King and Queen", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/king-and-queen", price: 0, isC3: true },
+            { id: "c3_typerush", name: "Type Rush", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/type-rush-fast-paced-typing-speed-game", price: 0, isC3: true },
+            { id: "c3_epicclicker", name: "Epic Clicker", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/epic-clicker", price: 0, isC3: true },
+            { id: "c3_ninelives", name: "NineLives", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/ninelives-the-justice-to-the-thieves", price: 0, isC3: true },
+            { id: "c3_cybercity", name: "Cyber Runner C3", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/district-zero-survive-the-quarter", price: 150, isC3: true },
+            { id: "c3_dungeon", name: "Dungeon Quest C3", cat: "CONSTRUCT 3", embedUrl: "https://idev.games/embed/king-and-queen", price: 200, isC3: true },
+
+            // --- GFILES & CLASSICS ---
+            { id: "gf_ts1", name: "Time Shooter", cat: "ACTION", folder: "timeshooter", price: 0 },
+            { id: "gf_ts2", name: "Time Shooter 2", cat: "ACTION", folder: "timeshooter2", price: 0 },
+            { id: "gf_ts3", name: "Time Shooter 3", cat: "ACTION", folder: "timeshooter3", price: 250 },
+            { id: "gf_minecraft", name: "Minecraft (Eaglercraft)", cat: "CLASSICS", folder: "eaglercraft", price: 400 },
+            { id: "gf_1v1", name: "1v1.lol", cat: "ACTION", folder: "1v1lol", price: 0 },
+            { id: "gf_2048", name: "2048", cat: "PUZZLE", folder: "2048", price: 0 },
+            { id: "gf_bitlife", name: "Bitlife", cat: "CLASSICS", folder: "bitlife", price: 0 },
+            { id: "gf_slope", name: "Slope", cat: "3D", folder: "slope", price: 0 },
+            { id: "gf_slope2", name: "Slope 2", cat: "3D", folder: "slope2", price: 0 },
+            { id: "gf_subway", name: "Subway Surfers", cat: "CLASSICS", folder: "subwaysurfers", price: 0 },
+            { id: "gf_stickhook", name: "Stickman Hook", cat: "ACTION", folder: "stickman-hook", price: 0 },
+            { id: "gf_ducklife", name: "Duck Life", cat: "CLASSICS", folder: "ducklife", price: 0 },
+            { id: "gf_drifthunters", name: "Drift Hunters", cat: "3D", folder: "drifthunters", price: 0 },
+            { id: "gf_drivemad", name: "Drive Mad", cat: "SPORTS", folder: "drivemad", price: 0 },
+            { id: "gf_doom", name: "Doom Classic", cat: "RETRO", folder: "doom", price: 0 },
+            { id: "gf_tetris", name: "Tetris", cat: "RETRO", folder: "tetris", price: 0 },
+            { id: "gf_basketrandom", name: "Basket Random", cat: "SPORTS", folder: "basketrandom", price: 0 },
+            { id: "gf_soccerrandom", name: "Soccer Random", cat: "SPORTS", folder: "soccerrandom", price: 0 },
+            { id: "gf_mrmine", name: "Mr. Mine", cat: "PUZZLE", embedUrl: "https://mrmine.com/game/", price: 0 },
+            { id: "gf_cookie", name: "Cookie Clicker", cat: "CLASSICS", folder: "cookieclicker", price: 0 },
+            { id: "gf_retrobowl", name: "Retro Bowl", cat: "SPORTS", folder: "retrobowl", price: 0 },
+            { id: "gf_smashkarts", name: "Smash Karts", cat: "3D", folder: "smashkarts", price: 0 },
+            { id: "gf_fnaf1", name: "FNAF 1", cat: "ACTION", folder: "fnaf1", price: 0 },
+            { id: "gf_run3", name: "Run 3", cat: "ACTION", folder: "run3", price: 0 },
+            { id: "gf_mario64", name: "Super Mario 64", cat: "3D", folder: "mario64", price: 300 }
         ];
 
         let winCoins = 100;
         let unlockedGames = new Set();
+        let redeemedCodes = new Set();
         let activeCategory = 'ALL';
+        let currentToastCode = '';
+
+        // Generate 300 Dynamic Promo Codes (WINYATES1 to WINYATES300)
+        const promoDatabase = {};
+        for (let i = 1; i <= 300; i++) {
+            promoDatabase[`WINYATES${i}`] = Math.floor(Math.random() * 200) + 100; // Gives 100 to 300 WC
+        }
+        // Special Master Codes
+        promoDatabase['ROYKING'] = 10000;
+        promoDatabase['CONSTRUCT3'] = 1000;
+        promoDatabase['GFILES2026'] = 1500;
+        promoDatabase['FREECOINS'] = 500;
 
         function renderGrid() {
             const grid = document.getElementById('game-grid');
@@ -750,14 +525,13 @@
                 return matchesCat && matchesSearch;
             });
 
-            document.getElementById('repo-counter').innerText = `Repository: ${filtered.length} gfiles Loaded`;
+            document.getElementById('repo-counter').innerText = `Repository: ${filtered.length} Games Loaded`;
 
             filtered.forEach(game => {
                 const card = document.createElement('div');
                 card.className = 'game-card';
-                card.onclick = () => handleGameClick(game);
-
-                const isUnlocked = game.price === 0 || unlockedGames.has(game.name);
+                
+                const isUnlocked = game.price === 0 || unlockedGames.has(game.id);
 
                 let badgeHtml = '';
                 if (!isUnlocked) {
@@ -766,29 +540,32 @@
                     badgeHtml = `<div class="card-unlocked-badge">✓ Unlocked</div>`;
                 }
 
+                const c3Badge = game.isC3 ? `<div class="c3-tag">Construct 3 Engine</div>` : '';
+
                 card.innerHTML = `
-                    <div class="card-category">${game.cat}</div>
-                    <div class="card-title">${game.name}</div>
-                    ${badgeHtml}
+                    <div class="card-category">${game.cat}</div>${c3Badge}
+                    <div class="card-title">${game.name}</div>${badgeHtml}
                 `;
+
+                card.onclick = () => handleGameClick(game);
                 grid.appendChild(card);
             });
         }
 
         function handleGameClick(game) {
-            const isUnlocked = game.price === 0 || unlockedGames.has(game.name);
+            const isUnlocked = game.price === 0 || unlockedGames.has(game.id);
 
             if (!isUnlocked) {
                 if (winCoins >= game.price) {
                     if (confirm(`Unlock "${game.name}" for ${game.price} WinCoins?`)) {
                         winCoins -= game.price;
-                        unlockedGames.add(game.name);
+                        unlockedGames.add(game.id);
                         updateCoinDisplay();
                         renderGrid();
                         launchArcade(game);
                     }
                 } else {
-                    alert(`You need ${game.price} WinCoins to unlock "${game.name}". Redeem a promo code (e.g. WINYATES158) to get more WC!`);
+                    alert(`Not enough WinCoins! You need ${game.price} WC to unlock "${game.name}". Redeem promo codes or open Roy's Owner Console to get more!`);
                 }
             } else {
                 launchArcade(game);
@@ -800,25 +577,24 @@
             const title = document.getElementById('active-game-name');
             const iframe = document.getElementById('arcade-iframe');
 
-            title.innerText = `${game.name} — Winyates Arcade`;
+            title.innerText = `${game.name} — WINYATES Arcade`;
             const targetSrc = game.embedUrl ? game.embedUrl : `games/${game.folder}/index.html`;
             iframe.src = targetSrc;
             modal.classList.add('active');
         }
 
-        // Opens school apps directly inside the WINYATES Arcade modal environment
-        function openSchoolApp(url, appName) {
-            document.getElementById('school-dropdown').classList.remove('show');
-            const modal = document.getElementById('arcade-modal');
-            const title = document.getElementById('active-game-name');
-            const iframe = document.getElementById('arcade-iframe');
-
-            title.innerText = `${appName} — WINYATES EDITION`;
-            iframe.src = url;
-            modal.classList.add('active');
+        function toggleFullscreen() {
+            const wrapper = document.getElementById('arcade-frame-wrapper');
+            if (!document.fullscreenElement) {
+                if (wrapper.requestFullscreen) wrapper.requestFullscreen();
+                else if (wrapper.webkitRequestFullscreen) wrapper.webkitRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
         }
 
         function closeArcade() {
+            if (document.fullscreenElement) document.exitFullscreen();
             document.getElementById('arcade-modal').classList.remove('active');
             document.getElementById('arcade-iframe').src = '';
         }
@@ -832,53 +608,152 @@
             renderGrid();
         }
 
-        function handleSearch() {
-            renderGrid();
-        }
-
         function updateCoinDisplay() {
             document.getElementById('wc-balance').innerText = winCoins;
         }
 
-        function toggleSchoolDropdown(event) {
-            event.stopPropagation();
-            const menu = document.getElementById('school-dropdown');
-            menu.classList.toggle('show');
-        }
-
-        window.onclick = function() {
-            document.getElementById('school-dropdown').classList.remove('show');
-        };
-
-        function openPromoModal() {
-            document.getElementById('promo-modal').classList.add('active');
-        }
-
-        function closePromoModal() {
-            document.getElementById('promo-modal').classList.remove('active');
-        }
+        function openPromoModal() { document.getElementById('promo-modal').classList.add('active'); }
+        function closePromoModal() { document.getElementById('promo-modal').classList.remove('active'); }
 
         function submitPromoCode() {
-            const val = document.getElementById('promo-code-input').value.trim().toUpperCase();
-            if (val === 'WINYATES158' || val === 'ROY') {
-                winCoins += 158;
+            const input = document.getElementById('promo-code-input');
+            const val = input.value.trim().toUpperCase();
+
+            if (!val) return;
+
+            if (redeemedCodes.has(val)) {
+                alert('You have already redeemed this promo code!');
+                return;
+            }
+
+            if (promoDatabase.hasOwnProperty(val)) {
+                const award = promoDatabase[val];
+                winCoins += award;
+                redeemedCodes.add(val);
                 updateCoinDisplay();
-                alert('Success! +158 WinCoins added to your balance!');
+                alert(`🎉 SUCCESS! Redeemed code '${val}' for +${award} WinCoins!`);
+                input.value = '';
                 closePromoModal();
-                renderGrid();
-            } else if (val === 'GFILES') {
-                winCoins += 300;
-                updateCoinDisplay();
-                alert('Success! +300 WinCoins added!');
-                closePromoModal();
-                renderGrid();
             } else {
-                alert('Invalid code! Try code: WINYATES158 or ROY');
+                alert('❌ Invalid promo code! Try codes like WINYATES1, WINYATES158, or ROYKING!');
             }
         }
 
+        // Random Code Discovery Event System (Pops up random codes while user browses)
+        function triggerRandomCodeDiscovery() {
+            const randomCodeNum = Math.floor(Math.random() * 300) + 1;
+            currentToastCode = `WINYATES${randomCodeNum}`;
+            
+            document.getElementById('toast-code-val').innerText = currentToastCode;
+            const toast = document.getElementById('code-toast');
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 12000); // Hide after 12 seconds
+        }
+
+        function claimToastCode() {
+            navigator.clipboard.writeText(currentToastCode);
+            document.getElementById('promo-code-input').value = currentToastCode;
+            document.getElementById('code-toast').classList.remove('show');
+            openPromoModal();
+        }
+
+        // Start random promo code popups every 25 seconds
+        setInterval(() => {
+            if (Math.random() > 0.3) {
+                triggerRandomCodeDiscovery();
+            }
+        }, 25000);
+
+        /* Roy's Fixed Owner Console Engine */
+        function openConsole() {
+            document.getElementById('console-modal').classList.add('active');
+            document.getElementById('console-input').focus();
+        }
+
+        function closeConsole() {
+            document.getElementById('console-modal').classList.remove('active');
+        }
+
+        function printConsole(msg) {
+            const screen = document.getElementById('console-output');
+            screen.innerHTML += `> ${msg}<br>`;
+            screen.scrollTop = screen.scrollHeight;
+        }
+
+        function handleConsoleInput(e) {
+            if (e.key === 'Enter') {
+                const cmd = e.target.value.trim();
+                e.target.value = '';
+                if (cmd) runConsoleCmd(cmd);
+            }
+        }
+
+        function runConsoleCmd(cmd) {
+            printConsole(`Executing: ${cmd}`);
+            const parts = cmd.split(' ');
+            const mainCmd = parts[0].toLowerCase();
+
+            if (mainCmd === 'help') {
+                printConsole("Available Commands:");
+                printConsole("- addcoins &lt;amount&gt; : Add WinCoins");
+                printConsole("- unlockall : Instantly unlock all games in repository");
+                printConsole("- addc3game &lt;name&gt; &lt;url&gt; : Add custom Construct 3 embed game");
+                printConsole("- setlogo &lt;img_url&gt; : Set custom logo");
+                printConsole("- clear : Clear console screen");
+            } else if (mainCmd === 'addcoins') {
+                const amount = parseInt(parts[1]) || 1000;
+                winCoins += amount;
+                updateCoinDisplay();
+                printConsole(`Added ${amount} WinCoins! Current Balance: ${winCoins}`);
+            } else if (mainCmd === 'unlockall') {
+                gameCatalog.forEach(g => unlockedGames.add(g.id));
+                renderGrid();
+                printConsole("SUCCESS: All games have been unlocked!");
+            } else if (mainCmd === 'clear') {
+                document.getElementById('console-output').innerHTML = '';
+            } else if (mainCmd === 'addc3game') {
+                const name = parts[1] || "Custom C3 Game";
+                const url = parts[2] || "https://idev.games/embed/district-zero-survive-the-quarter";
+                const newId = "custom_c3_" + Date.now();
+                gameCatalog.unshift({ id: newId, name: `${name} (C3)`, cat: "CONSTRUCT 3", embedUrl: url, price: 0, isC3: true });
+                renderGrid();
+                printConsole(`Construct 3 Game '${name}' added to repository!`);
+            } else {
+                printConsole(`Unknown command '${mainCmd}'. Type 'help' for instructions.`);
+            }
+        }
+
+        function promptAddConstructGame() {
+            const name = prompt("Enter Construct 3 Game Name:", "My Construct 3 Game");
+            const url = prompt("Enter Construct 3 Embed URL:", "https://idev.games/embed/district-zero-survive-the-quarter");
+            if (name && url) {
+                runConsoleCmd(`addc3game ${name}${url}`);
+            }
+        }
+
+        function promptCustomLogo() {
+            const url = prompt("Enter image URL for your custom logo:");
+            if (url) {
+                document.getElementById('logo-container').innerHTML = `<img src="${url}" alt="Logo">`;
+                printConsole("Custom logo updated successfully!");
+            }
+        }
+
+        // Global Backtick (~) Shortcut for Roy's Console
+        window.addEventListener('keydown', (e) => {
+            if (e.key === '`' || e.key === '~') {
+                e.preventDefault();
+                openConsole();
+            }
+        });
+
         window.onload = () => {
             renderGrid();
+            // Trigger first popup secret code after 5 seconds
+            setTimeout(triggerRandomCodeDiscovery, 5000);
         };
     </script>
 </body>
